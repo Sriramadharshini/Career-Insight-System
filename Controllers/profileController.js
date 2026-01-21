@@ -1,4 +1,4 @@
-const Profile = require('../Models/profile');
+const Profile = require('../Models/userprofile');
 
 class ProfileController {
 

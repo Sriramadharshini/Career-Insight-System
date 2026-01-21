@@ -21,7 +21,7 @@ router.post('/create', async (req, res) => {
 });
 
 
-router.get('/profile', async (req, res) => {
+router.get('/list', async (req, res) => {
   try {
     const profileData = req.body;
     console.log('List all profiles');
@@ -40,7 +40,7 @@ router.get('/profile', async (req, res) => {
   }
 });
 
-router.delete('/profile', async (req, res) => {
+router.delete('/delete', async (req, res) => {
   try {
     const { EmailAddress } = req.body;
     console.log('Delete profile id:', EmailAddress);
