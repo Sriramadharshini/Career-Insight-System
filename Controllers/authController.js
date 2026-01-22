@@ -9,12 +9,12 @@ async register(userData) {
     try {
     const existingEmail = await User.findOne({
         
-        EmailAddress: userData.EmailAddress 
+        EmailAddress: userData.EmailAddress
         
     });
 
     if (existingEmail) {
-        throw new Error('Email or Phone number already exists');
+        throw new Error('Email already exists');
     }
     const existingPhone = await User.findOne({
         
