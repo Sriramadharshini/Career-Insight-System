@@ -59,13 +59,8 @@ async login(loginData) {
     if(!ispasswordValid){
         throw new Error('Invalid password');
     }
-    const token = jwt.sign(
-        { userId: user._id, email: user.EmailAddress, fullname: user.Fullname ,password: user.Password},
-        process.env.JWT_SECRET_KEY,
-        { expiresIn: '1h' }
-    );
 
-    return { token, user };
+    return user ;
 
     } catch (error) {
     throw new Error(error.message);

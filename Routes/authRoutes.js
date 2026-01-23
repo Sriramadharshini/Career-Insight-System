@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../Controllers/authController');
 const auth = new authController();
+const generatePrefToken = require('../middleware/preftoken');
+const bodyParser = require('body-parser');
 
 router.post('/register', async (req, res) => {
 try {
@@ -21,22 +23,24 @@ try {
 router.post('/login', async (req, res) => {
 try {
     console.log('Login request body', req.body);
-
     const result = await auth.login(req.body);
-
+    console.log('Login successful for user:', result);
+    const tokenResult = await generatePrefToken(result);
+    if(
+        !tokenResult){
+        throw new Error('Token generation failed');
+    }
+    res.setHeader("token", `Bearer ${tokenResult.token}`);
+ 
     res.status(200).json({
     message: 'Login successful',
-    token: result.token,
-    user: {
-        id: result.user._id,
-        Fullname: result.user.Fullname,
-        EmailAddress: result.user.EmailAddress,
-        PhoneNumber: result.user.PhoneNumber
-    }
+    token: tokenResult.token,
+    data: result
     });
 
 } catch (error) {
-    res.status(401).json({
+    console.error('Login failed:', error);
+    res.status(500).json({
     error: 'Login failed',
     error_details: error.message
     });
@@ -44,3 +48,6 @@ try {
 });
 
 module.exports = router;
+
+
+
