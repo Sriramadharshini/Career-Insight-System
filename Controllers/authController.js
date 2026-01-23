@@ -55,12 +55,9 @@ async login(loginData) {
     if (!user) {
         throw new Error('User not found');
     }
-
-    const isMatch = await bcrypt.compare(loginData.Password, user.Password);
-    if (!isMatch) {
+    if(user.Password !== loginData.Password){
         throw new Error('Invalid password');
     }
-
     const token = jwt.sign(
         { userId: user._id, email: user.EmailAddress },
         process.env.jwt_secret,
@@ -75,3 +72,7 @@ async login(loginData) {
 }
 }
 module.exports = Authorization;
+
+
+
+
