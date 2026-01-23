@@ -22,16 +22,21 @@ router.post('/login', async (req, res) => {
 try {
     console.log('Login request body', req.body);
 
-    const result = await authController.login(req.body);
+    const result = await auth.login(req.body);
 
     res.status(200).json({
     message: 'Login successful',
     token: result.token,
-    user: result.user
+    user: {
+        id: result.user._id,
+        Fullname: result.user.Fullname,
+        EmailAddress: result.user.EmailAddress,
+        PhoneNumber: result.user.PhoneNumber
+    }
     });
 
 } catch (error) {
-    res.status(400).json({
+    res.status(401).json({
     error: 'Login failed',
     error_details: error.message
     });
