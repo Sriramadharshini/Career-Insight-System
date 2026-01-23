@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const ProfileController = require('../Controllers/profileController');
+const authorization = require('../middleware/authorization');
 router.post('/create', async (req, res) => {
   try {
     const profileData = req.body;
@@ -20,25 +21,21 @@ router.post('/create', async (req, res) => {
   }
 });
 
-
-router.get('/list', async (req, res) => {
-  try {
-    const profileData = req.body;
+router.get('/list', authorization, async (req, res) => {
+  try{
     console.log('List all profiles');
-
-    const result = await ProfileController.listAll(profileData);
-
+    const result = await ProfileController.listAllProfiles();
     res.status(200).json({
       message: 'Profiles fetched successfully',
       data: result
     });
-  } catch (error) {
+  }catch(error){
     res.status(500).json({
       error: 'Internal server error',
       error_details: error.message
     });
   }
-});
+})
 
 router.delete('/delete', async (req, res) => {
   try {
