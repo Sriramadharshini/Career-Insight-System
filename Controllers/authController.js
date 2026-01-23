@@ -23,7 +23,7 @@ async register(userData) {
     });
 
     if (existingPhone) {
-        throw new Error('Phone number already exists');
+        throw new Error('Phonenumber already exists');
     }
 
     const result = await User({
@@ -55,12 +55,13 @@ async login(loginData) {
     if (!user) {
         throw new Error('User not found');
     }
-    if(user.Password !== loginData.Password){
+    const ispasswordValid = await bcrypt.compare(loginData.Password, user.Password);
+    if(!ispasswordValid){
         throw new Error('Invalid password');
     }
     const token = jwt.sign(
-        { userId: user._id, email: user.EmailAddress },
-        process.env.jwt_secret,
+        { userId: user._id, email: user.EmailAddress, fullname: user.Fullname ,password: user.Password},
+        process.env.JWT_SECRET_KEY,
         { expiresIn: '1h' }
     );
 
