@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();
 const ProfileController = require('../Controllers/profileController');
 const authorization = require('../middleware/authorization');
-router.post('/create', async (req, res) => {
+router.post('/create',authorization, async (req, res) => {
   try {
     const profileData = req.body;
     console.log('Profile request body:', profileData);
 
-    const result = await ProfileController.create(profileData);
+    const result = await ProfileController.create(req);
 
     res.status(201).json({
       message: 'Profile created successfully',
@@ -23,8 +23,9 @@ router.post('/create', async (req, res) => {
 
 router.get('/list', authorization, async (req, res) => {
   try{
+    const email= req.email;
     console.log('List all profiles');
-    const result = await ProfileController.listAllProfiles();
+    const result = await ProfileController.listAllProfiles(email);
     res.status(200).json({
       message: 'Profiles fetched successfully',
       data: result
@@ -36,6 +37,8 @@ router.get('/list', authorization, async (req, res) => {
     });
   }
 })
+
+
 
 router.delete('/delete', async (req, res) => {
   try {
