@@ -19,7 +19,6 @@ try {
 }
 });
 
-
 router.post('/login', async (req, res) => {
 try {
     console.log('Login request body', req.body);
@@ -31,7 +30,7 @@ try {
         throw new Error('Token generation failed');
     }
     res.setHeader("token", `Bearer ${tokenResult.token}`);
- 
+
     res.status(200).json({
     message: 'Login successful',
     token: tokenResult.token,
