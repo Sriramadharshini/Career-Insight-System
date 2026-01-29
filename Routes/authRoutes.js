@@ -46,6 +46,22 @@ try {
 }
 });
 
+
+router.post('/logout',async (req, res) => {
+  try {
+    const result = await auth.logout(req.body);
+    res.status(200).json({
+        message:'logout successfully',
+        data:result
+    });
+  } catch (error) {
+    res.status(400).json({
+      error: error.message
+    });
+  }
+});
+
+
 module.exports = router;
 
 

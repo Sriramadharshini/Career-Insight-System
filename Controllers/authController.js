@@ -66,6 +66,20 @@ async login(loginData) {
     throw new Error(error.message);
     }
 }
+
+async logout(req){
+    try{
+        console.log('User Logged out');
+        return{
+        message:'Logout successfully'
+    };
+
+    }catch(error)
+    {
+        console.log('Logout error',error.message);
+        throw error;
+    }
+    }
 }
 module.exports = Authorization;
 

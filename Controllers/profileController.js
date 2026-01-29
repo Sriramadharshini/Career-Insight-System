@@ -49,9 +49,9 @@ async listAllProfiles(email) {
     }
   }
 
-  async deleteProfile(profileId) {
+  async delete(email) {
     try {
-      const result = await Profile.findByIdAndDelete(profileId);
+      const result = await Profile.findByIdAndDelete(email);
       console.log('Deleted profile:', result);
       return result;
     } catch (error) {
@@ -59,6 +59,5 @@ async listAllProfiles(email) {
       throw new Error('Failed to delete profile');
     }
   }
-
 }
 module.exports = new ProfileController();

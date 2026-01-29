@@ -40,12 +40,12 @@ router.get('/list', authorization, async (req, res) => {
 
 
 
-router.delete('/delete', async (req, res) => {
+router.post('/delete',authorization, async (req, res) => {
   try {
-    const { EmailAddress } = req.body;
-    console.log('Delete profile id:', EmailAddress);
+    const email= req.email;
+    console.log('Delete profile');
 
-    const result = await ProfileController.delete(EmailAddress);
+    const result = await ProfileController.delete(email);
 
     res.status(200).json({
       message: 'Profile deleted successfully',
@@ -58,4 +58,7 @@ router.delete('/delete', async (req, res) => {
     });
   }
 });
+
+
+
 module.exports = router;
