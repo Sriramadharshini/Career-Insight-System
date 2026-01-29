@@ -8,7 +8,7 @@ async function generatePrefToken(user) {
                 fullname: user.Fullname
             },
             process.env.JWT_SECRET_KEY,
-            { expiresIn: '2h' }
+            // { expiresIn: '2h' }
         );
         console.log('Token generated successfully:', token);
         return {
