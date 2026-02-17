@@ -34,10 +34,12 @@ async register(userData) {
     }).save();
 
     await Profile({
+        created_by: userData.EmailAddress,
+        personal_information: {
         Fullname: userData.Fullname,
         EmailAddress: userData.EmailAddress,
         PhoneNumber: userData.PhoneNumber
-    }).save();
+    }}).save();
 
     return result;
 

@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const profileRoutes = require('./Routes/profileRoutes');
 const authRoutes = require('./Routes/authRoutes');
+const skillGapRoutes = require('./Routes/skillGapRoutes');
 const morgan = require('morgan');
 const app = express();
 app.use(morgan('dev'));
@@ -11,6 +12,8 @@ app.use(cors());
 app.use(express.json());
 app.use('/profile',profileRoutes);
 app.use('/auth',authRoutes);
+app.use(express.urlencoded({extended:true}));
+app.use('/skill-gap',require('./Routes/skillGapRoutes'));
 app.get('/',(req,res)=>{
     res.send("API running");
     

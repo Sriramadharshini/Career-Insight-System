@@ -1,42 +1,58 @@
 const Profile = require('../Models/userprofile');
 const User = require('../Models/User');
+
+
 class ProfileController {
 
-async create(req){
-  try{
-    const emailFromToken = req.email;
-    const profileData = req.body;
-    
-    const user = await User.findOne({EmailAddress:emailFromToken});
-    
-    const mergedData = {
-      ...profileData,
-      EmailAddress : user.EmailAddress,
-      PhoneNumber :user.PhoneNumber,
-      Fullname :user.Fullname
-    };
+  async create(req) {
+    try {
+      const emailFromToken = req.email;
+      const profileData = req.body;
 
-    const result = await Profile.findOneAndUpdate(
-      {EmailAddress:emailFromToken},
-      {$set:mergedData},
-      {
-        new:true,
-        upsert:true,
-        runValidators:true
+      // ✅ First check user
+      const user = await User.findOne({ EmailAddress: emailFromToken });
+
+      if (!user) {
+        throw new Error('User not found');
       }
-      
-    );
-    if(!user){
-      throw new Error('User not found')
-    };
 
-    console.log("Profile Saved",result);
-    return result;
-  } catch(error){
-    console.error("Profile save error",error);
-    throw error;
+      const mergedData = {
+        created_by: emailFromToken,   // ✅ REQUIRED FIELD
+        career_level: profileData.career_level,
+
+        personal_information: {
+          ...profileData.personal_information,
+          Fullname: user.Fullname,
+          EmailAddress: user.EmailAddress,
+          PhoneNumber: user.PhoneNumber
+        },
+
+        skills: profileData.skills,
+        education: profileData.education,
+        experience: profileData.experience,
+        internships: profileData.internships,
+        projects: profileData.projects,
+        certifications: profileData.certifications
+      };
+
+      const result = await Profile.findOneAndUpdate(
+        { created_by: emailFromToken },  
+        { $set: mergedData },
+        {
+          new: true,
+          upsert: true,
+          runValidators: true
+        }
+      );
+
+      console.log("Profile Saved", result);
+      return result;
+
+    } catch (error) {
+      console.error("Profile save error", error);
+      throw error;
+    }
   }
-}
 
 async listAllProfiles(email) {
     try {
@@ -51,7 +67,7 @@ async listAllProfiles(email) {
 
   async delete(email) {
     try {
-      const result = await Profile.findByIdAndDelete(email);
+      const result = await Profile.findOneAndDelete({EmailAddress:email});
       console.log('Deleted profile:', result);
       return result;
     } catch (error) {
