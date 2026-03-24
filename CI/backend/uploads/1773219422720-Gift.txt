@@ -1,0 +1,86 @@
+A small gift from me (Bharani Chandar S 😇💖) 
+
+Day 1 : https://youtu.be/qvptKCLt4FQ
+
+Day 2 : https://youtu.be/inW1jPDUh6g
+
+Day 3 : https://youtu.be/kdM3lJm5f98
+
+
+Program 
+
+<!DOCTYPE html>
+<html>
+   <head>
+    <title>NammaPage</title>
+    <link rel="stylesheet" href="Nammaproject.css">
+    <style>
+        body{
+            background-color: yellow;
+        }
+        h1{
+            font-size: 100px;
+        }
+        img{
+            width: 98%;
+            height: 550px;
+            border: 20px black double ;
+            border-radius: 30px;
+           
+        }
+        #Main{
+            width: 18%;
+             transition: all 1s ease-in-out;
+        }
+        body:hover #Main{
+            width: 98%;
+        }
+        h2{
+            font-size: 50px;
+            text-align: center;
+        }
+        .Image1{
+             width: 22%;
+              height: 350px;
+              transition: all 0.5s ease-in-out;
+        }
+        .Image1:hover{
+            transform: scale(0.9);
+        }
+        .Image2{
+            width: 31%;
+            height: 300px;
+            transition: all 0.5s ease-in-out;
+        }
+        .Image2:hover{
+            transform: scale(0.9) rotate(5deg);
+        }
+        #Center2{
+            height: 350px;
+        }
+    </style>
+   </head>
+   <body>
+   <h1>F A S T R A C</h1>
+   
+   <img src="https://logodix.com/logo/2154028.gif" alt="Main Image" id="Main">
+    <h2>Men's Collections</h2>
+   <img src="https://www.fastrack.in/dw/image/v2/BKDD_PRD/on/demandware.static/-/Sites-titan-master-catalog/default/dw7699a5ab/images/Fastrack/Catalog/3287NM02_1.jpg?sw=800&sh=800" alt="Main Image" class="Image1">
+   <img src="https://www.fastrack.in/dw/image/v2/BKDD_PRD/on/demandware.static/-/Sites-titan-master-catalog/default/dw7b940fed/images/Fastrack/Catalog/3287KL01_1.jpg?sw=600&sh=600" alt="Main Image" class="Image1">
+   <img src="https://www.fastrack.in/dw/image/v2/BKDD_PRD/on/demandware.static/-/Sites-titan-master-catalog/default/dwfbc3253e/images/Fastrack/Catalog/3287QM04_2.jpg?sw=600&sh=600" alt="Main Image" class="Image1">
+   <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYWOmpFxw8acpmO6WwhIB3X73fkAI0wbJDxzy9fxewFh2dHNa6AEYFKbmExKwjO2UpT6s&usqp=CAU" alt="Main Image" class="Image1">
+    <h2>Women's Collections</h2>
+   <img src="https://m.media-amazon.com/images/S/aplus-media-library-service-media/d93e13cb-8006-4f42-9386-b749f4c2defd.__CR0,0,970,600_PT0_SX970_V1___.jpg" alt="Main Image" class="Image2">
+    <img src="https://www.fastrack.in/on/demandware.static/-/Sites-titan-master-catalog/default/dw969b4b68/images/promotions/fastrack/Vyb/FV60052_4.jpg" alt="Main Image" class="Image2" id="Center2">
+     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbs270WWHmXKpkrHmSlCsyA1Pjt9iErEh1x--2iAETBTO9nY17YBRJMA49EyTz1ibB9KU&usqp=CAU" alt="Main Image" class="Image2">
+
+     <h2>Kid's Collections</h2>
+      <img src="https://www.fastrack.in/on/demandware.static/-/Sites-titan-master-catalog/default/dw969b4b68/images/promotions/fastrack/Vyb/FV60052_4.jpg" alt="Main Image" class="Image2" id="Center2">
+     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbs270WWHmXKpkrHmSlCsyA1Pjt9iErEh1x--2iAETBTO9nY17YBRJMA49EyTz1ibB9KU&usqp=CAU" alt="Main Image" class="Image2">
+       <img src="https://www.fastrack.in/on/demandware.static/-/Sites-titan-master-catalog/default/dw969b4b68/images/promotions/fastrack/Vyb/FV60052_4.jpg" alt="Main Image" class="Image2" id="Center2">
+   <h2>shop@fastrac.com</h2>
+   </body> 
+</html>
+
+
+

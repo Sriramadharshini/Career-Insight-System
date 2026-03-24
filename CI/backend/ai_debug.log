@@ -1,0 +1,23 @@
+
+[2026-03-16T17:55:48.675Z] AI Error: Failed to analyze resume with AI.
+Stack: Error: Failed to analyze resume with AI.
+    at analyzeResumeWithAI (file:///D:/Dharshu/CI/backend/src/utils/aiAnalyzer.js:67:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async uploadResume (file:///D:/Dharshu/CI/backend/src/controllers/resumeController.js:13:22)
+
+[2026-03-22T14:52:39.863Z] AI Error: interviewQuestions is not defined
+Stack: ReferenceError: interviewQuestions is not defined
+    at analyzeResume (file:///D:/Dharshu/CI%20project/CI/backend/src/utils/atsScorer.js:449:5)
+    at uploadResume (file:///D:/Dharshu/CI%20project/CI/backend/src/controllers/resumeController.js:14:22)
+
+[2026-03-22T14:52:46.624Z] AI Error: interviewQuestions is not defined
+Stack: ReferenceError: interviewQuestions is not defined
+    at analyzeResume (file:///D:/Dharshu/CI%20project/CI/backend/src/utils/atsScorer.js:449:5)
+    at uploadResume (file:///D:/Dharshu/CI%20project/CI/backend/src/controllers/resumeController.js:14:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+[2026-03-22T14:53:08.788Z] AI Error: interviewQuestions is not defined
+Stack: ReferenceError: interviewQuestions is not defined
+    at analyzeResume (file:///D:/Dharshu/CI%20project/CI/backend/src/utils/atsScorer.js:449:5)
+    at uploadResume (file:///D:/Dharshu/CI%20project/CI/backend/src/controllers/resumeController.js:14:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
