@@ -15,7 +15,7 @@ const TagList = ({ items, color }) => {
         <span key={i} style={{
           background: `${color}18`, border: `1px solid ${color}40`,
           color: color, borderRadius: "20px", padding: "0.2rem 0.65rem",
-          fontSize: "0.75rem", fontWeight: 500
+          fontSize: "0.85rem", fontWeight: 500
         }}>{tag}</span>
       ))}
     </div>
@@ -27,28 +27,31 @@ const ModernTemplate = ({ profile }) => {
   const p = profile.personalInfo || {};
   const e = profile.education || {};
   const s = profile.skills || {};
+  const headingStyle = { fontSize: "16px", margin: "0 0 0.5rem", fontWeight: "bold", color: "#000000", lineHeight: 1.1 };
+  const subTextStyle = { fontSize: "14px", color: "#333333", margin: "0 0 1rem" };
+  const bodyStyle = { fontSize: "14px", color: "#111111", lineHeight: 1.6, margin: "0.25rem 0" };
+  const h3Style = { margin: "0 0 0.5rem", fontSize: "18px", textTransform: "uppercase", color: "#000000", borderBottom: "2px solid #000", paddingBottom: "0.4rem", fontWeight: "bold" };
   const secStyle = { marginBottom: "1.5rem" };
-  const h3Style = { margin: "0 0 0.75rem", fontSize: "0.80rem", textTransform: "uppercase", letterSpacing: "0.12em", color: "#000000", borderBottom: "2px solid #e5e7eb", paddingBottom: "0.4rem", fontWeight: 700 };
 
   return (
-    <div className="resume-a4" style={{ fontFamily: "'Inter', Arial, sans-serif", color: "#1e293b", background: "#ffffff" }}>
+    <div className="resume-a4" style={{ fontFamily: "'Times New Roman', Times, serif", color: "#111", background: "#ffffff", textAlign: "left" }}>
       {/* Header */}
-      <div style={{ background: "#000000", color: "#ffffff", padding: "2.5rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div style={{ borderBottom: "3px solid #000", padding: "2.5rem 2.5rem 1.5rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
           {p.profilePhoto && (
-            <div style={{ width: "80px", height: "80px", borderRadius: "50%", overflow: "hidden", border: "2px solid rgba(255,255,255,0.2)" }}>
+            <div style={{ width: "96px", height: "96px", borderRadius: "50%", overflow: "hidden", border: "3px solid #000" }}>
               <img src={p.profilePhoto} alt="Profile" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             </div>
           )}
           <div>
-            <h1 style={{ margin: "0 0 0.25rem", fontSize: "2rem", fontWeight: 700, letterSpacing: "-0.5px" }}>{p.fullName?.toUpperCase() || "YOUR NAME"}</h1>
-            <p style={{ margin: 0, fontSize: "1rem", color: "#e2e8f0", fontWeight: 500 }}>{profile.preferredRole}</p>
+            <h1 style={{ margin: "0", fontSize: "32px", fontWeight: "bold" }}>{p.fullName || "YOUR NAME"}</h1>
+            {profile.preferredRole && <p style={{ fontSize: "18px", color: "#333", margin: "0.3rem 0 0", fontWeight: "bold" }}>{profile.preferredRole}</p>}
           </div>
         </div>
-        <div style={{ textAlign: "right", fontSize: "0.8rem", color: "#cbd5e1", lineHeight: "1.6" }}>
-          {p.email && <div>{p.email}</div>}
-          {p.phone && <div>{p.phone}</div>}
-          {p.location && <div>{p.location}</div>}
+        <div style={{ textAlign: "right", fontSize: "14px", color: "#333", lineHeight: 1.6 }}>
+          {p.email && <div style={{ marginBottom: "2px" }}>{p.email}</div>}
+          {p.phone && <div style={{ marginBottom: "2px" }}>{p.phone}</div>}
+          {p.location && <div style={{ marginBottom: "2px" }}>{p.location}</div>}
         </div>
       </div>
 
@@ -58,31 +61,31 @@ const ModernTemplate = ({ profile }) => {
         <div style={{ background: "#f8fafc", borderRight: "1px solid #e2e8f0", padding: "1.5rem" }}>
           <div style={secStyle}>
             <h3 style={h3Style}>SKILLS</h3>
-            {s.technicalSkills && <><p style={{ margin: "0 0 0.3rem", fontSize: "0.73rem", color: "#4b5563", fontWeight: 600 }}>Technical</p><TagList items={s.technicalSkills} color="#000000" /></>}
-            {s.softSkills && <><p style={{ margin: "0.75rem 0 0.3rem", fontSize: "0.73rem", color: "#4b5563", fontWeight: 600 }}>Soft Skills</p><TagList items={s.softSkills} color="#000000" /></>}
-            {s.tools && <><p style={{ margin: "0.75rem 0 0.3rem", fontSize: "0.73rem", color: "#4b5563", fontWeight: 600 }}>Tools</p><TagList items={s.tools} color="#000000" /></>}
+            {s.technicalSkills && <><p style={{ margin: "0 0 0.3rem", fontSize: "14px", color: "#000", fontWeight: "bold" }}>Technical</p><TagList items={s.technicalSkills} color="#000000" /></>}
+            {s.softSkills && <><p style={{ margin: "0.75rem 0 0.3rem", fontSize: "14px", color: "#000", fontWeight: "bold" }}>Soft Skills</p><TagList items={s.softSkills} color="#000000" /></>}
+            {s.tools && <><p style={{ margin: "0.75rem 0 0.3rem", fontSize: "14px", color: "#000", fontWeight: "bold" }}>Tools</p><TagList items={s.tools} color="#000000" /></>}
           </div>
           <div style={secStyle}>
             <h3 style={h3Style}>EDUCATION</h3>
-            {e.university && <><p style={{ margin: 0, fontWeight: 600, fontSize: "0.85rem", color: "#1e293b" }}>{e.university}</p>
-            <p style={{ margin: "0.15rem 0", fontSize: "0.8rem", color: "#475569" }}>{e.degree}{e.fieldOfStudy && ` – ${e.fieldOfStudy}`}</p>
-            <p style={{ margin: 0, fontSize: "0.75rem", color: "#64748b" }}>{[e.startYear, e.endYear || e.graduationYear].filter(Boolean).join(" – ")}{e.cgpa && ` | CGPA: ${e.cgpa}`}</p></>}
+            {e.university && <><p style={{ margin: 0, fontWeight: "bold", fontSize: "14px", color: "#000" }}>{e.university}</p>
+            <p style={{ margin: "0.15rem 0", fontSize: "14px", color: "#333" }}>{e.degree}{e.fieldOfStudy && ` – ${e.fieldOfStudy}`}</p>
+            <p style={{ margin: 0, fontSize: "13px", color: "#555" }}>{[e.startYear, e.endYear || e.graduationYear].filter(Boolean).join(" – ")}{e.cgpa && ` | CGPA: ${e.cgpa}`}</p></>}
           </div>
           {(profile.certifications || []).filter(c => c.name).length > 0 && (
             <div style={secStyle}>
               <h3 style={h3Style}>CERTIFICATIONS</h3>
               {(profile.certifications || []).filter(c => c.name).map((c, i) => (
                 <div key={i} style={{ marginBottom: "0.5rem" }}>
-                  <p style={{ margin: 0, fontWeight: 600, fontSize: "0.82rem", color: "#1e293b" }}>{c.name}</p>
-                  {(c.issueMonth || c.issueYear) && <p style={{ margin: 0, fontSize: "0.75rem", color: "#64748b" }}>{c.issueMonth} {c.issueYear}</p>}
+                  <p style={{ margin: 0, fontWeight: "bold", fontSize: "14px", color: "#000" }}>{c.name}</p>
+                  {(c.issueMonth || c.issueYear) && <p style={{ margin: 0, fontSize: "13px", color: "#555" }}>{c.issueMonth} {c.issueYear}</p>}
                 </div>
               ))}
             </div>
           )}
-          {profile.personalInfo?.languages && (
+          {p.languages && (
             <div style={secStyle}>
               <h3 style={h3Style}>LANGUAGES</h3>
-              <TagList items={profile.personalInfo.languages} color="#1e293b" />
+              <TagList items={p.languages} color="#000" />
             </div>
           )}
         </div>
@@ -92,20 +95,20 @@ const ModernTemplate = ({ profile }) => {
           {profile.professionalSummary && (
             <div style={secStyle}>
               <h3 style={h3Style}>PROFESSIONAL SUMMARY</h3>
-              <p style={{ margin: 0, fontSize: "0.87rem", lineHeight: 1.7, color: "#334155" }}>{profile.professionalSummary}</p>
+              <p style={{ margin: 0, fontSize: "14px", lineHeight: 1.7, color: "#111", textAlign: "justify" }}>{profile.professionalSummary}</p>
             </div>
           )}
           {(profile.internships || []).filter(x => x.company).length > 0 && (
             <div style={secStyle}>
               <h3 style={h3Style}>EXPERIENCE</h3>
               {(profile.internships || []).filter(x => x.company).map((item, i) => (
-                <div key={i} style={{ marginBottom: "1rem", paddingLeft: "0.75rem", borderLeft: "2px solid #e5e7eb" }}>
+                <div key={i} style={{ marginBottom: "1rem" }}>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <strong style={{ fontSize: "0.9rem", color: "#1e293b" }}>{item.role}</strong>
-                    <span style={{ fontSize: "0.78rem", color: "#64748b" }}>{item.duration}</span>
+                    <strong style={{ fontSize: "16px", color: "#000" }}>{item.role}</strong>
+                    <span style={{ fontSize: "13px", color: "#555" }}>{item.duration}</span>
                   </div>
-                  <p style={{ margin: "0.1rem 0", fontSize: "0.82rem", color: "#000000", fontWeight: 600 }}>{item.company}{item.location && <span style={{ fontWeight: 400, color: "#64748b", marginLeft: "0.4rem" }}>· {item.location}</span>}</p>
-                  {item.technologiesUsed && <p style={{ margin: "0.25rem 0 0", fontSize: "0.78rem", color: "#64748b" }}>Tech: {item.technologiesUsed}</p>}
+                  <p style={{ margin: "0.1rem 0", fontSize: "14px", color: "#222", fontWeight: "bold" }}>{item.company}{item.location && <span style={{ fontWeight: "normal", color: "#555", marginLeft: "0.4rem" }}>· {item.location}</span>}</p>
+                  {item.technologiesUsed && <p style={{ margin: "0.25rem 0 0", fontSize: "13px", color: "#444" }}>Tech: {item.technologiesUsed}</p>}
                 </div>
               ))}
             </div>
@@ -114,14 +117,13 @@ const ModernTemplate = ({ profile }) => {
             <div style={secStyle}>
               <h3 style={h3Style}>PROJECTS</h3>
               {(profile.projects || []).filter(x => x.title).map((item, i) => (
-                <div key={i} style={{ marginBottom: "1rem", paddingLeft: "0.75rem", borderLeft: "2px solid #e5e7eb" }}>
+                <div key={i} style={{ marginBottom: "1rem" }}>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <strong style={{ fontSize: "0.9rem", color: "#1e293b" }}>{item.title}</strong>
-                    <span style={{ fontSize: "0.78rem", color: "#64748b" }}>{item.duration}</span>
+                    <strong style={{ fontSize: "16px", color: "#000" }}>{item.title}</strong>
+                    <span style={{ fontSize: "13px", color: "#555" }}>{item.duration}</span>
                   </div>
-                  {item.domain && <p style={{ margin: "0.1rem 0", fontSize: "0.78rem", color: "#111827", fontWeight: 600 }}>{item.domain}</p>}
-                  {item.description && <p style={{ margin: "0.25rem 0 0", fontSize: "0.8rem", color: "#475569", lineHeight: 1.5 }}>{item.description}</p>}
-                  {item.technologiesUsed && <TagList items={item.technologiesUsed} color="#000000" />}
+                  {item.domain && <p style={{ margin: "0.1rem 0", fontSize: "13px", color: "#222", fontWeight: "bold" }}>{item.domain}</p>}
+                  {item.description && <p style={{ margin: "0.25rem 0 0", fontSize: "14px", color: "#111", lineHeight: 1.5, textAlign: "justify" }}>{item.description}</p>}
                 </div>
               ))}
             </div>
@@ -131,7 +133,7 @@ const ModernTemplate = ({ profile }) => {
               <h3 style={h3Style}>ACHIEVEMENTS</h3>
               {(typeof profile.achievements === "string" ? profile.achievements : profile.achievements.join("\n"))
                 .split("\n").filter(Boolean).map((a, i) => (
-                  <p key={i} style={{ margin: "0.3rem 0", fontSize: "0.85rem", color: "#334155" }}>• {a.replace(/^[•\-]\s*/, "")}</p>
+                  <p key={i} style={{ margin: "0.3rem 0", fontSize: "14px", color: "#111" }}>• {a.replace(/^[•\-]\s*/, "")}</p>
                 ))}
             </div>
           )}
@@ -147,10 +149,10 @@ const ProfessionalTemplate = ({ profile }) => {
   const e = profile.education || {};
   const s = profile.skills || {};
   const accent = "#000000"; // Professional Black
-  const h3Style = { margin: "0 0 0.75rem", fontSize: "0.85rem", textTransform: "uppercase", letterSpacing: "0.1em", color: accent, fontWeight: 800, paddingBottom: "0.4rem", borderBottom: `2px solid #e5e7eb` };
+  const h3Style = { margin: "0 0 0.5rem", fontSize: "18px", textTransform: "uppercase", color: accent, fontWeight: "bold", paddingBottom: "0.4rem", borderBottom: "2px solid #ccc" };
 
   return (
-    <div className="resume-a4" style={{ fontFamily: "'Inter', Arial, sans-serif", color: "#333", background: "#ffffff", minHeight: "297mm", position: "relative" }}>
+    <div className="resume-a4" style={{ fontFamily: "'Times New Roman', Times, serif", color: "#000", background: "#ffffff", minHeight: "297mm", position: "relative", textAlign: "left" }}>
       <div style={{ padding: "3rem 3rem 1.5rem", borderBottom: "2px solid #e2e8f0", marginBottom: "2rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
           {p.profilePhoto && (
@@ -159,13 +161,15 @@ const ProfessionalTemplate = ({ profile }) => {
             </div>
           )}
           <div>
-            <h1 style={{ margin: "0 0 0.2rem", fontSize: "2.5rem", fontWeight: 800, color: "#1e293b", textTransform: "uppercase", letterSpacing: "-0.5px" }}>{p.fullName?.toUpperCase() || "YOUR NAME"}</h1>
-            <p style={{ margin: "0.5rem 0", fontSize: "1.05rem", color: accent, fontWeight: 600 }}>
-              {profile.preferredRole}
-            </p>
+            <h1 style={{ margin: "0 0 0.2rem", fontSize: "32px", fontWeight: "bold", color: "#000", textTransform: "uppercase" }}>{p.fullName || "YOUR NAME"}</h1>
+            {profile.preferredRole && (
+              <p style={{ margin: "0.5rem 0", fontSize: "18px", color: accent, fontWeight: "bold" }}>
+                {profile.preferredRole}
+              </p>
+            )}
           </div>
         </div>
-        <div style={{ textAlign: "right", fontSize: "0.85rem", color: "#475569", lineHeight: "1.6" }}>
+        <div style={{ textAlign: "right", fontSize: "14px", color: "#333", lineHeight: "1.6" }}>
           {p.phone && <div>{p.phone}</div>}
           {p.email && <div>{p.email}</div>}
           {p.location && <div>{p.location}</div>}
@@ -178,7 +182,7 @@ const ProfessionalTemplate = ({ profile }) => {
             {profile.professionalSummary && (
               <div style={{ marginBottom: "2rem" }}>
                 <h3 style={h3Style}>SUMMARY</h3>
-                <p style={{ margin: 0, fontSize: "0.9rem", lineHeight: 1.8, color: "#475569" }}>{profile.professionalSummary}</p>
+                <p style={{ margin: 0, fontSize: "14px", lineHeight: 1.8, color: "#111", textAlign: "justify" }}>{profile.professionalSummary}</p>
               </div>
             )}
             {(profile.internships || []).filter(x => x.company).length > 0 && (
@@ -187,11 +191,11 @@ const ProfessionalTemplate = ({ profile }) => {
                 {(profile.internships || []).filter(x => x.company).map((item, i) => (
                   <div key={i} style={{ marginBottom: "1.2rem" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-                      <strong style={{ fontSize: "0.95rem", color: "#1e293b" }}>{item.role}</strong>
-                      <span style={{ fontSize: "0.8rem", color: "#64748b", fontWeight: 500 }}>{item.duration}</span>
+                      <strong style={{ fontSize: "16px", color: "#000", fontWeight: "bold" }}>{item.role}</strong>
+                      <span style={{ fontSize: "13px", color: "#555" }}>{item.duration}</span>
                     </div>
-                    <p style={{ margin: "0.2rem 0", fontSize: "0.85rem", color: accent, fontWeight: 600 }}>{item.company} {item.location && `· ${item.location}`}</p>
-                    {item.technologiesUsed && <p style={{ margin: "0.3rem 0 0", fontSize: "0.8rem", color: "#475569" }}>Tech: {item.technologiesUsed}</p>}
+                    <p style={{ margin: "0.2rem 0", fontSize: "14px", color: accent, fontWeight: "bold" }}>{item.company} {item.location && `· ${item.location}`}</p>
+                    {item.technologiesUsed && <p style={{ margin: "0.3rem 0 0", fontSize: "13px", color: "#444" }}>Tech: {item.technologiesUsed}</p>}
                   </div>
                 ))}
               </div>
@@ -201,9 +205,8 @@ const ProfessionalTemplate = ({ profile }) => {
                 <h3 style={h3Style}>PROJECTS</h3>
                 {profile.projects.filter(x => x.title).map((item, i) => (
                   <div key={i} style={{ marginBottom: "1.2rem" }}>
-                    <strong style={{ fontSize: "0.95rem", color: "#1e293b", display: "block" }}>{item.title}</strong>
-                    <p style={{ margin: "0.25rem 0", fontSize: "0.85rem", color: "#475569" }}>{item.description}</p>
-                    {item.technologiesUsed && <TagList items={item.technologiesUsed} color={accent} />}
+                    <strong style={{ fontSize: "16px", color: "#000", fontWeight: "bold", display: "block" }}>{item.title}</strong>
+                    <p style={{ margin: "0.25rem 0", fontSize: "14px", color: "#111", lineHeight: 1.5, textAlign: "justify" }}>{item.description}</p>
                   </div>
                 ))}
               </div>
@@ -217,10 +220,10 @@ const ProfessionalTemplate = ({ profile }) => {
             <div style={{ marginBottom: "2rem" }}>
               <h3 style={h3Style}>EDUCATION</h3>
               {e.university && (
-                <div style={{ fontSize: "0.85rem", color: "#475569" }}>
-                  <strong style={{ color: "#1e293b", fontSize: "0.9rem" }}>{e.degree}</strong><br />
-                  <span style={{ color: accent, fontWeight: 500 }}>{e.university}</span><br />
-                  {[e.startYear, e.endYear || e.graduationYear].filter(Boolean).join(" – ")}
+                <div style={{ fontSize: "14px", color: "#333" }}>
+                  <strong style={{ color: "#000", fontSize: "16px", fontWeight: "bold" }}>{e.degree}</strong><br />
+                  <span style={{ color: accent, fontWeight: "bold" }}>{e.university}</span><br />
+                  <span style={{ fontSize: "13px", color: "#555" }}>{[e.startYear, e.endYear || e.graduationYear].filter(Boolean).join(" – ")}</span>
                 </div>
               )}
             </div>
@@ -229,8 +232,8 @@ const ProfessionalTemplate = ({ profile }) => {
                 <h3 style={h3Style}>CERTIFICATIONS</h3>
                 {profile.certifications.filter(c => c.name).map((c, i) => (
                     <div key={i} style={{ marginBottom: "0.75rem" }}>
-                      <p style={{ margin: 0, fontWeight: 600, fontSize: "0.85rem", color: "#1e293b" }}>{c.name}</p>
-                      <p style={{ margin: 0, fontSize: "0.8rem", color: "#64748b" }}>{c.issueMonth} {c.issueYear}</p>
+                      <p style={{ margin: 0, fontWeight: "bold", fontSize: "14px", color: "#000" }}>{c.name}</p>
+                      <p style={{ margin: 0, fontSize: "13px", color: "#555" }}>{c.issueMonth} {c.issueYear}</p>
                     </div>
                 ))}
               </div>
@@ -248,10 +251,10 @@ const CreativeTemplate = ({ profile }) => {
   const e = profile.education || {};
   const s = profile.skills || {};
   const accent = "#000000"; // Black Accent
-  const textDark = "#1e293b"; // Dark text for white background
+  const textDark = "#111111"; // Dark text for white background
 
   return (
-    <div className="resume-a4" style={{ fontFamily: "'Inter', Arial, sans-serif", color: textDark, background: "#ffffff", minHeight: "297mm", display: "flex", borderLeft: `12px solid ${accent}` }}>
+    <div className="resume-a4" style={{ fontFamily: "'Times New Roman', Times, serif", color: textDark, background: "#ffffff", minHeight: "297mm", display: "flex", borderLeft: `8px solid ${accent}`, textAlign: "left" }}>
       {/* Sidebar - Creative Style */}
       <div style={{ width: "32%", background: "#f8fafc", padding: "2.5rem 2rem", borderRight: "1px solid #e2e8f0" }}>
         {p.profilePhoto ? (
@@ -264,22 +267,22 @@ const CreativeTemplate = ({ profile }) => {
           </div>
         )}
         <div style={{ marginBottom: "2.5rem" }}>
-          <h3 style={{ fontSize: "0.85rem", color: accent, fontWeight: 800, textTransform: "uppercase", letterSpacing: "2px", marginBottom: "1rem" }}>CONTACT</h3>
-          <p style={{ margin: "0.5rem 0", fontSize: "0.85rem", color: "#475569" }}>{p.location}</p>
-          <p style={{ margin: "0.5rem 0", fontSize: "0.85rem", color: "#475569" }}>{p.phone}</p>
-          <p style={{ margin: "0.5rem 0", fontSize: "0.85rem", color: "#475569" }}>{p.email}</p>
+          <h3 style={{ fontSize: "18px", color: accent, fontWeight: "bold", textTransform: "uppercase", borderBottom: "2px solid #ccc", paddingBottom: "0.4rem", marginBottom: "1rem" }}>CONTACT</h3>
+          {p.location && <p style={{ margin: "0.5rem 0", fontSize: "14px", color: "#111" }}>{p.location}</p>}
+          {p.phone && <p style={{ margin: "0.5rem 0", fontSize: "14px", color: "#111" }}>{p.phone}</p>}
+          {p.email && <p style={{ margin: "0.5rem 0", fontSize: "14px", color: "#111" }}>{p.email}</p>}
         </div>
         <div style={{ marginBottom: "2.5rem" }}>
-          <h3 style={{ fontSize: "0.85rem", color: accent, fontWeight: 800, textTransform: "uppercase", letterSpacing: "2px", marginBottom: "1rem" }}>SKILLS</h3>
+          <h3 style={{ fontSize: "18px", color: accent, fontWeight: "bold", textTransform: "uppercase", borderBottom: "2px solid #ccc", paddingBottom: "0.4rem", marginBottom: "1rem" }}>SKILLS</h3>
           {s.technicalSkills && <TagList items={s.technicalSkills} color={accent} />}
         </div>
         <div>
-          <h3 style={{ fontSize: "0.85rem", color: accent, fontWeight: 800, textTransform: "uppercase", letterSpacing: "2px", marginBottom: "1rem" }}>EDUCATION</h3>
+          <h3 style={{ fontSize: "18px", color: accent, fontWeight: "bold", textTransform: "uppercase", borderBottom: "2px solid #ccc", paddingBottom: "0.4rem", marginBottom: "1rem" }}>EDUCATION</h3>
           {e.university && (
-            <div style={{ fontSize: "0.82rem", color: "#64748b", lineHeight: 1.5 }}>
-              <strong style={{ color: "#1e293b", fontSize: "0.9rem" }}>{e.degree}</strong><br />
+            <div style={{ fontSize: "14px", color: "#333", lineHeight: 1.5 }}>
+              <strong style={{ color: "#000", fontSize: "16px", fontWeight: "bold" }}>{e.degree}</strong><br />
               {e.university}<br />
-              {e.graduationYear || e.endYear}
+              <span style={{ fontSize: "13px", color: "#555" }}>{e.graduationYear || e.endYear}</span>
             </div>
           )}
         </div>
@@ -287,46 +290,46 @@ const CreativeTemplate = ({ profile }) => {
       {/* Main Content */}
       <div style={{ flex: 1, padding: "3rem" }}>
         <div style={{ marginBottom: "3rem" }}>
-          <h1 style={{ margin: 0, fontSize: "3.2rem", fontWeight: 900, color: "#0f172a", letterSpacing: "-1px", lineHeight: 1.1 }}>{p.fullName?.toUpperCase() || "YOUR NAME"}</h1>
-          <p style={{ margin: "0.5rem 0", fontSize: "1.2rem", color: accent, fontWeight: 700, letterSpacing: "1px" }}>{profile.preferredRole}</p>
+          <h1 style={{ margin: 0, fontSize: "32px", fontWeight: "bold", color: "#000" }}>{p.fullName || "YOUR NAME"}</h1>
+          <p style={{ margin: "0.5rem 0", fontSize: "18px", color: accent, fontWeight: "bold" }}>{profile.preferredRole}</p>
         </div>
         {profile.professionalSummary && (
           <div style={{ marginBottom: "2.5rem" }}>
-            <h3 style={{ fontSize: "1rem", color: "#0f172a", fontWeight: 800, borderBottom: `3px solid ${accent}`, display: "inline-block", paddingBottom: "0.2rem", marginBottom: "1.2rem" }}>ABOUT ME</h3>
-            <p style={{ margin: 0, fontSize: "0.92rem", lineHeight: 1.8, color: "#475569" }}>{profile.professionalSummary}</p>
+            <h3 style={{ fontSize: "18px", color: "#000", fontWeight: "bold", borderBottom: `2px solid ${accent}`, display: "inline-block", paddingBottom: "0.2rem", marginBottom: "1.2rem", textTransform: "uppercase" }}>ABOUT ME</h3>
+            <p style={{ margin: 0, fontSize: "14px", lineHeight: 1.8, color: "#111" }}>{profile.professionalSummary}</p>
           </div>
         )}
         {(profile.internships || []).filter(x => x.company).length > 0 && (
           <div style={{ marginBottom: "2.5rem" }}>
-            <h3 style={{ fontSize: "1rem", color: "#0f172a", fontWeight: 800, borderBottom: `3px solid ${accent}`, display: "inline-block", paddingBottom: "0.2rem", marginBottom: "1.2rem" }}>EXPERIENCE</h3>
+            <h3 style={{ fontSize: "18px", color: "#000", fontWeight: "bold", borderBottom: `2px solid ${accent}`, display: "inline-block", paddingBottom: "0.2rem", marginBottom: "1.2rem", textTransform: "uppercase" }}>EXPERIENCE</h3>
             {profile.internships.filter(x => x.company).map((item, i) => (
               <div key={i} style={{ marginBottom: "1.5rem" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-                  <strong style={{ fontSize: "1.05rem", color: "#0f172a" }}>{item.role} @ {item.company}</strong>
-                  <span style={{ fontSize: "0.8rem", color: accent, fontWeight: 700 }}>{item.duration}</span>
+                  <strong style={{ fontSize: "16px", color: "#000" }}>{item.role} @ {item.company}</strong>
+                  <span style={{ fontSize: "13px", color: accent, fontWeight: "bold" }}>{item.duration}</span>
                 </div>
-                {item.technologiesUsed && <p style={{ fontSize: "0.85rem", color: "#64748b", margin: "0.3rem 0" }}>{item.technologiesUsed}</p>}
+                {item.technologiesUsed && <p style={{ fontSize: "13px", color: "#444", margin: "0.3rem 0" }}>{item.technologiesUsed}</p>}
               </div>
             ))}
           </div>
         )}
         {(profile.projects || []).filter(x => x.title).length > 0 && (
           <div style={{ marginBottom: "2.5rem" }}>
-            <h3 style={{ fontSize: "1rem", color: "#0f172a", fontWeight: 800, borderBottom: `3px solid ${accent}`, display: "inline-block", paddingBottom: "0.2rem", marginBottom: "1.2rem" }}>PROJECTS</h3>
+            <h3 style={{ fontSize: "18px", color: "#000", fontWeight: "bold", borderBottom: `2px solid ${accent}`, display: "inline-block", paddingBottom: "0.2rem", marginBottom: "1.2rem", textTransform: "uppercase" }}>PROJECTS</h3>
             {profile.projects.filter(x => x.title).map((item, i) => (
               <div key={i} style={{ marginBottom: "1.2rem" }}>
-                <strong style={{ fontSize: "1.05rem", color: "#0f172a", display: "block" }}>{item.title}</strong>
-                <p style={{ margin: "0.25rem 0", fontSize: "0.9rem", color: "#475569", lineHeight: 1.6 }}>{item.description}</p>
+                <strong style={{ fontSize: "16px", color: "#000", display: "block", fontWeight: "bold" }}>{item.title}</strong>
+                <p style={{ margin: "0.25rem 0", fontSize: "14px", color: "#111", lineHeight: 1.6, textAlign: "justify" }}>{item.description}</p>
               </div>
             ))}
           </div>
         )}
         {profile.achievements && (
           <div style={{ marginBottom: "2.5rem" }}>
-            <h3 style={{ fontSize: "1rem", color: "#0f172a", fontWeight: 800, borderBottom: `3px solid ${accent}`, display: "inline-block", paddingBottom: "0.2rem", marginBottom: "1.2rem" }}>ACHIEVEMENTS</h3>
+            <h3 style={{ fontSize: "18px", color: "#000", fontWeight: "bold", borderBottom: `2px solid ${accent}`, display: "inline-block", paddingBottom: "0.2rem", marginBottom: "1.2rem", textTransform: "uppercase" }}>ACHIEVEMENTS</h3>
             {(typeof profile.achievements === "string" ? profile.achievements : profile.achievements.join("\n"))
               .split("\n").filter(Boolean).map((a, i) => (
-                <p key={i} style={{ margin: "0.4rem 0", fontSize: "0.9rem", color: "#475569" }}>• {a.replace(/^[•\-]\s*/, "")}</p>
+                <p key={i} style={{ margin: "0.4rem 0", fontSize: "14px", color: "#111" }}>• {a.replace(/^[•\-]\s*/, "")}</p>
               ))}
           </div>
         )}
@@ -341,19 +344,19 @@ const SimpleTemplate = ({ profile }) => {
   const e = profile.education || {};
   const s = profile.skills || {};
   const accent = "#000000"; // Minimal Black
-  const h3Style = { margin: "1.5rem 0 0.75rem", fontSize: "0.85rem", textTransform: "uppercase", letterSpacing: "1.5px", color: accent, fontWeight: 800, borderBottom: `2px solid #e5e7eb`, paddingBottom: "0.3rem" };
+  const h3Style = { margin: "1.5rem 0 0.5rem", fontSize: "18px", textTransform: "uppercase", color: accent, fontWeight: "bold", borderBottom: `2px solid #ccc`, paddingBottom: "0.3rem" };
 
   return (
-    <div className="resume-a4" style={{ fontFamily: "'Inter', Arial, sans-serif", color: "#334155", background: "#ffffff", minHeight: "297mm", borderTop: `10px solid ${accent}` }}>
+    <div className="resume-a4" style={{ fontFamily: "'Times New Roman', Times, serif", color: "#111", background: "#ffffff", minHeight: "297mm", borderTop: `10px solid ${accent}`, textAlign: "left" }}>
       <div style={{ padding: "3rem 3rem 2rem", textAlign: "center", borderBottom: "1px solid #e2e8f0" }}>
         {p.profilePhoto && (
             <div style={{ width: "90px", height: "90px", borderRadius: "50%", overflow: "hidden", margin: "0 auto 1.5rem", border: `2px solid ${accent}` }}>
               <img src={p.profilePhoto} alt="Profile" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             </div>
         )}
-        <h1 style={{ margin: "0 0 0.5rem", fontSize: "2.4rem", fontWeight: 800, color: "#0f172a", letterSpacing: "1px" }}>{p.fullName?.toUpperCase() || "YOUR NAME"}</h1>
-        <p style={{ fontSize: "1.1rem", color: accent, fontWeight: 600, marginBottom: "1rem" }}>{profile.preferredRole}</p>
-        <div style={{ display: "flex", justifyContent: "center", gap: "1.5rem", flexWrap: "wrap", color: "#64748b", fontSize: "0.85rem" }}>
+        <h1 style={{ margin: "0 0 0.5rem", fontSize: "32px", fontWeight: "bold", color: "#000" }}>{p.fullName || "YOUR NAME"}</h1>
+        <p style={{ fontSize: "18px", color: accent, fontWeight: "bold", marginBottom: "1rem" }}>{profile.preferredRole}</p>
+        <div style={{ display: "flex", justifyContent: "center", gap: "1.5rem", flexWrap: "wrap", color: "#333", fontSize: "14px" }}>
           {p.email && <span>{p.email}</span>}
           {p.phone && <span>{p.phone}</span>}
           {p.location && <span>{p.location}</span>}
@@ -363,47 +366,47 @@ const SimpleTemplate = ({ profile }) => {
       <div style={{ padding: "1rem 3.5rem 3rem" }}>
         {profile.professionalSummary && (
           <div style={{ marginBottom: "2rem" }}>
-            <h3 style={h3Style}>Professional Summary</h3>
-            <p style={{ fontSize: "0.95rem", lineHeight: 1.8, color: "#475569" }}>{profile.professionalSummary}</p>
+            <h3 style={h3Style}>PROFESSIONAL SUMMARY</h3>
+            <p style={{ fontSize: "14px", lineHeight: 1.8, color: "#111", margin: 0, textAlign: "justify" }}>{profile.professionalSummary}</p>
           </div>
         )}
         <div style={{ display: "grid", gridTemplateColumns: "2fr 1.2fr", gap: "3rem" }}>
           <div>
             {(profile.internships || []).filter(x => x.company).length > 0 && (
               <div style={{ marginBottom: "2rem" }}>
-                <h3 style={h3Style}>Experience</h3>
+                <h3 style={h3Style}>EXPERIENCE</h3>
                 {profile.internships.filter(x => x.company).map((item, i) => (
                   <div key={i} style={{ marginBottom: "1.5rem" }}>
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
-                      <strong style={{ fontSize: "0.95rem", color: "#0f172a" }}>{item.role} @ {item.company}</strong>
-                      <span style={{ fontSize: "0.8rem", color: "#64748b" }}>{item.duration}</span>
+                      <strong style={{ fontSize: "16px", color: "#000", fontWeight: "bold" }}>{item.role} @ {item.company}</strong>
+                      <span style={{ fontSize: "13px", color: "#555" }}>{item.duration}</span>
                     </div>
-                    {item.technologiesUsed && <p style={{ fontSize: "0.85rem", color: "#64748b", marginTop: "0.25rem" }}>{item.technologiesUsed}</p>}
+                    {item.technologiesUsed && <p style={{ fontSize: "13px", color: "#444", marginTop: "0.25rem" }}>{item.technologiesUsed}</p>}
                   </div>
                 ))}
               </div>
             )}
             {(profile.projects || []).filter(x => x.title).length > 0 && (
               <div style={{ marginBottom: "2rem" }}>
-                <h3 style={h3Style}>Projects</h3>
+                <h3 style={h3Style}>PROJECTS</h3>
                 {profile.projects.filter(x => x.title).map((item, i) => (
                   <div key={i} style={{ marginBottom: "1.25rem" }}>
-                    <strong style={{ color: "#0f172a" }}>{item.title}</strong>
-                    <p style={{ fontSize: "0.85rem", color: "#475569", margin: "0.25rem 0" }}>{item.description}</p>
+                    <strong style={{ color: "#000", fontWeight: "bold", fontSize: "16px" }}>{item.title}</strong>
+                    <p style={{ fontSize: "14px", color: "#111", margin: "0.25rem 0", lineHeight: 1.6, textAlign: "justify" }}>{item.description}</p>
                   </div>
                 ))}
               </div>
             )}
           </div>
           <div>
-            <h3 style={h3Style}>Skills</h3>
+            <h3 style={h3Style}>SKILLS</h3>
             {s.technicalSkills && <TagList items={s.technicalSkills} color={accent} />}
-            <h3 style={h3Style}>Education</h3>
+            <h3 style={h3Style}>EDUCATION</h3>
             {e.university && (
-              <div style={{ fontSize: "0.9rem", color: "#475569" }}>
-                <strong style={{ color: "#0f172a" }}>{e.degree}</strong>
-                <p style={{ margin: "0.25rem 0" }}>{e.university}</p>
-                <p style={{ fontSize: "0.8rem", color: "#64748b" }}>{e.graduationYear || e.endYear}</p>
+              <div style={{ fontSize: "14px", color: "#333", lineHeight: 1.5 }}>
+                <strong style={{ color: "#000", fontWeight: "bold", fontSize: "16px" }}>{e.degree}</strong>
+                <p style={{ margin: "0.25rem 0", color: "#111" }}>{e.university}</p>
+                <p style={{ fontSize: "13px", color: "#555", margin: 0 }}>{e.graduationYear || e.endYear}</p>
               </div>
             )}
           </div>
@@ -436,9 +439,9 @@ const ResumeViewPage = () => {
     if (!profile) return;
     setAnalyzing(true);
     try {
-      const resp = await resumeApi.analyzeProfile(token, profile);
-      // Navigate to insights dashboard securely without requiring an upload prompt
-      navigate("/resume-upload", { state: { predefinedAnalysis: resp, fromProfileBuilder: true } }); 
+      await resumeApi.analyzeProfile(token, profile);
+      // Navigate directly to career suggestions for users who built a profile
+      navigate("/career-suggestions", { state: { isFromProfile: true } }); 
     } catch (err) {
       console.error("Analysis failed:", err);
       alert("Analysis failed. Please try again.");
@@ -522,7 +525,7 @@ const ResumeViewPage = () => {
           }}>✦</div>
           <div>
             <h2 style={{ margin: 0, fontSize: "0.95rem", fontWeight: 700, color: "#fff" }}>Resume Preview</h2>
-            <p style={{ margin: 0, fontSize: "0.75rem", color: "#94a2b8" }}>
+            <p style={{ margin: 0, fontSize: "0.85rem", color: "#94a2b8" }}>
               Template: <span style={{ color: "#a5b4fc", fontWeight: 600 }}>{templateLabels[profile.template] || "Modern"}</span>
               {profile.personalInfo?.fullName && ` · ${profile.personalInfo.fullName}`}
             </p>
@@ -613,6 +616,7 @@ const ResumeViewPage = () => {
       </div>
 
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Open+Sans:wght@300;400;600;700&family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap');
         @media print {
           body { background: white !important; padding: 0 !important; }
           header, .no-print, .resume-action-bar, .app-shell > header, [class*="topbar"] { display: none !important; }

@@ -99,5 +99,11 @@ export const resumeApi = {
       method: "POST",
       headers: createHeaders(token),
       body: JSON.stringify({ profile })
+    }),
+  evaluateInterview: (token, payload) =>
+    apiRequest("/resume/evaluate-interview", {
+      method: "POST",
+      headers: createHeaders(token),
+      body: JSON.stringify(payload)
     })
 };

@@ -24,6 +24,7 @@ export const saveProfile = async (req, res) => {
       ...req.body,
       personalInfo: {
         fullName: cleanText(req.body.personalInfo?.fullName),
+        profilePhoto: req.body.personalInfo?.profilePhoto || "",
         phone: cleanText(req.body.personalInfo?.phone),
         email: cleanText(req.body.personalInfo?.email),
         location: cleanText(req.body.personalInfo?.location),

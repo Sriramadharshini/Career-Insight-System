@@ -1,6 +1,7 @@
 import { Resume } from "../models/Resume.js";
 import { analyzeResume } from "../utils/atsScorer.js";
 import { extractResumeText } from "../utils/extractResumeText.js";
+import { analyzeResumeWithAI, evaluateInterviewAnswersWithAI } from '../utils/aiAnalyzer.js';
 import fs from "fs";
 
 export const uploadResume = async (req, res) => {
@@ -93,5 +94,122 @@ export const analyzeCurrentProfile = async (req, res) => {
   } catch (error) {
     console.error("Profile analysis error:", error);
     return res.status(500).json({ message: "Analysis failed", error: error.message });
+  }
+};
+
+export const evaluateInterview = async (req, res) => {
+  try {
+    const { role, qna } = req.body;
+    if (!qna || !Array.isArray(qna)) {
+      return res.status(400).json({ success: false, message: "Invalid answers payload." });
+    }
+
+    try {
+      if (process.env.GEMINI_API_KEY) {
+        const aiResults = await evaluateInterviewAnswersWithAI(qna, role || "Professional");
+        
+        if (Array.isArray(aiResults) && aiResults.length === qna.length) {
+          let totalScore = 0;
+          const evaluatedAnswers = qna.map((item, idx) => {
+            const aiRes = aiResults[idx];
+            totalScore += aiRes.score || 0;
+            return {
+              question: item.question,
+              userAnswer: item.answer,
+              timeTaken: item.time || 0,
+              isCorrect: aiRes.isCorrect || false,
+              score: aiRes.score || 0,
+              feedback: aiRes.feedback || "Good effort.",
+              expectedAnswer: aiRes.expectedAnswer || "No specific model answer generated."
+            };
+          });
+
+          let maxPossibleScore = qna.length * 10;
+          let percentage = maxPossibleScore > 0 ? Math.round((totalScore / maxPossibleScore) * 100) : 0;
+          let overallFeedback = percentage >= 80 ? "Excellent performance! You demonstrated strong knowledge." 
+                             : percentage >= 60 ? "Good job, but there's room for improvement in technical depth." 
+                             : "You need to practice more and focus on core technical concepts.";
+
+          return res.json({
+            success: true,
+            results: {
+              totalScore: Math.min(percentage, 100),
+              totalQuestions: qna.length,
+              evaluatedAnswers,
+              overallFeedback
+            }
+          });
+        }
+      }
+    } catch (aiError) {
+      console.error("AI Evaluation failed, falling back to heuristic:", aiError);
+    }
+
+    let totalScore = 0;
+    
+    // Heuristic Fallback
+    const evaluatedAnswers = qna.map(item => {
+      const q = (item.question || "").toLowerCase();
+      const a = (item.answer || "").toLowerCase();
+      const time = item.time || 0;
+      
+      let isCorrect = false;
+      let feedback = "Needs improvement in technical explanation. Your answer needs more depth and specific details.";
+      let score = 0;
+      let expectedAnswer = "A comprehensive answer should explicitly cover the core architecture, provide a real-world use case, and outline best practices regarding security, scalability, and performance.";
+
+      if (q.includes("react")) expectedAnswer = "To optimize React performance, you should utilize useMemo and useCallback to prevent unnecessary re-renders, implement React.lazy for code splitting, avoid inline functions in render, and use a dedicated state management library efficiently.";
+      if (q.includes("sql")) expectedAnswer = "A strong database answer involves discussing proper indexing, normalized vs denormalized schemas where appropriate, and using efficient JOINs while avoiding N+1 query patterns.";
+      if (q.includes("api")) expectedAnswer = "A secure REST API implies using HTTPS, implementing JWT or OAuth for authentication, rate limiting to prevent abuse, input validation, and proper CORS configurations.";
+
+      if (a.length > 20) {
+        if (q.includes("react") && (a.includes("state") || a.includes("props") || a.includes("hook") || a.includes("component"))) {
+          isCorrect = true; score = 10; feedback = "Good understanding of the topic. Excellent demonstration of React fundamentals.";
+        } else if (q.includes("sql") && (a.includes("select") || a.includes("join") || a.includes("table") || a.includes("database"))) {
+          isCorrect = true; score = 10; feedback = "Good understanding of the topic. Clear explanation of database concepts.";
+        } else if (a.length > 50) {
+          isCorrect = true; score = 8; feedback = "Good understanding of the topic. Detailed response, though you could mention more specific technical keywords.";
+        } else {
+          score = 4; feedback = "Needs improvement in technical explanation. Try to expand on your answer with practical examples.";
+        }
+      } else if (a.length > 0) {
+        score = 2; feedback = "Needs improvement in technical explanation. Your answer is too brief to correctly assess your knowledge.";
+      } else {
+        score = 0; feedback = "Needs improvement in technical explanation. No answer provided.";
+      }
+      
+      totalScore += score;
+      
+      return {
+        question: item.question,
+        userAnswer: item.answer,
+        timeTaken: time,
+        isCorrect,
+        score,
+        feedback,
+        expectedAnswer
+      };
+    });
+    
+    const accuracy = Math.round((totalScore / (qna.length * 10)) * 100) || 0;
+    const avgTime = Math.round(qna.reduce((acc, curr) => acc + curr.timeTaken, 0) / (qna.length || 1));
+    
+    let confidenceLevel = "Beginner";
+    if (accuracy > 75) confidenceLevel = "Advanced";
+    else if (accuracy > 40) confidenceLevel = "Intermediate";
+    
+    return res.status(200).json({
+      role,
+      totalScore: accuracy,
+      confidenceLevel,
+      avgTime,
+      evaluatedAnswers,
+      strongAreas: accuracy > 50 ? ["Technical Knowledge", "Communication Skills"] : ["Basic Concepts"],
+      improvementAreas: accuracy < 80 ? ["Deep-dive Technical Explanations", "Providing System Examples"] : ["Advanced Architecture Patterns"]
+    });
+    
+  } catch (error) {
+    console.error("Interview Evaluation Error:", error);
+    return res.status(500).json({ message: "Failed to evaluate interview", error: error.message });
   }
 };

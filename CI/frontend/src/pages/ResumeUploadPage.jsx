@@ -214,12 +214,6 @@ const ResumeUploadPage = () => {
     if (location.state?.predefinedAnalysis) {
       setAnalysis(location.state.predefinedAnalysis);
       setTimeout(() => resultsRef.current?.scrollIntoView({ behavior:"smooth", block:"start" }), 300);
-    } else {
-      resumeApi.getLatest(token).then(data => {
-        if (data && data.atsScore) {
-           setAnalysis(data);
-        }
-      }).catch(() => {});
     }
   }, [token, location.state]);
 
@@ -371,7 +365,7 @@ const ResumeUploadPage = () => {
                 </div>
               </div>
               <motion.button whileHover={{ scale:1.04 }} whileTap={{ scale:0.97 }}
-                onClick={() => navigate("/career-suggestions")}
+                onClick={() => navigate("/career-suggestions", { state: { isFromProfile: false } })}
                 style={{ padding:"0.75rem 1.75rem", background:"linear-gradient(135deg,#059669,#10b981)",
                   color:"#fff", border:"none", borderRadius:"12px", fontSize:"0.92rem", fontWeight:700,
                   cursor:"pointer", fontFamily:"inherit", whiteSpace:"nowrap",
@@ -484,108 +478,165 @@ const ResumeUploadPage = () => {
             {/* ── Tab: SKILLS ── */}
             {activeTab==="skills" && (
               <motion.div initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }}>
-                <div style={{ background:"rgba(15,20,40,0.8)", border:"1px solid rgba(99,102,241,0.2)", borderRadius:"24px", padding:"3rem", textAlign: "center" }}>
-                  <h3 style={{ margin:"0 0 2rem", fontSize:"1.5rem", fontWeight:800, color:"#f1f5f9" }}>✅ Detected Skills & Technologies</h3>
+                <div style={{ position:"relative", background:"#0f172a", border:"1px solid rgba(16,185,129,0.25)", borderRadius:"32px", padding:"3.5rem", overflow:"hidden", boxShadow:"0 25px 50px -12px rgba(0,0,0,0.5)" }}>
                   
-                  <div style={{ maxWidth: 800, margin: "0 auto 3rem" }}>
-                    <img src="/skills_new.png" alt="Skills Illustration" style={{ width:"100%", maxHeight: 350, objectFit: "contain", borderRadius:"20px", filter: "drop-shadow(0 0 20px rgba(99,102,241,0.3))" }} />
+                  {/* Background Radial Glow */}
+                  <div style={{ position:"absolute", top:"-50%", right:"-20%", width:"100%", height:"100%", background:"radial-gradient(circle, rgba(16,185,129,0.06), transparent 70%)", pointerEvents:"none" }} />
+                  <div style={{ position:"absolute", bottom:"-50%", left:"-20%", width:"100%", height:"100%", background:"radial-gradient(circle, rgba(56,189,248,0.04), transparent 70%)", pointerEvents:"none" }} />
+
+                  {/* Header */}
+                  <div style={{ textAlign: "center", marginBottom: "4rem", position: "relative", zIndex: 1 }}>
+                    <div style={{ display:"inline-flex", background:"rgba(16,185,129,0.1)", padding:"0.5rem 1.25rem", borderRadius:"999px", color:"#6ee7b7", fontSize:"0.85rem", fontWeight:800, marginBottom:"1rem", textTransform:"uppercase", letterSpacing: "1.5px", border: "1px solid rgba(16,185,129,0.2)" }}>
+                      Competency Matrix
+                    </div>
+                    <h3 style={{ margin:"0 0 1rem", fontSize:"2.5rem", fontWeight:900, color:"#fff", letterSpacing: "-1px" }}>Core Proficiencies</h3>
+                    <p style={{ margin:0, color:"#94a3b8", fontSize:"1.1rem", maxWidth: 650, marginInline: "auto", lineHeight: 1.6 }}>
+                      Expert-level skills and technologies verified from your professional profile.
+                    </p>
                   </div>
 
-                  <div style={{ display:"flex", flexWrap:"wrap", gap:"0.8rem", justifyContent: "center" }}>
-                    {(analysis.extractedSkills || analysis.matchedKeywords || []).map(s => (
-                      <Chip key={s} label={s} color="#10b981" />
+                  {/* Skills Grid */}
+                  <h4 style={{ textAlign: "center", color: "#6ee7b7", marginBottom: "1.5rem", fontSize: "1.1rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px" }}>Skills Identified from Resume Content</h4>
+                  <div style={{ display:"flex", flexWrap:"wrap", gap:"1rem", justifyItems: "center", justifyContent: "center", position: "relative", zIndex: 1, marginBottom: "3rem" }}>
+                    {(analysis.extractedSkills || analysis.matchedKeywords || []).map((s, i) => (
+                      <motion.div key={s} initial={{ opacity:0, scale:0.9 }} animate={{ opacity:1, scale:1 }} transition={{ delay: i * 0.05 }}
+                        className="hover-glass" style={{ display: "inline-flex", alignItems: "center", gap: "0.75rem", background: "linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.02))", border: "1px solid rgba(16,185,129,0.2)", borderRadius: "16px", padding: "0.75rem 1.5rem", color: "#6ee7b7", fontSize: "1.1rem", fontWeight: 700, boxShadow: "0 8px 16px rgba(0,0,0,0.2)", cursor:"default" }}>
+                        <span style={{ fontSize: "1.3rem", background: "rgba(16,185,129,0.15)", width: "36px", height: "36px", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "10px", boxShadow: "inset 0 0 0 1px rgba(16,185,129,0.3)" }}>
+                          {["🎯", "💻", "⚡", "🔧", "💡", "🚀", "🛡️", "📊", "🧠", "🌐"][i % 10]}
+                        </span>
+                        {s}
+                      </motion.div>
                     ))}
                   </div>
+
                   {!(analysis.extractedSkills||analysis.matchedKeywords||[]).length && (
-                    <p style={{ color:"#475569", fontSize:"1.05rem", marginTop: "2rem" }}>No matching keywords detected. Try adding more technical skills to your resume.</p>
+                    <div style={{ textAlign: "center", padding: "3rem", background: "rgba(255,255,255,0.02)", borderRadius: "24px", border: "1px dashed rgba(255,255,255,0.1)", marginBottom: "3rem" }}>
+                      <p style={{ color:"#94a3b8", fontSize:"1.1rem", margin: 0 }}>No matching technical proficiencies detected. Consider enriching your profile.</p>
+                    </div>
                   )}
                   
-                  <div style={{ marginTop:"3rem", padding:"2rem", background:"rgba(16,185,129,0.05)", border:"1px solid rgba(16,185,129,0.2)", borderRadius:"20px" }}>
-                    <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"1.25rem" }}>
-                      <h3 style={{ margin:0, fontSize:"1.15rem", fontWeight:800, color:"#f1f5f9" }}>Skill Readiness Index</h3>
-                      <span style={{ fontSize:"2rem", fontWeight:900, color:"#10b981" }}>{analysis.skillReadinessIndex || 0}%</span>
+                  {/* Readiness Index */}
+                  <div style={{ position: "relative", zIndex: 1, padding:"3rem", background:"linear-gradient(135deg, rgba(16,185,129,0.05), rgba(0,0,0,0))", border:"1px solid rgba(16,185,129,0.15)", borderRadius:"24px" }}>
+                    <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"1.5rem" }}>
+                      <div>
+                        <h3 style={{ margin:"0 0 0.5rem", fontSize:"1.3rem", fontWeight:900, color:"#fff" }}>Skill Readiness Index</h3>
+                        <p style={{ margin:0, fontSize:"1rem", color:"#94a3b8" }}>Matches {(analysis.matchedKeywords||[]).length} core technical keywords for highly competitive roles.</p>
+                      </div>
+                      <span style={{ fontSize:"2.5rem", fontWeight:900, color:"#10b981", textShadow: "0 0 20px rgba(16,185,129,0.3)" }}>{analysis.skillReadinessIndex || 0}%</span>
                     </div>
                     <AnimatedBar value={analysis.skillReadinessIndex||0} max={100} color="#10b981" />
-                    <p style={{ margin:"1.25rem 0 0", fontSize:"1rem", color:"#64748b", fontWeight: 500 }}>
-                      Your resume matches {(analysis.matchedKeywords||[]).length} core technical keywords.
-                    </p>
                   </div>
                 </div>
               </motion.div>
             )}
 
-            {/* ── Tab: GAPS ── */}
+            {/* ── Tab: GAPS (Redesigned) ── */}
             {activeTab==="gaps" && (
               <motion.div initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }}>
-                <div style={{ background:"rgba(15,20,40,0.8)", border:"1px solid rgba(234,179,8,0.2)", borderRadius:"24px", padding:"3rem", textAlign: "center" }}>
-                  <h3 style={{ margin:"0 0 2rem", fontSize:"1.5rem", fontWeight:800, color:"#f1f5f9" }}>🔍 Detailed Gap Analysis</h3>
+                <div style={{ position:"relative", background:"#0f172a", border:"1px solid rgba(234,179,8,0.25)", borderRadius:"32px", padding:"3.5rem", overflow:"hidden", boxShadow:"0 25px 50px -12px rgba(0,0,0,0.5)" }}>
                   
-                  <div style={{ maxWidth: 600, margin: "0 auto 3rem" }}>
-                    <img src="/gaps_new.png" alt="Gap Analysis Illustration" style={{ width:"100%", maxHeight: 300, objectFit: "contain", borderRadius:"20px", filter: "drop-shadow(0 0 20px rgba(234,179,8,0.2))" }} />
+                  {/* Background Radial Glow */}
+                  <div style={{ position:"absolute", top:"-50%", left:"-20%", width:"100%", height:"100%", background:"radial-gradient(circle, rgba(234,179,8,0.06), transparent 70%)", pointerEvents:"none" }} />
+                  <div style={{ position:"absolute", bottom:"-50%", right:"-20%", width:"100%", height:"100%", background:"radial-gradient(circle, rgba(244,63,94,0.04), transparent 70%)", pointerEvents:"none" }} />
+
+                  {/* Header */}
+                  <div style={{ textAlign: "center", marginBottom: "4rem", position: "relative", zIndex: 1 }}>
+                    <div style={{ display:"inline-flex", background:"rgba(234,179,8,0.1)", padding:"0.5rem 1.25rem", borderRadius:"999px", color:"#fde047", fontSize:"0.85rem", fontWeight:800, marginBottom:"1rem", textTransform:"uppercase", letterSpacing: "1.5px", border: "1px solid rgba(234,179,8,0.2)" }}>
+                      Career Trajectory Audit
+                    </div>
+                    <h3 style={{ margin:"0 0 1rem", fontSize:"2.5rem", fontWeight:900, color:"#fff", letterSpacing: "-1px" }}>Timeline &amp; Competency Gaps</h3>
+                    <p style={{ margin:0, color:"#94a3b8", fontSize:"1.1rem", maxWidth: 650, marginInline: "auto", lineHeight: 1.6 }}>
+                      A professional assessment of your career continuity and missing core competencies required by top-tier employers.
+                    </p>
                   </div>
 
-                  <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1.5rem", marginBottom:"2rem" }}>
-                    {/* Education Milestone */}
-                    <div style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.06)", borderRadius:"20px", padding:"1.5rem" }}>
-                      <p style={{ margin:"0 0 0.5rem", fontSize:"0.8rem", color:"#64748b", textTransform:"uppercase", letterSpacing:"1px", fontWeight: 700 }}>Post-Education Experience</p>
-                      <p style={{ margin:0, fontSize:"1.75rem", fontWeight:900, color:"#38bdf8" }}>
-                        {analysis.yearsSinceEducation !== null ? `${analysis.yearsSinceEducation} Years` : "N/A"}
-                      </p>
-                      <p style={{ margin:"0.5rem 0 0", fontSize:"0.9rem", color:"#475569" }}>Since your latest graduation</p>
-                    </div>
-                    {/* Career Status */}
-                    <div style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.06)", borderRadius:"20px", padding:"1.5rem" }}>
-                      <p style={{ margin:"0 0 0.5rem", fontSize:"0.8rem", color:"#64748b", textTransform:"uppercase", letterSpacing:"1px", fontWeight: 700 }}>Career Gap Status</p>
-                      <p style={{ margin:0, fontSize:"1.5rem", fontWeight:800, color: (analysis.timelineGaps||[]).length > 0 ? "#f43f5e" : "#10b981" }}>
-                        {(analysis.timelineGaps||[]).length > 0 ? "Gap Detected" : "No Gaps Found"}
-                      </p>
-                      <p style={{ margin:"0.5rem 0 0", fontSize:"0.9rem", color:"#475569" }}>Based on recent timeline scan</p>
-                    </div>
-                  </div>
-
-                  {/* Main Gap Message Card */}
-                  <div style={{ padding:"2rem", background: (analysis.timelineGaps||[]).length > 0 ? "rgba(244,63,94,0.06)" : "rgba(16,185,129,0.06)", border: `1px solid ${(analysis.timelineGaps||[]).length > 0 ? "rgba(244,63,94,0.2)" : "rgba(16,185,129,0.2)"}`, borderRadius:"20px", textAlign: "left" }}>
-                    <div style={{ display:"flex", gap:"1.25rem", alignItems:"center" }}>
-                      <span style={{ fontSize: "2.5rem" }}>{(analysis.timelineGaps||[]).length > 0 ? "🚨" : "🎉"}</span>
+                  <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"2rem", marginBottom:"3rem", position: "relative", zIndex: 1 }}>
+                    {/* Education Tenure */}
+                    <div style={{ background:"rgba(255,255,255,0.02)", border:"1px solid rgba(255,255,255,0.06)", borderRadius:"24px", padding:"2rem", display:"flex", alignItems:"center", gap:"1.5rem", transition:"all 0.3s" }} className="hover-glass">
+                      <div style={{ width: 60, height: 60, borderRadius: "16px", background: "rgba(56,189,248,0.1)", color: "#38bdf8", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "2rem" }}>
+                        📅
+                      </div>
                       <div>
-                        <p style={{ margin:0, fontSize:"1.15rem", fontWeight:800, color:"#f1f5f9" }}>
-                          {analysis.gapMessage || "No career gaps detected in the provided resume."}
-                        </p>
-                        <p style={{ margin:"0.25rem 0 0", fontSize:"1.05rem", color: "#64748b" }}>
-                          {(analysis.timelineGaps||[]).length > 0 
-                            ? "Consider explaining these periods in your cover letter." 
-                            : "Your career progression looks consistent and professional."}
-                        </p>
+                         <p style={{ margin:"0 0 0.25rem", fontSize:"0.85rem", color:"#94a3b8", textTransform:"uppercase", letterSpacing:"1.5px", fontWeight: 800 }}>Post-Education Tenure</p>
+                         <p style={{ margin:0, fontSize:"2rem", fontWeight:900, color:"#38bdf8" }}>{analysis.yearsSinceEducation !== null ? `${analysis.yearsSinceEducation} Years` : "N/A"}</p>
+                         <p style={{ margin:"0.25rem 0 0", fontSize:"0.85rem", color:"#475569" }}>Since graduation</p>
+                      </div>
+                    </div>
+
+                    {/* Timeline Integrity */}
+                    <div style={{ background:"rgba(255,255,255,0.02)", border:"1px solid rgba(255,255,255,0.06)", borderRadius:"24px", padding:"2rem", display:"flex", alignItems:"center", gap:"1.5rem", transition:"all 0.3s" }} className="hover-glass">
+                      <div style={{ width: 60, height: 60, borderRadius: "16px", background: (analysis.timelineGaps||[]).length > 0 ? "rgba(244,63,94,0.1)" : "rgba(16,185,129,0.1)", color: (analysis.timelineGaps||[]).length > 0 ? "#f43f5e" : "#10b981", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "2rem" }}>
+                        {(analysis.timelineGaps||[]).length > 0 ? "⏳" : "📈"}
+                      </div>
+                      <div>
+                         <p style={{ margin:"0 0 0.25rem", fontSize:"0.85rem", color:"#94a3b8", textTransform:"uppercase", letterSpacing:"1.5px", fontWeight: 800 }}>Timeline Integrity</p>
+                         <p style={{ margin:0, fontSize:"2rem", fontWeight:900, color: (analysis.timelineGaps||[]).length > 0 ? "#f43f5e" : "#10b981" }}>{(analysis.timelineGaps||[]).length > 0 ? "Gap Detected" : "No Gaps"}</p>
+                         <p style={{ margin:"0.25rem 0 0", fontSize:"0.85rem", color:"#475569" }}>Based on historical scan</p>
                       </div>
                     </div>
                   </div>
 
-                  {/* Timeline breakdown (if gaps) */}
-                  {(analysis.timelineGaps||[]).length > 0 && (
-                    <div style={{ marginTop:"1.5rem", textAlign: "left" }}>
-                      <h4 style={{ margin:"0 0 1rem", fontSize:"1rem", fontWeight:700, color:"#f1f5f9" }}>Identified Timeline Gaps:</h4>
-                      <div style={{ display:"flex", flexDirection:"column", gap:"0.75rem" }}>
-                        {analysis.timelineGaps.map((g,i) => (
-                          <div key={i} style={{ padding:"1rem 1.25rem", background:"rgba(139,92,246,0.05)", border:"1px solid rgba(139,92,246,0.15)", borderRadius:"12px", fontSize:"1.05rem", color:"#ddd6fe" }}>
-                            📅 {g}
+                  {/* Assessment Card */}
+                  <div style={{ position: "relative", zIndex: 1, padding:"3rem", background: (analysis.timelineGaps||[]).length > 0 ? "linear-gradient(135deg,rgba(244,63,94,0.15),rgba(159,18,57,0.05))" : "linear-gradient(135deg,rgba(16,185,129,0.15),rgba(6,78,59,0.05))", border: `2px solid ${(analysis.timelineGaps||[]).length > 0 ? "rgba(244,63,94,0.6)" : "rgba(16,185,129,0.5)"}`, borderRadius:"24px", textAlign: "left", marginBottom: "3rem", display: "flex", gap: "2.5rem", alignItems: "center", boxShadow: (analysis.timelineGaps||[]).length > 0 ? "0 0 30px rgba(244,63,94,0.3)" : "0 0 30px rgba(16,185,129,0.2)" }}>
+                      <div style={{ width: 90, height: 90, borderRadius: "50%", background: (analysis.timelineGaps||[]).length > 0 ? "rgba(244,63,94,0.2)" : "rgba(16,185,129,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "3.5rem", flexShrink: 0, boxShadow: `0 0 40px ${(analysis.timelineGaps||[]).length > 0 ? "rgba(244,63,94,0.4)" : "rgba(16,185,129,0.4)"}` }}>
+                        {(analysis.timelineGaps||[]).length > 0 ? "📊" : "🚀"}
+                      </div>
+                      <div>
+                        {/* Highlights */}
+                        {(analysis.timelineGaps||[]).length > 0 && <span style={{ display:"inline-block", padding:"0.4rem 1rem", background:"#f43f5e", color:"#fff", fontSize:"0.8rem", fontWeight:800, textTransform:"uppercase", letterSpacing:"1px", borderRadius:"8px", marginBottom:"1rem" }}>Action Required</span>}
+                        {!(analysis.timelineGaps||[]).length > 0 && <span style={{ display:"inline-block", padding:"0.4rem 1rem", background:"#10b981", color:"#fff", fontSize:"0.8rem", fontWeight:800, textTransform:"uppercase", letterSpacing:"1px", borderRadius:"8px", marginBottom:"1rem" }}>Excellent</span>}
+
+                        <h4 style={{ margin:"0 0 0.75rem", fontSize:"1.5rem", fontWeight:900, color:"#fff", lineHeight: 1.4, letterSpacing: "-0.5px" }}>
+                          {(analysis.timelineGaps||[]).length > 0 
+                            ? `A career gap of ${analysis.yearsSinceEducation !== null ? analysis.yearsSinceEducation : (analysis.timelineGaps||[]).length} years has been identified after your most recent educational qualification.`
+                            : "Your academic and career timeline appears consistent with no significant gaps identified."}
+                        </h4>
+                        <p style={{ margin:0, fontSize:"1.1rem", color: "#cbd5e1", lineHeight: 1.6, fontWeight: 500 }}>
+                          {(analysis.timelineGaps||[]).length > 0 
+                            ? "You may consider adding certifications, internships, or projects to strengthen your profile." 
+                            : "Your career progression demonstrates excellent stability. This consistency is highly attractive to recruiters."}
+                        </p>
+                        
+                        {(analysis.timelineGaps||[]).length > 0 && (
+                          <div style={{ display:"flex", flexWrap:"wrap", gap:"0.75rem", marginTop: "1.75rem" }}>
+                            {analysis.timelineGaps.map((g,i) => (
+                              <div key={i} style={{ padding:"0.6rem 1.25rem", background:"rgba(244,63,94,0.15)", border:"1px solid rgba(244,63,94,0.4)", borderRadius:"12px", fontSize:"1rem", fontWeight:700, color:"#ffe4e6", display: "inline-flex", alignItems: "center", gap: "0.75rem" }}>
+                                <span style={{ fontSize: "1.2rem" }}>🗓️</span> {g}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                  </div>
+
+                  {/* Strategic Action Items (Vertical Timeline) */}
+                  {(analysis.gapAnalysis||[]).length > 0 && (
+                    <div style={{ position: "relative", zIndex: 1, background: "rgba(0,0,0,0.2)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "24px", padding: "3rem" }}>
+                      <div style={{ marginBottom: "2.5rem" }}>
+                        <h4 style={{ margin:"0 0 0.5rem", fontSize:"1.5rem", fontWeight:800, color:"#fff" }}>Strategic Action Items</h4>
+                        <p style={{ margin:0, fontSize:"1rem", color:"#64748b" }}>Role-specific competency gaps to address for peak interview readiness.</p>
+                      </div>
+
+                      <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+                        {analysis.gapAnalysis.map((gap, i) => (
+                          <div key={i} style={{ display: "flex", gap: "1.5rem" }}>
+                            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                              <div style={{ width: 44, height: 44, borderRadius: "50%", background: "rgba(234,179,8,0.1)", border: "2px solid rgba(234,179,8,0.4)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fef08a", fontSize: "1.2rem", zIndex: 2 }}>
+                                {i + 1}
+                              </div>
+                              {i !== analysis.gapAnalysis.length - 1 && (
+                                <div style={{ width: 2, flex: 1, background: "linear-gradient(to bottom, rgba(234,179,8,0.3), rgba(234,179,8,0.05))", marginTop: "0.5rem", minHeight: "30px" }} />
+                              )}
+                            </div>
+                            <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "16px", padding: "1.5rem", flex: 1, transition: "all 0.3s" }} className="hover-glass">
+                              <p style={{ margin:0, fontSize:"1.1rem", color:"#e2e8f0", lineHeight: 1.6 }}>{gap}</p>
+                            </div>
                           </div>
                         ))}
                       </div>
                     </div>
                   )}
 
-                  {/* Role-wise Analysis (Optional bottom section) */}
-                  {(analysis.gapAnalysis||[]).length > 0 && (
-                    <div style={{ marginTop:"1.5rem", textAlign: "left", padding: "1.5rem", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-                      <h4 style={{ margin:"0 0 1rem", fontSize:"1rem", fontWeight:700, color:"#f1f5f9" }}>Role-wise Gap Insights:</h4>
-                      {analysis.gapAnalysis.map((gap,i) => (
-                        <div key={i} style={{ display:"flex", gap:"0.75rem", marginBottom: "0.5rem" }}>
-                          <span style={{ color:"#eab308" }}>⚠</span>
-                          <span style={{ fontSize:"1.05rem", color:"#fef08a", lineHeight:1.5 }}>{gap}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </div>
               </motion.div>
             )}

@@ -67,3 +67,56 @@ export const analyzeResumeWithAI = async (resumeText) => {
     throw new Error("Failed to analyze resume with AI.");
   }
 };
+
+export const evaluateInterviewAnswersWithAI = async (answers, role) => {
+  if (!process.env.GEMINI_API_KEY) {
+    throw new Error("GEMINI_API_KEY is missing in environment variables.");
+  }
+
+  if (!genAI) {
+    genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+  }
+
+  const prompt = `
+    You are an expert technical interviewer evaluating a candidate for a "${role}" role.
+    Analyze the following list of interview questions and the candidate's answers.
+    Provide a highly detailed, strict JSON response.
+    Do NOT wrap the response in markdown code blocks (\`\`\`json ... \`\`\`), output raw JSON only.
+    
+    Extract and structure the response strictly using this JSON schema:
+    [
+      {
+        "isCorrect": Boolean,
+        "feedback": String,
+        "expectedAnswer": String,
+        "score": Number 
+      }
+    ]
+    Note: 'score' must be a Number between 0 and 10. 'expectedAnswer' MUST be a highly relevant, comprehensive, and role-specific correct answer to the exact question asked, formatted professionally. It should not be generic; it must directly and accurately answer the prompt as an expert would.
+    Ensure the array length exactly matches the number of questions provided.
+    
+    Questions and Candidate Answers:
+    ${JSON.stringify(answers.map((a, i) => ({ q: a.question, a: a.answer })), null, 2)}
+  `;
+
+  try {
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash",
+      generationConfig: { responseMimeType: "application/json" }
+    });
+
+    const result = await model.generateContent(prompt);
+    const outputText = result.response.text();
+    
+    try {
+      const parsedData = JSON.parse(outputText);
+      return parsedData;
+    } catch (parseError) {
+      import("fs").then(fs => fs.appendFileSync("ai_debug_interview.log", `\nJSON PARSE ERROR\nRaw AI Output:\n${outputText}\n`));
+      throw new Error("AI returned invalid JSON block.");
+    }
+  } catch (error) {
+    console.error("AI Interview Analysis Error:", error);
+    throw new Error("Failed to analyze interview answers with AI.");
+  }
+};

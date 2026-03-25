@@ -21,3 +21,33 @@ Stack: ReferenceError: interviewQuestions is not defined
     at analyzeResume (file:///D:/Dharshu/CI%20project/CI/backend/src/utils/atsScorer.js:449:5)
     at uploadResume (file:///D:/Dharshu/CI%20project/CI/backend/src/controllers/resumeController.js:14:22)
     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+[2026-03-24T07:07:43.048Z] AI Error: SKILL_PROGRESSION is not defined
+Stack: ReferenceError: SKILL_PROGRESSION is not defined
+    at file:///D:/Dharshu/CI%20project/CI/backend/src/utils/atsScorer.js:441:5
+    at Array.forEach (<anonymous>)
+    at analyzeResume (file:///D:/Dharshu/CI%20project/CI/backend/src/utils/atsScorer.js:440:19)
+    at uploadResume (file:///D:/Dharshu/CI%20project/CI/backend/src/controllers/resumeController.js:14:22)
+
+[2026-03-24T07:08:01.125Z] AI Error: SKILL_PROGRESSION is not defined
+Stack: ReferenceError: SKILL_PROGRESSION is not defined
+    at file:///D:/Dharshu/CI%20project/CI/backend/src/utils/atsScorer.js:441:5
+    at Array.forEach (<anonymous>)
+    at analyzeResume (file:///D:/Dharshu/CI%20project/CI/backend/src/utils/atsScorer.js:440:19)
+    at uploadResume (file:///D:/Dharshu/CI%20project/CI/backend/src/controllers/resumeController.js:14:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+[2026-03-24T07:10:27.500Z] AI Error: SKILL_PROGRESSION is not defined
+Stack: ReferenceError: SKILL_PROGRESSION is not defined
+    at file:///D:/Dharshu/CI%20project/CI/backend/src/utils/atsScorer.js:441:5
+    at Array.forEach (<anonymous>)
+    at analyzeResume (file:///D:/Dharshu/CI%20project/CI/backend/src/utils/atsScorer.js:440:19)
+    at uploadResume (file:///D:/Dharshu/CI%20project/CI/backend/src/controllers/resumeController.js:14:22)
+
+[2026-03-24T07:10:56.059Z] AI Error: SKILL_PROGRESSION is not defined
+Stack: ReferenceError: SKILL_PROGRESSION is not defined
+    at file:///D:/Dharshu/CI%20project/CI/backend/src/utils/atsScorer.js:441:5
+    at Array.forEach (<anonymous>)
+    at analyzeResume (file:///D:/Dharshu/CI%20project/CI/backend/src/utils/atsScorer.js:440:19)
+    at uploadResume (file:///D:/Dharshu/CI%20project/CI/backend/src/controllers/resumeController.js:14:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)

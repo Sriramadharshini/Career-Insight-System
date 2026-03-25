@@ -106,7 +106,7 @@ const profileSchema = new mongoose.Schema(
     preferredRole: { type: String, required: true, trim: true },
     template: {
       type: String,
-      enum: ["modern", "professional", "compact"],
+      enum: ["modern", "professional", "compact", "creative", "simple"],
       default: "modern"
     }
   },

@@ -27,7 +27,11 @@ const resumeSchema = new mongoose.Schema(
     skillReadinessIndex: { type: Number, default: 0 },
     gapAnalysis: { type: [String], default: [] },
     certifications: { type: [String], default: [] },
-    learningPathways: { type: [String], default: [] }
+    learningPathways: { type: [String], default: [] },
+    careerTrack: { type: String, default: "fullstack" },
+    nextLevelSkills: { type: [String], default: [] },
+    suggestedResources: { type: mongoose.Schema.Types.Mixed, default: {} },
+    roleSpecificInsights: { type: [mongoose.Schema.Types.Mixed], default: [] }
   },
   { timestamps: true }
 );

@@ -178,6 +178,36 @@ const PrimaryButton = ({ children, onClick, disabled, type = "button", style: s 
   </button>
 );
 
+// ── Section card wrapper ─────────────────────────────────────────────────────
+const Card = ({ children }) => (
+  <div style={{
+    background: "rgba(99,102,241,0.05)", border: "1px solid rgba(99,102,241,0.18)",
+    borderRadius: "12px", padding: "1.5rem", marginBottom: "1.25rem"
+  }}>{children}</div>
+);
+
+const CardHeader = ({ num, label, grad, onRemove, showRemove }) => (
+  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem" }}>
+    <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+      <span style={{
+        background: grad || "linear-gradient(135deg,#4f46e5,#6366f1)", color: "#fff",
+        width: "28px", height: "28px", borderRadius: "8px",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        fontWeight: 700, fontSize: "0.8rem"
+      }}>{num}</span>
+      <span style={{ fontWeight: 600, fontSize: "0.92rem", color: "#e2e8f0" }}>{label}</span>
+    </div>
+    {showRemove && (
+      <button type="button" onClick={onRemove}
+        style={{
+          background: "rgba(239,68,68,0.12)", border: "1px solid rgba(239,68,68,0.3)",
+          color: "#fca5a5", borderRadius: "6px", padding: "0.2rem 0.6rem",
+          fontSize: "0.75rem", cursor: "pointer", fontFamily: "inherit"
+        }}>Remove</button>
+    )}
+  </div>
+);
+
 // ─── Main Component ───────────────────────────────────────────────────────────
 const ProfilePage = () => {
   const { token, user } = useAuth();
@@ -320,36 +350,6 @@ const ProfilePage = () => {
   const skillChips = ["Python", "React.js", "Node.js", "SQL", "Docker", "AWS"]
     .filter(s => !formData.skills.technicalSkills.includes(s)).slice(0, 4);
 
-  // ── Section card wrapper ─────────────────────────────────────────────────────
-  const Card = ({ children }) => (
-    <div style={{
-      background: "rgba(99,102,241,0.05)", border: "1px solid rgba(99,102,241,0.18)",
-      borderRadius: "12px", padding: "1.5rem", marginBottom: "1.25rem"
-    }}>{children}</div>
-  );
-
-  const CardHeader = ({ num, label, grad, onRemove, showRemove }) => (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
-        <span style={{
-          background: grad || "linear-gradient(135deg,#4f46e5,#6366f1)", color: "#fff",
-          width: "28px", height: "28px", borderRadius: "8px",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          fontWeight: 700, fontSize: "0.8rem"
-        }}>{num}</span>
-        <span style={{ fontWeight: 600, fontSize: "0.92rem", color: "#e2e8f0" }}>{label}</span>
-      </div>
-      {showRemove && (
-        <button type="button" onClick={onRemove}
-          style={{
-            background: "rgba(239,68,68,0.12)", border: "1px solid rgba(239,68,68,0.3)",
-            color: "#fca5a5", borderRadius: "6px", padding: "0.2rem 0.6rem",
-            fontSize: "0.75rem", cursor: "pointer", fontFamily: "inherit"
-          }}>Remove</button>
-      )}
-    </div>
-  );
-
   // ─── Section renderers ────────────────────────────────────────────────────────
   const renderSection = () => {
     switch (activeSection) {
@@ -407,7 +407,7 @@ const ProfilePage = () => {
             <input type="date" value={formData.personalInfo.dateOfBirth}
               onChange={e => upPI("dateOfBirth", e.target.value)}
               max={new Date().toISOString().split("T")[0]}
-              style={{ ...inputStyle, colorScheme: "dark" }}
+              style={{ ...inputStyle, colorScheme: "light", color: "#e2e8f0" }}
               onFocus={focusIn} onBlur={focusOut} />
           </div>
 
@@ -580,7 +580,7 @@ const ProfilePage = () => {
                   <label style={labelStyle}>Issue Date (Month & Year)</label>
                   <input type="month" value={cert.issueMonth}
                     onChange={e => upList("certifications", idx, "issueMonth", e.target.value)}
-                    style={{ ...inputStyle, colorScheme: "dark" }} onFocus={focusIn} onBlur={focusOut} />
+                    style={{ ...inputStyle, colorScheme: "light", color: "#e2e8f0" }} onFocus={focusIn} onBlur={focusOut} />
                 </div>
                 <SelectField label="Issue Year" value={cert.issueYear} onChange={e => upList("certifications", idx, "issueYear", e.target.value)}>
                   <option value="">— Select year —</option>

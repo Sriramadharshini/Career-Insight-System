@@ -66,7 +66,7 @@ const ResumeAnalysisPage = () => {
           <span className="eyebrow">Next Step</span>
           <h3>Continue to career suggestions</h3>
           <div className="analysis-action-buttons">
-            <button type="button" onClick={() => navigate("/career-suggestions")}>
+            <button type="button" onClick={() => navigate("/career-suggestions", { state: { isFromProfile: false } })}>
               View Career Suggestions
             </button>
           </div>

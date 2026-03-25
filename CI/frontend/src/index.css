@@ -3452,3 +3452,9 @@ background:linear-gradient(135deg,#f97316,#fb923c,#f43f5e);
   display: inline-flex;
   align-items: center;
 }
+
+.hover-glass:hover { 
+  background: rgba(255,255,255,0.05) !important; 
+  border-color: rgba(99,102,241,0.3) !important; 
+  transform: translateY(-3px); 
+}

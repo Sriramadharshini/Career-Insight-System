@@ -7,7 +7,7 @@ import { useAuth } from "../context/AuthContext";
 // ── Mini resume scale previews (transform: scale trick) ──────────────────────
 
 const CreativePreview = () => (
-  <div style={{ width: "400%", height: "400%", transform: "scale(0.25)", transformOrigin: "top left", display: "flex", fontFamily: "Georgia, serif" }}>
+  <div style={{ width: "400%", height: "400%", transform: "scale(0.25)", transformOrigin: "top left", display: "flex", fontFamily: "'Times New Roman', Times, serif" }}>
     <div style={{ width: "35%", background: "#111827", padding: "4rem", display: "flex", flexDirection: "column", gap: "2rem", color: "#fff" }}>
       <div style={{ width: "200px", height: "200px", borderRadius: "50%", border: "4px solid #fff", margin: "0 auto" }} />
       <div style={{ fontSize: "24px", lineHeight: "1.6", color: "#cbd5e1" }}>
@@ -20,7 +20,7 @@ const CreativePreview = () => (
     <div style={{ width: "65%", padding: "6rem 4rem", color: "#000", textAlign: "left" }}>
       <h4 style={{ margin: 0, fontSize: "56px", color: "#000", textTransform: "uppercase" }}>Your Name</h4>
       <p style={{ margin: "8px 0 40px 0", fontSize: "28px", color: "#475569" }}>Software Engineer</p>
-      <div style={{ fontSize: "24px", color: "#334155", lineHeight: "1.6", marginBottom: "40px" }}>
+      <div style={{ fontSize: "24px", color: "#334155", lineHeight: "1.6", marginBottom: "40px", textAlign: "justify" }}>
         Passionate developer with expertise in building scalable web applications. Proven track record of delivering high-quality solutions that drive business growth.
       </div>
       <strong style={{ fontSize: "28px", color: "#000", display: "block", borderBottom: "4px solid #000", paddingBottom: "10px", marginBottom: "20px" }}>EXPERIENCE</strong>
@@ -33,7 +33,7 @@ const CreativePreview = () => (
 );
 
 const SimplePreview = () => (
-  <div style={{ width: "400%", height: "400%", transform: "scale(0.25)", transformOrigin: "top left", display: "flex", flexDirection: "column", color: "#000", padding: "6rem", background: "#fff", fontFamily: "Arial, sans-serif" }}>
+  <div style={{ width: "400%", height: "400%", transform: "scale(0.25)", transformOrigin: "top left", display: "flex", flexDirection: "column", color: "#000", padding: "6rem", background: "#fff", fontFamily: "'Times New Roman', Times, serif" }}>
     <div style={{ height: "32px", background: "#000", width: "100%", position: "absolute", top: 0, left: 0 }} />
     <div style={{ textAlign: "center", marginBottom: "40px", marginTop: "20px", borderBottom: "1px solid #e2e8f0", paddingBottom: "30px" }}>
       <h4 style={{ margin: 0, fontSize: "64px", color: "#000", fontWeight: "bold", letterSpacing: "4px" }}>YOUR NAME</h4>
@@ -42,7 +42,7 @@ const SimplePreview = () => (
     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "40px" }}>
       <div>
         <strong style={{ fontSize: "28px", color: "#000", display: "block", marginBottom: "12px", textTransform: "uppercase", borderBottom: "2px solid #e2e8f0", paddingBottom: "10px" }}>Objective</strong>
-        <div style={{ fontSize: "24px", color: "#334155", lineHeight: "1.6", marginBottom: "30px" }}>
+        <div style={{ fontSize: "24px", color: "#334155", lineHeight: "1.6", marginBottom: "30px", textAlign: "justify" }}>
           Results-driven software developer seeking to contribute technical expertise to an innovative team focused on creating impactful digital solutions.
         </div>
       </div>
@@ -58,7 +58,7 @@ const SimplePreview = () => (
 );
 
 const ModernPreview = () => (
-  <div style={{ width: "400%", height: "400%", transform: "scale(0.25)", transformOrigin: "top left", display: "flex", flexDirection: "column", color: "#000", fontFamily: "'Segoe UI', sans-serif", background: "#fff" }}>
+  <div style={{ width: "400%", height: "400%", transform: "scale(0.25)", transformOrigin: "top left", display: "flex", flexDirection: "column", color: "#000", fontFamily: "'Times New Roman', Times, serif", background: "#fff" }}>
     <div style={{ width: "100%", padding: "6rem 4rem", background: "#000", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
       <h4 style={{ margin: 0, fontSize: "56px", color: "#fff", fontWeight: "300", lineHeight: "1.2" }}>YOUR NAME<br /><span style={{ fontSize: "28px", color: "#cbd5e1" }}>Full Stack Developer</span></h4>
       <div style={{ textAlign: "right", fontSize: "22px", color: "#f8fafc", lineHeight: "1.6" }}>
@@ -76,7 +76,7 @@ const ModernPreview = () => (
       </div>
       <div style={{ width: "70%", padding: "4rem" }}>
         <strong style={{ fontSize: "26px", color: "#000", display: "block", marginBottom: "16px", borderBottom: "2px solid #e2e8f0", paddingBottom: "10px" }}>PROFESSIONAL SUMMARY</strong>
-        <div style={{ fontSize: "22px", color: "#334155", lineHeight: "1.7", marginBottom: "40px" }}>
+        <div style={{ fontSize: "22px", color: "#334155", lineHeight: "1.7", marginBottom: "40px", textAlign: "justify" }}>
           Innovative developer with a strong foundation in modern web technologies. Dedicated to writing clean code and creating exceptional user experiences.
         </div>
         <strong style={{ fontSize: "26px", color: "#000", display: "block", marginBottom: "16px", borderBottom: "2px solid #e2e8f0", paddingBottom: "10px" }}>EXPERIENCE</strong>
@@ -92,7 +92,7 @@ const ModernPreview = () => (
 );
 
 const ProfessionalPreview = () => (
-  <div style={{ width: "400%", height: "400%", transform: "scale(0.25)", transformOrigin: "top left", display: "flex", flexDirection: "column", color: "#e2e8f0", padding: "6rem", background: "#ffffff", fontFamily: "'Calibri', sans-serif" }}>
+  <div style={{ width: "400%", height: "400%", transform: "scale(0.25)", transformOrigin: "top left", display: "flex", flexDirection: "column", color: "#e2e8f0", padding: "6rem", background: "#ffffff", fontFamily: "'Times New Roman', Times, serif" }}>
     <div style={{ textAlign: "left", marginBottom: "40px", paddingBottom: "30px", borderBottom: "2px solid #e2e8f0" }}>
       <h4 style={{ margin: 0, fontSize: "64px", color: "#000", fontWeight: "bold" }}>YOUR NAME</h4>
       <p style={{ margin: "16px 0 0 0", fontSize: "24px", color: "#000" }}>Data Scientist | New York, NY | (555) 000-0000 | name@email.com</p>
@@ -100,7 +100,7 @@ const ProfessionalPreview = () => (
     <div style={{ display: "flex", gap: "4rem" }}>
       <div style={{ width: "60%" }}>
         <strong style={{ fontSize: "26px", color: "#000", display: "block", marginBottom: "20px", textTransform: "uppercase", borderBottom: "2px solid #e2e8f0", paddingBottom: "10px" }}>Summary</strong>
-        <div style={{ fontSize: "22px", color: "#334155", lineHeight: "1.7", marginBottom: "40px" }}>
+        <div style={{ fontSize: "22px", color: "#334155", lineHeight: "1.7", marginBottom: "40px", textAlign: "justify" }}>
           Results-driven professional with 5+ years of experience. Expert in data analysis, machine learning, and driving actionable insights from complex datasets.
         </div>
         <strong style={{ fontSize: "26px", color: "#000", display: "block", marginBottom: "20px", textTransform: "uppercase", borderBottom: "2px solid #e2e8f0", paddingBottom: "10px" }}>Experience</strong>

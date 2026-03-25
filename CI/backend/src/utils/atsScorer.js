@@ -10,19 +10,9 @@ const ATS_KEYWORDS = [
   "selenium", "cypress", "automation", "quality assurance", "qa", "manual testing"
 ];
 
-const ROLE_RULES = [
-  { role: "Frontend Developer",  keywords: ["react","javascript","html","css","ui","typescript","redux"] },
-  { role: "Backend Developer",   keywords: ["node","express","api","mongodb","sql","python","java"] },
-  { role: "Full Stack Developer",keywords: ["react","node","mongodb","express","api","html","css"] },
-  { role: "Data Analyst",        keywords: ["sql","python","excel","power bi","analysis","pandas","tableau"] },
-  { role: "QA Engineer",         keywords: ["testing","selenium","automation","quality","jest","cypress","qa"] },
-  { role: "AI/ML Engineer",      keywords: ["python","machine learning","tensorflow","data","keras","sklearn"] },
-  { role: "DevOps Engineer",     keywords: ["docker","kubernetes","aws","ci/cd","linux","bash"] },
-  { role: "Cloud Engineer",      keywords: ["aws","azure","cloud","docker","kubernetes","devops"] },
-  { role: "Mobile Developer",    keywords: ["react native","flutter","android","ios","kotlin","swift","mobile"] },
-  { role: "UI/UX Designer",      keywords: ["figma","adobe xd","ui","ux","design","wireframing","prototyping"] },
-  { role: "Cybersecurity Analyst",keywords: ["security","cybersecurity","network","encryption","firewall","penetration"] },
-];
+import * as ExpandedData from "./expandedData.js";
+const ROLE_RULES = ExpandedData.ROLE_RULES;
+const TRACK_RESOURCES = ExpandedData.TRACK_RESOURCES;
 
 const SKILL_PROGRESSION = {
   "javascript": ["TypeScript", "Advanced Design Patterns", "Testing with Jest"],
@@ -35,96 +25,6 @@ const SKILL_PROGRESSION = {
   "css": ["Sass/SCSS", "Animation Libraries (Framer Motion)", "Responsive Design Systems"],
   "docker": ["Kubernetes", "CI/CD Pipeline Design", "Infrastructure as Code (Terraform)"],
   "machine learning": ["Deep Learning", "Natural Language Processing", "MLOps"],
-};
-
-const TRACK_RESOURCES = {
-  frontend: {
-    websites: [
-      { name: "MDN Web Docs", url: "https://developer.mozilla.org", focus: "Standard web technologies" },
-      { name: "React Learn", url: "https://react.dev", focus: "Modern React patterns" },
-      { name: "CSS-Tricks", url: "https://css-tricks.com", focus: "Styling and layouts" },
-      { name: "JavaScript.info", url: "https://javascript.info", focus: "Advanced JS concepts" }
-    ],
-    youtube: ["Frontend Developer Roadmap 2026", "Modern React Tutorial", "Advanced CSS Grid & Flexbox", "JavaScript Interview Questions"]
-  },
-  backend: {
-    websites: [
-      { name: "Node.js Guide", url: "https://nodejs.org", focus: "Server-side foundations" },
-      { name: "Express.js", url: "https://expressjs.com", focus: "API development" },
-      { name: "MongoDB University", url: "https://university.mongodb.com", focus: "NoSQL databases" },
-      { name: "Postman Learning", url: "https://learning.postman.com", focus: "API testing" }
-    ],
-    youtube: ["Backend Roadmap 2026", "Node.js Microservices", "Database Modeling Best Practices", "REST vs GraphQL Explained"]
-  },
-  fullstack: {
-    websites: [
-      { name: "MERN Stack Guide", url: "https://www.mongodb.com/mern-stack", focus: "Full stack development" },
-      { name: "The Odin Project", url: "https://www.theodinproject.com", focus: "Complete curriculum" },
-      { name: "Full Stack Open", url: "https://fullstackopen.com/en", focus: "Deep dive in web dev" }
-    ],
-    youtube: ["Full Stack Roadmap 2026", "Building a MERN App", "Auth & Security for Full Stack", "Web Scalability Patterns"]
-  },
-  data: {
-    websites: [
-      { name: "Kaggle", url: "https://www.kaggle.com", focus: "Data science competitions" },
-      { name: "Pandas Docs", url: "https://pandas.pydata.org", focus: "Data manipulation" },
-      { name: "SQLBolt", url: "https://sqlbolt.com", focus: "Interactive SQL learning" },
-      { name: "Tableau Public", url: "https://public.tableau.com", focus: "Data visualization" }
-    ],
-    youtube: ["Data Analyst Career Path", "Python for Data Science", "Advanced SQL for Analytics", "Power BI Dashboard Mastery"]
-  },
-  ai: {
-    websites: [
-      { name: "Google ML Crash Course", url: "https://developers.google.com/machine-learning/crash-course", focus: "ML basics" },
-      { name: "PyTorch Tutorials", url: "https://pytorch.org/tutorials/", focus: "Deep learning" },
-      { name: "Hugging Face", url: "https://huggingface.co/learn", focus: "LLMs and Transformers" }
-    ],
-    youtube: ["Machine Learning Roadmap 2026", "Neural Networks from Scratch", "Fine-tuning LLMs Guide", "AI Engineer Interview Prep"]
-  },
-  cloud: {
-    websites: [
-      { name: "AWS Training", url: "https://explore.skillbuilder.aws", focus: "Cloud architecture" },
-      { name: "Docker Docs", url: "https://docs.docker.com", focus: "Containerization" },
-      { name: "Kubernetes Training", url: "https://kubernetes.io/training/", focus: "Orchestration" }
-    ],
-    youtube: ["DevOps Roadmap 2026", "Docker & Kubernetes Crash Course", "AWS Solutions Architect", "CI/CD Pipeline Design"]
-  },
-  mobile: {
-    websites: [
-        { name: "React Native Docs", url: "https://reactnative.dev", focus: "Cross-platform mobile" },
-        { name: "Flutter Dev", url: "https://docs.flutter.dev", focus: "Modern mobile UI" },
-        { name: "Android Developers", url: "https://developer.android.com", focus: "Native Android" },
-        { name: "Swift Playgrounds", url: "https://www.apple.com/swift/playgrounds", focus: "iOS development" }
-    ],
-    youtube: ["Mobile Dev Roadmap 2026", "React Native Masterclass", "Flutter for Beginners", "iOS App Development with Swift"]
-  },
-  design: {
-    websites: [
-        { name: "Figma Learning", url: "https://www.figma.com/resources/learn-design", focus: "Interface design" },
-        { name: "UX Design Institute", url: "https://www.uxdesigninstitute.com", focus: "UX certification" },
-        { name: "Behance", url: "https://www.behance.net", focus: "Design inspiration" },
-        { name: "Awwwards", url: "https://www.awwwards.com", focus: "Web design excellence" }
-    ],
-    youtube: ["UI/UX Roadmap 2026", "Figma Advanced Components", "User Research Methodologies", "Principles of Visual Design"]
-  },
-  security: {
-    websites: [
-        { name: "OWASP", url: "https://owasp.org", focus: "Web security standards" },
-        { name: "TryHackMe", url: "https://tryhackme.com", focus: "Interactive security labs" },
-        { name: "Cybrary", url: "https://www.cybrary.it", focus: "Cybersecurity training" },
-        { name: "Hack The Box", url: "https://www.hackthebox.com", focus: "Advanced penetration testing" }
-    ],
-    youtube: ["Cybersecurity Roadmap 2026", "Ethical Hacking Full Course", "Network Security Fundamentals", "Web Application Penetration Testing"]
-  },
-  qa: {
-    websites: [
-        { name: "Selenium Dev", url: "https://www.selenium.dev", focus: "Browser automation" },
-        { name: "Cypress Docs", url: "https://docs.cypress.io", focus: "Frontend testing" },
-        { name: "ISTQB", url: "https://www.istqb.org", focus: "Testing certification" },
-        { name: "Guru99 QA", url: "https://www.guru99.com/software-testing.html", focus: "Testing fundamentals" }
-    ],
-    youtube: ["QA Engineer Roadmap 2026", "Automated Testing with Selenium", "Jest & React Testing Library", "Manual Testing interview Prep"]
-  }
 };
 
 // Helper: produce a realistic score with slight natural variation
@@ -600,12 +500,50 @@ export const analyzeResume = (resumeText = "", targetRole = "") => {
 
   // Derive exactly 10 interview questions
   const primaryRole = recommendedRoles[0] || "Full Stack Developer";
-  let pool = questionBank[primaryRole] || questionBank["Full Stack Developer"];
+  let pool = ExpandedData.questionBank[primaryRole] || ExpandedData.questionBank["Full Stack Developer"];
   
   // Shuffle and pick 10
   const interviewQuestions = pool
     .sort(() => 0.5 - Math.random())
     .slice(0, 10);
+
+  // ── Role Specific Insights ──────────────────────────────────────────────────
+  const ROLE_TO_TRACK = ExpandedData.ROLE_TO_TRACK;
+
+  const roleSpecificInsights = recommendedRoles.map(role => {
+    const trackKey = ROLE_TO_TRACK[role] || "fullstack";
+    const recommendedResources = TRACK_RESOURCES[trackKey] || TRACK_RESOURCES.fullstack;
+    
+    const roleRule = ROLE_RULES.find(r => r.role === role);
+    let missingRoleSkills = [];
+    if (roleRule) {
+      missingRoleSkills = roleRule.keywords.filter(kw => !extractedSkills.includes(kw));
+    }
+    
+    let extraSkills = [];
+    extractedSkills.forEach(s => {
+      if (SKILL_PROGRESSION[s]) {
+        SKILL_PROGRESSION[s].forEach(ns => {
+          if (!extractedSkills.includes(ns.toLowerCase()) && !extraSkills.includes(ns)) {
+             extraSkills.push(ns);
+          }
+        });
+      }
+    });
+
+    const roleSkillsToLearn = [...new Set([...missingRoleSkills.map(s => s.charAt(0).toUpperCase() + s.slice(1)), ...extraSkills])].slice(0, 8);
+
+    const rolePool = ExpandedData.questionBank[role] || ExpandedData.questionBank["Full Stack Developer"];
+    const roleQuestions = [...rolePool].sort(() => 0.5 - Math.random()).slice(0, 10);
+
+    return {
+      role,
+      trackKey,
+      nextLevelSkills: roleSkillsToLearn.length > 0 ? roleSkillsToLearn : ["System Design", "Advanced Architecture", "Performance Optimization", "Leadership & Mentoring", "Agile Methodologies"],
+      suggestedResources: recommendedResources,
+      interviewQuestions: roleQuestions
+    };
+  });
 
   return {
     atsScore: Math.round(Math.min(score, 100)),
@@ -625,6 +563,7 @@ export const analyzeResume = (resumeText = "", targetRole = "") => {
     learningPathways,
     careerTrack,
     nextLevelSkills: nextLevelSkills.slice(0, 6),
-    suggestedResources
+    suggestedResources,
+    roleSpecificInsights
   };
 };
