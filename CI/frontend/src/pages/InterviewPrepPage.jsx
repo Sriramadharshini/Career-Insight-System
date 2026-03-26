@@ -76,8 +76,18 @@ const InterviewPrepPage = () => {
   }, []);
 
   const startVideoRecording = async () => {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      alert("Your browser does not support video recording. Please use a modern browser like Chrome or Firefox.");
+      setMode("text");
+      return;
+    }
+
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { width: { ideal: 1280 }, height: { ideal: 720 } }, 
+        audio: true 
+      });
+      
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
       }
@@ -97,8 +107,14 @@ const InterviewPrepPage = () => {
 
       mediaRecorder.start();
     } catch (err) {
-      console.error("Camera access denied", err);
-      alert("Microphone/Camera access denied. Falling back to Text Mode.");
+      console.error("Media access error:", err);
+      if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") {
+        alert("Camera/Microphone access was denied. Please check your browser's site settings (usually the lock icon next to the URL) to allow access and try again.");
+      } else if (err.name === "NotFoundError" || err.name === "DevicesNotFoundError") {
+        alert("No camera or microphone found. Please connect your devices and try again.");
+      } else {
+        alert("An unexpected error occurred while accessing the camera. Falling back to Text Mode.");
+      }
       setMode("text");
     }
   };

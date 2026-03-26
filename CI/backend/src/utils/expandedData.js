@@ -51,10 +51,10 @@ export const TRACK_RESOURCES = {
   ], ["Backend Developer Roadmap", "Microservices vs Monolith", "REST API Best Practices", "Database Design Patterns", "Backend Interview Questions"]),
 
   "full stack developer": makeRes([
-    ["Full Stack Open", "https://fullstackopen.com/en", "Deep Dive"], ["The Odin Project", "https://www.theodinproject.com", "Curriculum"],
-    ["MERN Stack Guide", "https://www.mongodb.com/mern-stack", "Stack Tutorial"], ["Next.js Docs", "https://nextjs.org", "Fullstack Framework"],
+    ["The Open Academy", "https://fullstackopen.com/en", "Deep Dive"], ["The Odin Project", "https://www.theodinproject.com", "Curriculum"],
+    ["MERN Stack Guide", "https://www.mongodb.com/mern-stack", "Stack Tutorial"], ["Next.js Docs", "https://nextjs.org", "Modern Framework"],
     ["freeCodeCamp", "https://www.freecodecamp.org", "Interactive Practice"]
-  ], ["Full Stack Roadmap", "Building a MERN App from Scratch", "Next.js Full Course", "Web Security Essentials", "Full Stack Project Ideas"]),
+  ], ["Modern Developer Roadmap", "Building a MERN App from Scratch", "Next.js Full Course", "Web Security Essentials", "Project Ideas"]),
 
   "data scientist": makeRes([
     ["Kaggle", "https://www.kaggle.com", "ML Datasets"], ["Scikit-Learn", "https://scikit-learn.org", "ML Library"],

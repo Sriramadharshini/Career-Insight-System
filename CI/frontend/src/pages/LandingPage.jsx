@@ -44,7 +44,7 @@ const LandingPage = () => {
 
       {/* SECTION 1: HERO */}
       <section className="landing-hero" id="overview">
-        <motion.div 
+        <motion.div
           className="landing-copy landing-copy-centered"
           variants={staggerContainer}
           initial="hidden"
@@ -78,9 +78,9 @@ const LandingPage = () => {
           style={{ width: '100%', maxWidth: '1100px', margin: '6rem auto 0 auto', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         >
           <div style={{ position: 'relative', width: '100%', display: 'flex', flexWrap: 'wrap', gap: '3rem', justifyContent: 'center', alignItems: 'center', padding: '2rem', background: 'rgba(255, 255, 255, 0.02)', borderRadius: '50px', border: '1px solid rgba(255, 255, 255, 0.05)', boxShadow: '0 40px 100px rgba(0,0,0,0.5)' }}>
-            
+
             {/* Main High-Quality Illustration */}
-            <motion.div 
+            <motion.div
               style={{ flex: '1 1 400px', maxWidth: '500px' }}
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.5 }}
@@ -89,35 +89,35 @@ const LandingPage = () => {
             </motion.div>
 
             {/* Accompanying Content Card */}
-            <motion.div 
+            <motion.div
               style={{ flex: '1 1 350px', maxWidth: '450px', padding: '1rem' }}
               variants={staggerContainer}
             >
-               <motion.div variants={fadeInUp} style={{ background: 'rgba(56, 189, 248, 0.1)', display: 'inline-flex', padding: '0.6rem 1.2rem', borderRadius: '100px', color: '#38bdf8', fontSize: '0.85rem', fontWeight: '700', marginBottom: '1.5rem', border: '1px solid rgba(56, 189, 248, 0.2)' }}>
-                  AI CORE INTELLIGENCE
-               </motion.div>
-               <motion.h3 variants={fadeInUp} style={{ fontSize: '2.2rem', color: '#fff', marginBottom: '1.2rem', fontWeight: '800' }}>Smart Profile Analysis</motion.h3>
-               <motion.p variants={fadeInUp} style={{ color: '#a1a1aa', fontSize: '1.15rem', lineHeight: '1.7', marginBottom: '2.5rem' }}>
-                  Our proprietary neural engine identifies over 200 key signals in your professional profile, ensuring your resume speaks the language of modern recruiters.
-               </motion.p>
-               
-               <motion.div variants={fadeInUp} style={{ display: 'grid', gap: '1rem' }}>
-                 {[
-                   { label: "Extraction Accuracy", value: "99.8%" },
-                   { label: "ATS Optimization", value: "Real-time" }
-                 ].map((item, id) => (
-                   <div key={id} style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem', background: 'rgba(255,255,255,0.03)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                      <span style={{ color: '#a1a1aa' }}>{item.label}</span>
-                      <span style={{ color: '#38bdf8', fontWeight: '800' }}>{item.value}</span>
-                   </div>
-                 ))}
-               </motion.div>
+              <motion.div variants={fadeInUp} style={{ background: 'rgba(56, 189, 248, 0.1)', display: 'inline-flex', padding: '0.6rem 1.2rem', borderRadius: '100px', color: '#38bdf8', fontSize: '0.85rem', fontWeight: '700', marginBottom: '1.5rem', border: '1px solid rgba(56, 189, 248, 0.2)' }}>
+                AI CORE INTELLIGENCE
+              </motion.div>
+              <motion.h3 variants={fadeInUp} style={{ fontSize: '2.2rem', color: '#fff', marginBottom: '1.2rem', fontWeight: '800' }}>Smart Profile Analysis</motion.h3>
+              <motion.p variants={fadeInUp} style={{ color: '#a1a1aa', fontSize: '1.15rem', lineHeight: '1.7', marginBottom: '2.5rem' }}>
+                Our proprietary neural engine identifies over 200 key signals in your professional profile, ensuring your resume speaks the language of modern recruiters.
+              </motion.p>
+
+              <motion.div variants={fadeInUp} style={{ display: 'grid', gap: '1rem' }}>
+                {[
+                  { label: "Extraction Accuracy", value: "99.8%" },
+                  { label: "ATS Optimization", value: "Real-time" }
+                ].map((item, id) => (
+                  <div key={id} style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem', background: 'rgba(255,255,255,0.03)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                    <span style={{ color: '#a1a1aa' }}>{item.label}</span>
+                    <span style={{ color: '#38bdf8', fontWeight: '800' }}>{item.value}</span>
+                  </div>
+                ))}
+              </motion.div>
             </motion.div>
           </div>
         </motion.div>
       </section>      {/* SECTION 2: CORE FEATURES */}
       <section className="landing-value-section" id="features" style={{ padding: '10rem 2rem 6rem 2rem', background: 'linear-gradient(to bottom, #000, #050505)' }}>
-        <motion.div 
+        <motion.div
           className="deliverables-heading"
           initial="hidden"
           whileInView="visible"
@@ -131,11 +131,11 @@ const LandingPage = () => {
         </motion.div>
 
         <div style={{ width: '100%', maxWidth: '1400px', margin: '0 auto', padding: '0 2rem', display: 'flex', justifyContent: 'center' }}>
-          <motion.div 
-            style={{ 
-              display: 'grid', 
-              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
-              gap: '2.5rem', 
+          <motion.div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+              gap: '2.5rem',
               marginTop: '5rem',
               width: '100%',
               justifyContent: 'center'
@@ -148,36 +148,36 @@ const LandingPage = () => {
             {[
               { title: "Smart ATS Scoring", desc: "Find out instantly if your resume will pass automated recruiter filters before you even apply.", color: "#38bdf8", icon: <BarChart3 size={28} /> },
               { title: "Skill Gap Analysis", desc: "Learn exactly which skills you are missing for your desired jobs, and get tips on how to improve.", color: "#a78bfa", icon: <Zap size={28} /> },
-              { title: "Powerful Bullet Points", desc: "Our AI helps you rewrite your experience with strong action verbs to highlight your real impact.", color: "#fb7185", icon: <Sparkles size={28} /> },
+              { title: "Ace Your Interview", desc: "Mock interviews, STAR-based answer coaching, role-specific question sets, and follow-up templates to turn interviews into offers.", color: "#f59e0b", icon: <ShieldCheck size={28} /> },
               { title: "Role Recommendations", desc: "Not sure what to apply for? We analyze your strengths and suggest the best career paths for you.", color: "#34d399", icon: <Target size={28} /> }
             ].map((feat, i) => (
-              <motion.div 
-                key={i} 
-                className="feature-card-modern" 
-                variants={popIn} 
-                whileHover={{ y: -15, scale: 1.02, boxShadow: `0 30px 60px ${feat.color}22` }} 
-                style={{ 
-                  padding: '3.5rem 2.5rem', 
-                  background: 'rgba(15, 23, 42, 0.4)', 
+              <motion.div
+                key={i}
+                className="feature-card-modern"
+                variants={popIn}
+                whileHover={{ y: -15, scale: 1.02, boxShadow: `0 30px 60px ${feat.color}22` }}
+                style={{
+                  padding: '3.5rem 2.5rem',
+                  background: 'rgba(15, 23, 42, 0.4)',
                   backdropFilter: 'blur(20px)',
-                  borderRadius: '32px', 
+                  borderRadius: '32px',
                   border: '1px solid rgba(255, 255, 255, 0.05)',
-                  display: 'flex', 
-                  flexDirection: 'column', 
+                  display: 'flex',
+                  flexDirection: 'column',
                   alignItems: 'center',
                   textAlign: 'center',
                   transition: 'border-color 0.3s ease'
                 }}
               >
-                <div style={{ 
-                  background: `linear-gradient(135deg, ${feat.color}22, ${feat.color}11)`, 
-                  color: feat.color, 
-                  width: '80px', 
-                  height: '80px', 
-                  borderRadius: '24px', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center', 
+                <div style={{
+                  background: `linear-gradient(135deg, ${feat.color}22, ${feat.color}11)`,
+                  color: feat.color,
+                  width: '80px',
+                  height: '80px',
+                  borderRadius: '24px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                   marginBottom: '2rem',
                   border: `1px solid ${feat.color}33`
                 }}>
@@ -196,7 +196,7 @@ const LandingPage = () => {
       {/* SECTION 3: WORKFLOW */}
       <section className="landing-workflow" id="workflow" style={{ padding: '8rem 2rem', background: '#050505', position: 'relative' }}>
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent)' }}></div>
-        <motion.div 
+        <motion.div
           className="workflow-heading"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -207,14 +207,14 @@ const LandingPage = () => {
           <h2 style={{ fontSize: '3.5rem', color: '#fff', fontWeight: '800', marginTop: '1rem' }}>Your Path To Success</h2>
           <p style={{ color: '#a1a1aa', fontSize: '1.25rem', maxWidth: '600px', margin: '1.5rem auto' }}>Accelerate your career journey with our intelligent three-step workflow.</p>
         </motion.div>
-        
+
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '3rem' }}>
-          {[ 
+          {[
             { step: "01", title: "Build Your Identity", desc: "Create a high-impact, ATS-optimized resume in minutes using our AI-driven builder.", color: "#38bdf8", icon: <FileText size={36} /> },
             { step: "02", title: "Analyze & Optimize", desc: "Get deep insights into your skill gaps and receive actionable suggestions to stay ahead.", color: "#a78bfa", icon: <LineChart size={36} /> },
             { step: "03", title: "Launch Your Career", desc: "Discover tailored job recommendations and career paths that perfectly match your goals.", color: "#34d399", icon: <Rocket size={36} /> }
           ].map((item, index) => (
-            <motion.div 
+            <motion.div
               key={index}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -222,10 +222,10 @@ const LandingPage = () => {
               transition={{ delay: index * 0.2 }}
               style={{ position: 'relative', height: '100%' }}
             >
-              <motion.div 
+              <motion.div
                 whileHover={{ y: -10 }}
-                style={{ 
-                  background: 'rgba(255, 255, 255, 0.02)', 
+                style={{
+                  background: 'rgba(255, 255, 255, 0.02)',
                   border: '1px solid rgba(255, 255, 255, 0.05)',
                   padding: '3.5rem 2.5rem',
                   borderRadius: '35px',
@@ -276,17 +276,17 @@ const LandingPage = () => {
           <span className="eyebrow neon-glow-text">System Applications</span>
           <h2 style={{ fontSize: '4rem', color: '#fff', fontWeight: '900', letterSpacing: '-0.02em', margin: '1rem auto', textAlign: 'center' }}>Engineered for your Career</h2>
         </motion.div>
-        
+
         <div style={{ width: '100%', maxWidth: '1400px', margin: '0 auto' }}>
-          
+
           {/* Illustration Row - Perfectly Balanced */}
-          <motion.div 
-            style={{ 
-              display: 'flex', 
+          <motion.div
+            style={{
+              display: 'flex',
               flexDirection: 'row',
-              flexWrap: 'wrap', 
-              gap: '6rem', 
-              alignItems: 'center', 
+              flexWrap: 'wrap',
+              gap: '6rem',
+              alignItems: 'center',
               justifyContent: 'center',
               padding: '0 2rem'
             }}
@@ -352,11 +352,11 @@ const LandingPage = () => {
       <section style={{ padding: '10rem 2rem', background: '#000', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', width: '100%', height: '100%', top: 0, left: 0, background: 'radial-gradient(circle at 70% 30%, rgba(56, 189, 248, 0.08) 0%, transparent 60%)' }}></div>
         <div style={{ position: 'absolute', width: '100%', height: '100%', top: 0, left: 0, background: 'radial-gradient(circle at 20% 80%, rgba(167, 139, 250, 0.08) 0%, transparent 60%)' }}></div>
-        
-        <motion.div 
-          style={{ 
-            maxWidth: '1100px', 
-            margin: '0 auto', 
+
+        <motion.div
+          style={{
+            maxWidth: '1100px',
+            margin: '0 auto',
             background: 'linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01))',
             padding: '6rem 4rem',
             borderRadius: '50px',
@@ -381,55 +381,69 @@ const LandingPage = () => {
           </p>
           <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link to="/register" className="nav-pill" style={{ padding: '1.4rem 3.5rem', fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-               Get Started For Free <Rocket size={20} />
+              Get Started<Rocket size={20} />
             </Link>
           </div>
         </motion.div>
       </section>
 
-      {/* FOOTER - Redesigned */}
-      <footer style={{ borderTop: '1px solid rgba(255,255,255,0.05)', background: '#050505', padding: '4rem 2rem 2rem 2rem' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'minmax(250px, 1.5fr) 1fr 1fr', gap: '3rem' }}>
-          
+      {/* FOOTER - Polished Professional Design */}
+      <footer style={{ borderTop: '1px solid rgba(255,255,255,0.05)', background: '#050505', padding: '6rem 2rem 3rem 2rem' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '5rem' }}>
+
           {/* Brand Col */}
-          <div>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1.5rem' }}>
-              <div style={{ background: 'rgba(56, 189, 248, 0.1)', padding: '0.5rem', borderRadius: '10px' }}>
-                <Sparkles size={24} color="#38bdf8" />
+              <div style={{ background: 'rgba(56, 189, 248, 0.1)', padding: '0.6rem', borderRadius: '12px' }}>
+                <Sparkles size={26} color="#38bdf8" />
               </div>
-              <h2 style={{ color: '#fff', fontSize: '1.5rem', margin: 0, fontWeight: '700' }}>Career Insight</h2>
+              <h2 style={{ color: '#fff', fontSize: '1.8rem', margin: 0, fontWeight: '800', letterSpacing: '-0.02em' }}>Career Insight System</h2>
             </div>
-            <p style={{ color: '#a1a1aa', lineHeight: '1.6', fontSize: '0.95rem', maxWidth: '300px' }}>
-              Giving you the intelligent tools to create beautiful resumes, discover skill gaps, and take total control of your career journey.
+            <p style={{ color: '#a1a1aa', lineHeight: '1.8', fontSize: '1.05rem', marginBottom: '2rem', maxWidth: '380px' }}>
+              Our AI-powered platform provides intelligent tools for resume building, skill gap analysis, and personalized career growth.
             </p>
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                <Rocket size={18} color="#a1a1aa" />
+              </div>
+              <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                <BrainCircuit size={18} color="#a1a1aa" />
+              </div>
+            </div>
           </div>
 
-          {/* Links Col 1 */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <h3 style={{ color: '#fff', fontSize: '1.1rem', marginBottom: '0.5rem' }}>Platform</h3>
-            <Link to="/login" style={{ color: '#a1a1aa', textDecoration: 'none', transition: 'color 0.2s' }}>Sign In</Link>
-            <Link to="/register" style={{ color: '#a1a1aa', textDecoration: 'none', transition: 'color 0.2s' }}>Create Account</Link>
-            <a href="#features" style={{ color: '#a1a1aa', textDecoration: 'none', transition: 'color 0.2s' }}>Features</a>
-            <a href="#workflow" style={{ color: '#a1a1aa', textDecoration: 'none', transition: 'color 0.2s' }}>How it Works</a>
-          </div>
+          {/* Links Grid Wrapper for Symmetrical Alignment */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', width: '100%' }}>
+            {/* Links Col 1 - Platform */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+              <h3 style={{ color: '#fff', fontSize: '1.1rem', marginBottom: '0.5rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Platform</h3>
+              <Link to="/login" style={{ color: '#a1a1aa', textDecoration: 'none', transition: 'color 0.2s', fontSize: '1rem' }} className="footer-link-hover">Sign In</Link>
+              <Link to="/register" style={{ color: '#a1a1aa', textDecoration: 'none', transition: 'color 0.2s', fontSize: '1rem' }} className="footer-link-hover">Create Account</Link>
+              <a href="#features" style={{ color: '#a1a1aa', textDecoration: 'none', transition: 'color 0.2s', fontSize: '1rem' }} className="footer-link-hover">Key Features</a>
+              <a href="#workflow" style={{ color: '#a1a1aa', textDecoration: 'none', transition: 'color 0.2s', fontSize: '1rem' }} className="footer-link-hover">Our Workflow</a>
+            </div>
 
-          {/* Links Col 2 */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <h3 style={{ color: '#fff', fontSize: '1.1rem', marginBottom: '0.5rem' }}>Resources</h3>
-            <span style={{ color: '#a1a1aa', cursor: 'pointer' }}>Template Library</span>
-            <span style={{ color: '#a1a1aa', cursor: 'pointer' }}>Career Advice Blog</span>
-            <span style={{ color: '#a1a1aa', cursor: 'pointer' }}>Resume Guide</span>
-            <span style={{ color: '#a1a1aa', cursor: 'pointer' }}>Help Center</span>
+            {/* Links Col 2 - Resources */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+              <h3 style={{ color: '#fff', fontSize: '1.1rem', marginBottom: '0.5rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Resources</h3>
+              <span style={{ color: '#a1a1aa', cursor: 'pointer', fontSize: '1rem' }} className="footer-link-hover">Documentation</span>
+              <span style={{ color: '#a1a1aa', cursor: 'pointer', fontSize: '1rem' }} className="footer-link-hover">Architecture</span>
+              <span style={{ color: '#a1a1aa', cursor: 'pointer', fontSize: '1rem' }} className="footer-link-hover">User Manual</span>
+              <span style={{ color: '#a1a1aa', cursor: 'pointer', fontSize: '1rem' }} className="footer-link-hover">Privacy & Ethics</span>
+            </div>
           </div>
-
         </div>
 
-        {/* Bottom Bar */}
-        <div style={{ maxWidth: '1200px', margin: '3rem auto 0 auto', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-          <span style={{ color: '#666', fontSize: '0.9rem' }}>© 2026 Career Insight. Empowering your potential.</span>
-          <div style={{ display: 'flex', gap: '1.5rem' }}>
-            <span style={{ color: '#666', fontSize: '0.9rem', cursor: 'pointer' }}>Privacy Policy</span>
-            <span style={{ color: '#666', fontSize: '0.9rem', cursor: 'pointer' }}>Terms of Service</span>
+        {/* Bottom Bar - Polished Attribution */}
+        <div style={{ maxWidth: '1200px', margin: '5rem auto 0 auto', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '2.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <span style={{ color: '#64748b', fontSize: '0.95rem', fontWeight: '500' }}>Career Insight System | 2026</span>
+            <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#334155' }}></div>
+            <span style={{ color: '#475569', fontSize: '0.95rem' }}>Empowering Career Excellence</span>
+          </div>
+          <div style={{ display: 'flex', gap: '2.5rem', alignItems: 'center' }}>
+            <span style={{ color: '#475569', fontSize: '0.9rem', cursor: 'pointer' }} className="footer-link-hover">Terms of Service</span>
+            <span style={{ color: '#475569', fontSize: '0.9rem', cursor: 'pointer' }} className="footer-link-hover">Privacy Policy</span>
           </div>
         </div>
       </footer>

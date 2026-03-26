@@ -1,5 +1,5 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { TrendingUp, Sparkles } from "lucide-react";
+import { TrendingUp, Sparkles, Zap, ExternalLink, Video } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { profileApi, resumeApi } from "../api";
@@ -54,25 +54,39 @@ const GlassCard = ({ children, gradient, style = {} }) => (
 );
 
 // ─── Resource Link ────────────────────────────────────────────────────────────
-const ResourceLink = ({ href, index, name, focus, accent, icon }) => (
-  <motion.a
-    href={href} target="_blank" rel="noreferrer"
-    whileHover={{ x: 6, scale: 1.02, backgroundColor: "rgba(255,255,255,0.05)" }}
-    style={{
-      display: "flex", gap: "1.25rem", alignItems: "center", padding: "1.25rem 1.5rem",
-      background: "rgba(255,255,255,0.02)", border: `1px solid ${accent}15`, borderRadius: "16px",
-      textDecoration: "none", transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
-    }}>
-    <div style={{ width: 40, height: 40, borderRadius: "10px", background: `${accent}15`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.2rem", flexShrink: 0 }}>
-      {icon}
-    </div>
-    <div style={{ flex: 1 }}>
-      <p style={{ margin: "0 0 0.25rem", fontSize: "1.05rem", fontWeight: 700, color: "#f1f5f9" }}>{name}</p>
-      <p style={{ margin: 0, fontSize: "0.85rem", color: "#94a3b8" }}>{focus}</p>
-    </div>
-    <span style={{ color: `${accent}80`, fontSize: "1.2rem" }}>↗</span>
-  </motion.a>
-);
+const ResourceLink = ({ href, index, name, focus, accent, isYoutube }) => {
+  const domain = new URL(href).hostname;
+  const logoUrl = isYoutube 
+    ? "https://www.google.com/s2/favicons?sz=128&domain=youtube.com"
+    : `https://www.google.com/s2/favicons?sz=128&domain=${domain}`;
+
+  return (
+    <motion.a
+      href={href} target="_blank" rel="noreferrer"
+      whileHover={{ x: 6, scale: 1.02, backgroundColor: "rgba(255,255,255,0.05)" }}
+      style={{
+        display: "flex", gap: "1.25rem", alignItems: "center", padding: "1.25rem 1.5rem",
+        background: "rgba(255,255,255,0.02)", border: `1px solid ${accent}15`, borderRadius: "16px",
+        textDecoration: "none", transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+      }}>
+      <div style={{ width: 44, height: 44, borderRadius: "12px", background: isYoutube ? "rgba(244,63,94,0.1)" : `${accent}15`, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", flexShrink: 0, border: "1px solid rgba(255,255,255,0.05)" }}>
+        <img 
+          src={logoUrl} 
+          alt={name} 
+          style={{ width: "24px", height: "24px", objectFit: "contain" }}
+          onError={(e) => { e.target.src = "https://www.google.com/s2/favicons?sz=64&domain=google.com"; }}
+        />
+      </div>
+      <div style={{ flex: 1 }}>
+        <p style={{ margin: "0 0 0.25rem", fontSize: "1.05rem", fontWeight: 700, color: "#f1f5f9" }}>{name}</p>
+        <p style={{ margin: 0, fontSize: "0.85rem", color: "#94a3b8" }}>{focus}</p>
+      </div>
+      <span style={{ color: isYoutube ? "#f43f5e80" : `${accent}80`, fontSize: "1.1rem" }}>
+        {isYoutube ? <Video size={18} /> : <ExternalLink size={18} />}
+      </span>
+    </motion.a>
+  );
+};
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 const CareerSuggestionsPage = () => {
@@ -227,7 +241,7 @@ const CareerSuggestionsPage = () => {
                 <motion.div key="websites" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
                   style={{ display: "grid", gap: "1rem" }}>
                   {resources.websites.map((w, i) => (
-                    <ResourceLink key={i} href={w.url} name={w.name} focus={w.focus} accent={trackInfo.color} icon="🌐" />
+                    <ResourceLink key={i} href={w.url} name={w.name} focus={w.focus} accent={trackInfo.color} />
                   ))}
                 </motion.div>
               ) : (
@@ -240,7 +254,7 @@ const CareerSuggestionsPage = () => {
                       name={q}
                       focus="Curated Video Guide"
                       accent="#f43f5e"
-                      icon="▶"
+                      isYoutube={true}
                     />
                   ))}
                 </motion.div>
@@ -254,7 +268,9 @@ const CareerSuggestionsPage = () => {
       <section style={{ maxWidth: 1200, margin: "0 auto", padding: "0 2rem 4rem" }}>
         <div style={{ background: "linear-gradient(135deg,rgba(139,92,246,0.1),transparent)", border: "1px solid rgba(139,92,246,0.2)", borderRadius: "32px", padding: "3rem", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "2rem", flexWrap: "wrap" }}>
           <div style={{ flex: 1, minWidth: 300 }}>
-            <h3 style={{ fontSize: "1.75rem", fontWeight: 800, color: "#fff", marginBottom: "1rem" }}>Ready for the real thing? 🎯</h3>
+            <h3 style={{ fontSize: "1.75rem", fontWeight: 800, color: "#fff", marginBottom: "1rem", display: "flex", alignItems: "center", gap: "0.8rem" }}>
+              Ready for the real thing? <Zap size={28} color="#f59e0b" fill="#f59e0b" />
+            </h3>
             <p style={{ color: "#94a3b8", fontSize: "1.05rem", lineHeight: 1.6, margin: 0 }}>
               Test your knowledge with our AI-powered Interview Simulator. Practice with timed questions tailored specifically to your {displayTitle} profile.
             </p>
