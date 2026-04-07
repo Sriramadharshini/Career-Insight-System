@@ -1,7 +1,7 @@
 import { Resume } from "../models/Resume.js";
 import { analyzeResume } from "../utils/atsScorer.js";
 import { extractResumeText } from "../utils/extractResumeText.js";
-import { analyzeResumeWithAI, evaluateInterviewAnswersWithAI } from '../utils/aiAnalyzer.js';
+import { analyzeResumeWithAI, evaluateInterviewAnswersWithAI, generateCareerSuggestionsWithAI, generateJobRecommendationsWithAI, evaluateVideoInterview as evaluateVideoHeuristic } from '../utils/aiAnalyzer.js';
 import fs from "fs";
 
 export const uploadResume = async (req, res) => {
@@ -14,12 +14,32 @@ export const uploadResume = async (req, res) => {
     const extractedText = await extractResumeText(req.file.path);
     const analysis = analyzeResume(extractedText, targetRole);
 
+    // ── AI-powered career suggestion enrichment ────────────────────────────────
+    let aiCareerData = null;
+    try {
+      if (process.env.GEMINI_API_KEY) {
+        aiCareerData = await generateCareerSuggestionsWithAI(extractedText);
+      }
+    } catch (aiErr) {
+      console.warn("AI career suggestions failed, using static fallback:", aiErr.message);
+    }
+
+    const finalAnalysis = {
+      ...analysis,
+      ...(aiCareerData && {
+        recommendedRoles: aiCareerData.recommendedRoles || analysis.recommendedRoles,
+        careerTrack: aiCareerData.careerTrack || analysis.careerTrack,
+        roleSpecificInsights: aiCareerData.roleSpecificInsights || analysis.roleSpecificInsights,
+        aiCareerSuggestions: true
+      })
+    };
+
     const resume = await Resume.create({
       user: req.user._id,
       originalName: req.file.originalname,
       filePath: req.file.path,
       extractedText,
-      ...analysis
+      ...finalAnalysis
     });
 
     return res.status(201).json(resume);
@@ -35,12 +55,18 @@ export const uploadResume = async (req, res) => {
 
 export const getLatestResume = async (req, res) => {
   try {
+    if (!req.user || !req.user._id) {
+      return res.status(401).json({ message: "User context missing" });
+    }
     const resume = await Resume.findOne({ user: req.user._id }).sort({ createdAt: -1 });
-    return res.json(resume);
+    return res.json(resume || null);
   } catch (error) {
-    return res.status(500).json({ message: "Failed to fetch resume", error: error.message });
+    console.error("Fetch resume error:", error);
+    // Return null instead of 500 to keep the frontend from crashing on empty profiles
+    return res.status(200).json(null);
   }
 };
+
 
 export const analyzeCurrentProfile = async (req, res) => {
   try {
@@ -76,6 +102,26 @@ export const analyzeCurrentProfile = async (req, res) => {
 
     const analysis = analyzeResume(text, profile.preferredRole);
 
+    // ── AI-powered career suggestion enrichment ────────────────────────────────
+    let aiCareerData = null;
+    try {
+      if (process.env.GEMINI_API_KEY) {
+        aiCareerData = await generateCareerSuggestionsWithAI(text);
+      }
+    } catch (aiErr) {
+      console.warn("AI career suggestions failed for profile, using static fallback:", aiErr.message);
+    }
+
+    const finalAnalysis = {
+      ...analysis,
+      ...(aiCareerData && {
+        recommendedRoles: aiCareerData.recommendedRoles || analysis.recommendedRoles,
+        careerTrack: aiCareerData.careerTrack || analysis.careerTrack,
+        roleSpecificInsights: aiCareerData.roleSpecificInsights || analysis.roleSpecificInsights,
+        aiCareerSuggestions: true
+      })
+    };
+
     // Save this as a "Resume" record for the user so suggestions work
     const resume = await Resume.findOneAndUpdate(
       { user: req.user._id, isFromProfile: true },
@@ -83,9 +129,9 @@ export const analyzeCurrentProfile = async (req, res) => {
         user: req.user._id,
         originalName: "Generated from Profile",
         extractedText: text,
-        filePath: "profile-generated", 
+        filePath: "profile-generated",
         isFromProfile: true,
-        ...analysis
+        ...finalAnalysis
       },
       { upsert: true, new: true }
     );
@@ -213,3 +259,45 @@ export const evaluateInterview = async (req, res) => {
     return res.status(500).json({ message: "Failed to evaluate interview", error: error.message });
   }
 };
+
+export const evaluateVideoInterview = async (req, res) => {
+  try {
+    const { role, questionTimings } = req.body;
+    if (!questionTimings || !Array.isArray(questionTimings)) {
+      return res.status(400).json({ success: false, message: "Invalid questionTimings payload." });
+    }
+    const result = evaluateVideoHeuristic(questionTimings, role || "Professional");
+    return res.status(200).json({ success: true, results: result });
+  } catch (error) {
+    console.error("Video Interview Evaluation Error:", error);
+    return res.status(500).json({ message: "Failed to evaluate video interview", error: error.message });
+  }
+};
+export const getJobRecommendations = async (req, res) => {
+  try {
+    if (!req.user || !req.user._id) {
+      return res.status(200).json([]);
+    }
+
+    const resume = await Resume.findOne({ user: req.user._id }).sort({ createdAt: -1 });
+    
+    if (!resume) {
+      return res.status(200).json([]); 
+    }
+
+    // Pass recommendations directly if they exist from analysis, or generate new ones
+    const recommendations = await generateJobRecommendationsWithAI(
+      resume.extractedText || "",
+      resume.recommendedRoles?.[0] || ""
+    );
+
+    return res.json(recommendations || []);
+  } catch (error) {
+    console.error("Job recommendations route error:", error);
+    // Explicitly return 200 with empty array to prevent 500 errors in frontend Promise.all
+    if (!res.headersSent) {
+      return res.status(200).json([]);
+    }
+  }
+};
+

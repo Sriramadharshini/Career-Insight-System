@@ -3,6 +3,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { resumeApi } from "../api";
 import { useAuth } from "../context/AuthContext";
+import { Zap, Briefcase, Target, Award, TrendingUp, CheckCircle, AlertCircle, Shield, Globe } from "lucide-react";
+
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const SECTION_META = {
@@ -161,6 +163,58 @@ const UploadZone = ({ file, onFile }) => {
   );
 };
 
+// ─── Skill Icons Map ─────────────────────────────────────────────────────────
+const SKILL_ICON_MAP = {
+  react:       "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
+  python:      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
+  javascript:  "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
+  typescript:  "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",
+  node:        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg",
+  html:        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg",
+  css:         "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg",
+  java:        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg",
+  sql:         "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg",
+  mysql:       "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg",
+  postgresql:  "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg",
+  mongodb:     "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg",
+  docker:      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg",
+  aws:         "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg",
+  figma:       "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg",
+  git:         "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg",
+  express:     "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg",
+  angular:     "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg",
+  vue:         "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg",
+  nextjs:      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg",
+  redux:       "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redux/redux-original.svg",
+  tailwind:     "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg",
+  cplusplus:   "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg",
+  csharp:      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg",
+  php:         "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg",
+  laravel:     "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-plain.svg",
+  flutter:     "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg",
+  dart:        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dart/dart-original.svg",
+  kotlin:      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg",
+  swift:       "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/swift/swift-original.svg",
+  go:          "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg",
+  rust:        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rust/rust-plain.svg",
+  firebase:    "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg",
+  graphql:     "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg",
+  django:      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg",
+  spring:      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original.svg",
+  tensorflow:  "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg",
+  pytorch:     "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytorch/pytorch-original.svg",
+  kubernetes:  "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg",
+  linux:       "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg",
+};
+
+
+const getSkillIcon = (skill) => {
+  const lowerSkill = skill.toLowerCase();
+  const key = Object.keys(SKILL_ICON_MAP).find(k => lowerSkill.includes(k) || k.includes(lowerSkill));
+  return key ? SKILL_ICON_MAP[key] : null;
+};
+
+
 // ─── Skill Chip ───────────────────────────────────────────────────────────────
 const Chip = ({ label, color = "#6366f1" }) => (
   <span style={{
@@ -265,15 +319,15 @@ const ResumeUploadPage = () => {
             <p style={{ margin:"0 0 1.5rem", fontSize:"1rem", color:"#64748b", lineHeight:1.7 }}>
               Instantly analyze your resume with our AI engine. Receive section-wise scores, skill gap insights, matched keywords, and career recommendations — all in one scan.
             </p>
-            <div style={{ display:"flex", gap:"1.5rem", flexWrap:"wrap", marginTop: "1.25rem" }}>
+            <div style={{ display:"flex", gap:"1rem", flexWrap:"wrap", marginTop: "1.25rem" }}>
               {[
-                { icon: "🔎", label: "Skill Extraction", color: "#6366f1" },
-                { icon: "📈", label: "ATS Scoring",     color: "#10b981" },
-                { icon: "🎯", label: "Gap Analysis",    color: "#f59e0b" },
-                { icon: "🛣️", label: "Career Path",     color: "#38bdf8" }
+                { svg: (<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><path d="M11 8v6M8 11h6"/></svg>), label: "Skill Extraction", color: "#6366f1" },
+                { svg: (<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>), label: "ATS Scoring",     color: "#10b981" },
+                { svg: (<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>), label: "Gap Analysis",    color: "#f59e0b" },
+                { svg: (<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 17l4-8 4 4 4-6 4 10"/><path d="M21 21H3"/></svg>), label: "Career Path",     color: "#38bdf8" }
               ].map((f) => (
-                <motion.div key={f.label} whileHover={{ y: -2 }} style={{ display:"flex", alignItems:"center", gap:"0.6rem", background: "rgba(255,255,255,0.03)", padding: "0.5rem 1rem", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.05)" }}>
-                  <span style={{ fontSize: "1.2rem", filter: `drop-shadow(0 0 8px ${f.color}40)` }}>{f.icon}</span>
+                <motion.div key={f.label} whileHover={{ y: -2 }} style={{ display:"flex", alignItems:"center", gap:"0.6rem", background: "rgba(255,255,255,0.03)", padding: "0.55rem 1rem", borderRadius: "12px", border: `1px solid ${f.color}20` }}>
+                  <span style={{ color: f.color, display:"flex", alignItems:"center", filter:`drop-shadow(0 0 6px ${f.color}50)` }}>{f.svg}</span>
                   <span style={{ fontSize:"0.88rem", color:"#cbd5e1", fontWeight:600 }}>{f.label}</span>
                 </motion.div>
               ))}
@@ -498,15 +552,27 @@ const ResumeUploadPage = () => {
                   {/* Skills Grid */}
                   <h4 style={{ textAlign: "center", color: "#6ee7b7", marginBottom: "1.5rem", fontSize: "1.1rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px" }}>Skills Identified from Resume Content</h4>
                   <div style={{ display:"flex", flexWrap:"wrap", gap:"1rem", justifyItems: "center", justifyContent: "center", position: "relative", zIndex: 1, marginBottom: "3rem" }}>
-                    {(analysis.extractedSkills || analysis.matchedKeywords || []).map((s, i) => (
-                      <motion.div key={s} initial={{ opacity:0, scale:0.9 }} animate={{ opacity:1, scale:1 }} transition={{ delay: i * 0.05 }}
-                        className="hover-glass" style={{ display: "inline-flex", alignItems: "center", gap: "0.75rem", background: "linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.02))", border: "1px solid rgba(16,185,129,0.2)", borderRadius: "16px", padding: "0.75rem 1.5rem", color: "#6ee7b7", fontSize: "1.1rem", fontWeight: 700, boxShadow: "0 8px 16px rgba(0,0,0,0.2)", cursor:"default" }}>
-                        <span style={{ fontSize: "1.3rem", background: "rgba(16,185,129,0.15)", width: "36px", height: "36px", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "10px", boxShadow: "inset 0 0 0 1px rgba(16,185,129,0.3)" }}>
-                          {["🎯", "💻", "⚡", "🔧", "💡", "🚀", "🛡️", "📊", "🧠", "🌐"][i % 10]}
-                        </span>
-                        {s}
-                      </motion.div>
-                    ))}
+                    {(analysis.extractedSkills || analysis.matchedKeywords || []).map((s, i) => {
+                      const iconUrl = getSkillIcon(s);
+                      return (
+                        <motion.div key={i} 
+                          initial={{ opacity:0, scale:0.5 }}
+                          animate={{ opacity:1, scale:1 }}
+                          transition={{ delay: i * 0.03 }}
+                          whileHover={{ scale: 1.05, background: "rgba(110, 231, 183, 0.15)" }}
+                          style={{ background:"rgba(110, 231, 183, 0.08)", border:"1px solid rgba(110, 231, 183, 0.25)", color:"#6ee7b7", padding:"0.6rem 1.25rem", borderRadius:"14px", fontSize:"0.95rem", fontWeight:700, display:"flex", alignItems:"center", gap:"0.75rem", transition: "all 0.2s" }}>
+                          <div style={{ width: 24, height: 24, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                            {iconUrl ? (
+                              <img src={iconUrl} alt={s} style={{ width: "100%", height: "100%", objectFit: "contain" }} onError={(e) => { e.target.style.display = "none"; }} />
+                            ) : (
+                              <Zap size={16}/>
+                            )}
+                          </div>
+                          <span>{s}</span>
+                        </motion.div>
+                      );
+                    })}
+
                   </div>
 
                   {!(analysis.extractedSkills||analysis.matchedKeywords||[]).length && (

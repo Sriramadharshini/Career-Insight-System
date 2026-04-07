@@ -31,7 +31,8 @@ const resumeSchema = new mongoose.Schema(
     careerTrack: { type: String, default: "fullstack" },
     nextLevelSkills: { type: [String], default: [] },
     suggestedResources: { type: mongoose.Schema.Types.Mixed, default: {} },
-    roleSpecificInsights: { type: [mongoose.Schema.Types.Mixed], default: [] }
+    roleSpecificInsights: { type: [mongoose.Schema.Types.Mixed], default: [] },
+    aiCareerSuggestions: { type: Boolean, default: false }
   },
   { timestamps: true }
 );

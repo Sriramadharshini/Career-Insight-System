@@ -42,8 +42,19 @@ app.use(express.urlencoded({ limit: "10mb", extended: true }));
 app.use("/uploads", express.static(path.resolve("uploads")));
 
 app.get("/api/health", (_req, res) => {
-  res.json({ status: "ok" });
+  const dbStatus = mongoose.connection.readyState;
+  const statusMap = {
+    0: "disconnected",
+    1: "connected",
+    2: "connecting",
+    3: "disconnecting"
+  };
+  res.json({ 
+    status: dbStatus === 1 ? "ok" : "error",
+    database: statusMap[dbStatus] || "unknown"
+  });
 });
+
 
 app.get("/", (_req, res) => {
   res.json({

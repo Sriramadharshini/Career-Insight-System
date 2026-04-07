@@ -50,20 +50,22 @@ const LandingPage = () => {
           initial="hidden"
           animate="visible"
         >
-          <motion.span className="eyebrow neon-glow-text" variants={fadeInUp}>AI-Powered Career Building</motion.span>
-          <motion.h1 className="hero-display" variants={fadeInUp}>
-            Develop Your
-            <span className="hero-display-gradient"> Career Potential </span>
-            With AI
+          <motion.span className="eyebrow neon-glow-text" variants={fadeInUp} style={{ fontSize: '0.95rem', letterSpacing: '0.25em', fontWeight: 800 }}>AI-Powered Career Intelligence Platform</motion.span>
+          <motion.h1 className="hero-display" variants={fadeInUp} style={{ fontSize: 'clamp(3rem, 6vw, 5.2rem)', lineHeight: 1.05, letterSpacing: '-2.5px', marginTop: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', fontWeight: 900 }}>
+            <span>Develop</span>
+            <span style={{ color: 'rgba(255,255,255,0.9)' }}>Your Career</span>
+            <span className="hero-display-gradient" style={{ display: 'inline-block', margin: '0.1rem 0', filter: 'drop-shadow(0 0 30px rgba(56, 189, 248, 0.3))' }}>Potential</span>
+            <span style={{ fontSize: '0.9em', opacity: 0.9 }}>With AI</span>
           </motion.h1>
-          <motion.p className="lead-text" variants={fadeInUp}>
-            Stop guessing what recruiters want. Create professional resumes, instantly discover missing skills, and find the perfect job matches—all powered by intelligent technology designed for your success.
+
+          <motion.p className="lead-text" variants={fadeInUp} style={{ fontSize: '1.25rem', lineHeight: 1.8, maxWidth: 620, color: 'rgba(255,255,255,0.7)' }}>
+            Stop guessing what recruiters want. Build professional resumes, uncover skill gaps instantly, and discover perfect job matches — all powered by intelligent AI designed for your success.
           </motion.p>
-          <motion.div className="hero-actions" variants={fadeInUp} style={{ marginTop: '1.5rem' }}>
-            <Link className="button-link button-primary premium-glow" to="/register" style={{ padding: '1rem 2rem', fontSize: '1.1rem' }}>
-              Start Building Now
+          <motion.div className="hero-actions" variants={fadeInUp} style={{ marginTop: '2rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            <Link className="button-link button-primary premium-glow" to="/register" style={{ padding: '1.1rem 2.4rem', fontSize: '1.15rem', fontWeight: 800 }}>
+              Get Started Free
             </Link>
-            <Link className="button-link button-secondary" to="/login" style={{ padding: '1rem 2rem', fontSize: '1.1rem', background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)' }}>
+            <Link className="button-link button-secondary" to="/login" style={{ padding: '1.1rem 2.4rem', fontSize: '1.15rem', fontWeight: 700, background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '14px' }}>
               Sign In
             </Link>
           </motion.div>

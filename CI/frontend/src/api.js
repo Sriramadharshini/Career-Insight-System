@@ -105,5 +105,15 @@ export const resumeApi = {
       method: "POST",
       headers: createHeaders(token),
       body: JSON.stringify(payload)
+    }),
+  evaluateVideoInterview: (token, payload) =>
+    apiRequest("/resume/evaluate-video-interview", {
+      method: "POST",
+      headers: createHeaders(token),
+      body: JSON.stringify(payload)
+    }),
+  getJobRecommendations: (token) =>
+    apiRequest("/resume/job-recommendations", {
+      headers: createHeaders(token, false)
     })
 };

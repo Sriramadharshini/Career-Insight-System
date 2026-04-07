@@ -13,6 +13,7 @@ import ResumeViewPage from "./pages/ResumeViewPage";
 import CareerDashboard from "./pages/CareerDashboard";
 import TemplateSelectPage from "./pages/TemplateSelectPage";
 import InterviewPrepPage from "./pages/InterviewPrepPage";
+import JobRecommendationsPage from "./pages/JobRecommendationsPage";
 
 const App = () => {
   return (
@@ -82,6 +83,22 @@ const App = () => {
           element={
             <ProtectedRoute>
               <InterviewPrepPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <CareerDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/job-recommendations"
+          element={
+            <ProtectedRoute>
+              <JobRecommendationsPage />
             </ProtectedRoute>
           }
         />

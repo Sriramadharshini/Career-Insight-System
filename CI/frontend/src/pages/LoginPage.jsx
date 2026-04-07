@@ -16,7 +16,7 @@ const LoginPage = () => {
       .then(() => setConnectionMessage(""))
       .catch(() =>
         setConnectionMessage(
-          "Backend API is not connected. Start the backend server and verify it is running on http://localhost:5001."
+          "Backend API is not connected. Start the backend server and verify it is running on http://localhost:5002."
         )
       );
   }, []);

@@ -259,32 +259,54 @@ export const analyzeResume = (resumeText = "", targetRole = "") => {
     learningPathways.push("System Design Interview Preparation");
   }
 
-  // ── Recommended roles ────────────────────────────────────────────────────────
-  const roleRulesScored = ROLE_RULES.map(rule => ({
-    role: rule.role,
-    matches: rule.keywords.filter(kw => text.includes(kw)).length
-  }));
+  // ── Recommended roles (weighted keyword scoring) ─────────────────────────────
+  // Core keywords for each domain (count 2x vs generic 1x)
+  const CORE_KEYWORDS = {
+    frontend:  ["react", "vue", "angular", "typescript", "html", "css"],
+    backend:   ["node", "express", "django", "flask", "spring", "fastapi"],
+    data:      ["sql", "pandas", "tableau", "power bi", "machine learning", "data analysis"],
+    ai:        ["tensorflow", "pytorch", "neural networks", "deep learning", "nlp", "keras"],
+    cloud:     ["aws", "azure", "gcp", "kubernetes", "terraform"],
+    mobile:    ["react native", "flutter", "swift", "kotlin", "android", "ios"],
+    design:    ["figma", "adobe xd", "prototyping", "wireframing", "user research"],
+    security:  ["penetration testing", "ethical hacking", "kali linux", "burp suite"],
+    qa:        ["selenium", "cypress", "jest", "automation", "quality assurance"]
+  };
+
+  const roleRulesScored = ROLE_RULES.map(rule => {
+    let score = 0;
+    rule.keywords.forEach(kw => {
+      if (text.includes(kw)) {
+        // Find if it's a core keyword for any domain — if so, weight 2x
+        const isCore = Object.values(CORE_KEYWORDS).some(arr => arr.includes(kw));
+        score += isCore ? 2 : 1;
+      }
+    });
+    return { role: rule.role, matches: score };
+  });
 
   if (targetRole) {
-    roleRulesScored.push({ role: targetRole, matches: Math.max(2, matchedKeywords.length) });
+    roleRulesScored.push({ role: targetRole, matches: Math.max(3, matchedKeywords.length) });
   }
 
   const recommendedRoles = roleRulesScored
-    .filter(item => item.matches > 0)
+    .filter(item => item.matches >= 3) // Minimum threshold to avoid noise
     .sort((a, b) => b.matches - a.matches)
     .slice(0, 4)
     .map(item => item.role);
 
   // Dynamic Fallback based on text heuristics
   if (!recommendedRoles.length) {
-    if (text.includes("design") || text.includes("creative") || text.includes("art")) {
+    // Even if below threshold, take top match if it exists
+    const topMatch = roleRulesScored.filter(i => i.matches > 0).sort((a,b) => b.matches - a.matches)[0];
+    if (topMatch) {
+      recommendedRoles.push(topMatch.role);
+    } else if (text.includes("design") || text.includes("creative")) {
       recommendedRoles.push("UI/UX Designer", "Product Designer");
     } else if (text.includes("manage") || text.includes("lead") || text.includes("agile")) {
       recommendedRoles.push("Project Manager", "Scrum Master");
     } else if (text.includes("data") || text.includes("analy") || text.includes("excel")) {
       recommendedRoles.push("Data Analyst", "Business Analyst");
-    } else if (text.includes("market") || text.includes("seo") || text.includes("content")) {
-      recommendedRoles.push("Digital Marketer", "Content Strategist");
     } else {
       recommendedRoles.push("Software Engineer", "IT Specialist");
     }
