@@ -3458,3 +3458,152 @@ background:linear-gradient(135deg,#f97316,#fb923c,#f43f5e);
   border-color: rgba(99,102,241,0.3) !important; 
   transform: translateY(-3px); 
 }
+
+/* ═══════════════════════════════════════════════════════════
+   TEXT-COLOR ANIMATION COMPONENT
+   Gradient-cycling hero headline — 8-second loop
+   ═══════════════════════════════════════════════════════════ */
+
+/* Container */
+.text-color-root {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  padding: 1.5rem 2rem;
+}
+
+/* Corner Plus icons */
+.tc-plus {
+  position: absolute;
+  width: 2rem;
+  height: 2rem;
+  color: #6366f1;
+}
+.tc-plus--tl { top: -1rem;  left: -1rem;  }
+.tc-plus--tr { top: -1rem;  right: -1rem; }
+.tc-plus--bl { bottom: -1rem; left: -1rem; }
+.tc-plus--br { bottom: -1rem; right: -1rem; }
+
+/* Main heading */
+.tc-heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  font-size: clamp(2.8rem, 6.5vw, 5.5rem);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  text-align: center;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Each word span — hosts the animated ::before pseudo-element */
+.tc-word {
+  position: relative;
+  display: block;
+  padding: 0 0.5rem;
+}
+
+/* The ::before layer renders the dark background title that
+   fades in/out behind the clipped gradient foreground */
+.tc-word::before {
+  content: attr(data-content);
+  position: absolute;
+  inset: 0;
+  padding: 0 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  color: rgba(255, 255, 255, 0.08);
+}
+
+/* Foreground gradient span (clipped to text) */
+.tc-fg {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  background-image: linear-gradient(to right, var(--fg-from), var(--fg-to));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ── Foreground gradient colours ─────────────────────────── */
+.tc-fg-1 {
+  --fg-from: #39ff14;   /* Neon green   */
+  --fg-to:   #00ffff;   /* Neon cyan    */
+}
+.tc-fg-2 {
+  --fg-from: #ff073a;   /* Neon red-pink */
+  --fg-to:   #ff6ec7;   /* Neon magenta  */
+}
+.tc-fg-3 {
+  --fg-from: #ff6a00;   /* Vivid orange    */
+  --fg-to:   #bf00ff;   /* Electric purple */
+}
+
+/* ── Background animation keyframes ─────────────────────── */
+@keyframes tc-bg-kf-1 {
+  from, 16.667%, to { opacity: 0; }
+  25%, 91.667%      { opacity: 1; }
+}
+@keyframes tc-bg-kf-2 {
+  from, to           { opacity: 1; }
+  33.333%, 50%       { opacity: 0; }
+  25%, 58.333%       { opacity: 1; }
+}
+@keyframes tc-bg-kf-3 {
+  from, 58.333%, 91.667%, to { opacity: 1; }
+  66.667%, 83.333%           { opacity: 0; }
+}
+
+.tc-bg-1::before { animation: tc-bg-kf-1 8s infinite; }
+.tc-bg-2::before { animation: tc-bg-kf-2 8s infinite; }
+.tc-bg-3::before { animation: tc-bg-kf-3 8s infinite; }
+
+/* ── Foreground animation keyframes ─────────────────────── */
+@keyframes tc-fg-kf-1 {
+  from, 16.667%, to { opacity: 1; }
+  33.333%, 83.333%  { opacity: 0; }
+}
+@keyframes tc-fg-kf-2 {
+  from, to           { opacity: 0; }
+  33.333%, 50%       { opacity: 1; }
+  16.667%, 66.667%   { opacity: 0; }
+}
+@keyframes tc-fg-kf-3 {
+  from, 50%, to      { opacity: 0; }
+  66.667%, 83.333%   { opacity: 1; }
+}
+
+
+/* Apply foreground animations */
+.tc-fg-1 { animation: tc-fg-kf-1 8s infinite; }
+.tc-fg-2 { animation: tc-fg-kf-2 8s infinite; }
+.tc-fg-3 { animation: tc-fg-kf-3 8s infinite; }
+
+/* ── AnimatedText auth page sizes ───────────────────────── */
+/* Form panel heading ("Welcome Back" / "Start Your Journey") */
+.auth-animated-title {
+  font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+/* Illustration panel heading ("Unlock Your AI Career Potential" etc.) */
+.auth-hero-animated-title {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+}

@@ -5,6 +5,7 @@ import { BrainCircuit, LineChart, Target, ShieldCheck, ChevronDown, CheckCircle2
 import heroAi from "../assets/hero_ai_clean.png";
 import benefitsStages from "../assets/benefits_stages.png";
 import { CareerHeroIllustration } from "../components/ProjectIllustrations";
+import { TextColor } from "../components/ui/text-color";
 
 // Animation Variants
 const fadeInUp = {
@@ -51,12 +52,9 @@ const LandingPage = () => {
           animate="visible"
         >
           <motion.span className="eyebrow neon-glow-text" variants={fadeInUp} style={{ fontSize: '0.95rem', letterSpacing: '0.25em', fontWeight: 800 }}>AI-Powered Career Intelligence Platform</motion.span>
-          <motion.h1 className="hero-display" variants={fadeInUp} style={{ fontSize: 'clamp(3rem, 6vw, 5.2rem)', lineHeight: 1.05, letterSpacing: '-2.5px', marginTop: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', fontWeight: 900 }}>
-            <span>Develop</span>
-            <span style={{ color: 'rgba(255,255,255,0.9)' }}>Your Career</span>
-            <span className="hero-display-gradient" style={{ display: 'inline-block', margin: '0.1rem 0', filter: 'drop-shadow(0 0 30px rgba(56, 189, 248, 0.3))' }}>Potential</span>
-            <span style={{ fontSize: '0.9em', opacity: 0.9 }}>With AI</span>
-          </motion.h1>
+          <motion.div variants={fadeInUp} style={{ marginTop: '2rem', width: '100%' }}>
+            <TextColor />
+          </motion.div>
 
           <motion.p className="lead-text" variants={fadeInUp} style={{ fontSize: '1.25rem', lineHeight: 1.8, maxWidth: 620, color: 'rgba(255,255,255,0.7)' }}>
             Stop guessing what recruiters want. Build professional resumes, uncover skill gaps instantly, and discover perfect job matches — all powered by intelligent AI designed for your success.

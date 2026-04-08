@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { healthApi } from "../api";
 import { useAuth } from "../context/AuthContext";
 import { motion } from "framer-motion";
 import registerIllustration from "../assets/register_illustration_v2.png";
+import { AnimatedText } from "../components/ui/animated-shiny-text";
 
 // Animation Variants
 const slideInLeft = {
@@ -34,18 +34,6 @@ const RegisterPage = () => {
   const { register } = useAuth();
   const [formData, setFormData] = useState({ name: "", email: "", password: "", confirmPassword: "", phone: "" });
   const [error, setError] = useState("");
-  const [connectionMessage, setConnectionMessage] = useState("");
-
-  useEffect(() => {
-    healthApi
-      .check()
-      .then(() => setConnectionMessage(""))
-      .catch(() =>
-        setConnectionMessage(
-          "Backend API is not connected. Start the backend server and verify it is running on http://localhost:5002."
-        )
-      );
-  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -64,7 +52,7 @@ const RegisterPage = () => {
       });
       navigate("/login");
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Unable to connect. Please ensure the server is running.");
     }
   };
 
@@ -82,11 +70,15 @@ const RegisterPage = () => {
         >
           <div className="auth-card auth-card-wide auth-form-card" style={{ maxWidth: '440px', background: 'transparent', border: 'none', boxShadow: 'none' }}>
             <motion.div style={{ textAlign: 'center', marginBottom: '2rem' }} variants={popItem}>
-              <h2 style={{ fontSize: '2rem', color: '#fff', marginBottom: '0.4rem', fontWeight: '700' }}>Start Your Journey</h2>
+              <AnimatedText
+                text="Start Your Journey"
+                gradientColors="linear-gradient(90deg, #a78bfa, #ec4899, #f59e0b, #a78bfa)"
+                gradientAnimationDuration={3}
+                style={{ padding: '0.25rem 0 0.5rem' }}
+                textClassName="auth-animated-title"
+              />
               <p className="auth-subtext neon-glow-text">Discover Your Career Path</p>
             </motion.div>
-
-            {connectionMessage && <p className="warning-text" style={{ color: '#ff453a' }}>{connectionMessage}</p>}
 
             <motion.form onSubmit={handleSubmit} className="form-grid" variants={formStagger} initial="hidden" animate="visible">
 
@@ -189,7 +181,15 @@ const RegisterPage = () => {
           animate="visible"
         >
           <img src={registerIllustration} alt="Career Guidance Illustration" />
-          <motion.h1 style={{ color: '#fff' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>Build Your Career with AI Intelligence</motion.h1>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
+            <AnimatedText
+              text="Build Your Career with AI"
+              gradientColors="linear-gradient(90deg, #a78bfa, #38bdf8, #34d399, #a78bfa)"
+              gradientAnimationDuration={3.5}
+              style={{ padding: '0.5rem 0' }}
+              textClassName="auth-hero-animated-title"
+            />
+          </motion.div>
           <motion.p style={{ color: 'rgba(255,255,255,0.7)' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}>
             Join our platform to leverage AI-driven tools that analyze your resume, recommend accurate job roles, and guide your next professional moves.
           </motion.p>

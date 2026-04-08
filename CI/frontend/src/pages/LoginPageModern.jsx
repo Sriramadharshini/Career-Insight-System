@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { healthApi } from "../api";
 import { useAuth } from "../context/AuthContext";
 import { motion } from "framer-motion";
 import loginIllustration from "../assets/login_illustration_v2.png";
+import { AnimatedText } from "../components/ui/animated-shiny-text";
 
 // Animation Variants
 const slideInLeft = {
@@ -34,18 +34,6 @@ const LoginPageModern = () => {
   const { login } = useAuth();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
-  const [connectionMessage, setConnectionMessage] = useState("");
-
-  useEffect(() => {
-    healthApi
-      .check()
-      .then(() => setConnectionMessage(""))
-      .catch(() =>
-        setConnectionMessage(
-          "Backend API is not connected. Start the backend server and verify it is running on http://localhost:5002."
-        )
-      );
-  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -55,9 +43,10 @@ const LoginPageModern = () => {
       await login(formData);
       navigate("/onboarding");
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Unable to connect. Please ensure the server is running.");
     }
   };
+
 
   return (
     <section className="auth-page-container dark-theme-override">
@@ -72,7 +61,15 @@ const LoginPageModern = () => {
           animate="visible"
         >
           <img src={loginIllustration} alt="AI Career Analytics Illustration" />
-          <motion.h1 style={{ color: '#fff' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>Unlock Your AI Career Potential</motion.h1>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
+            <AnimatedText
+              text="Unlock Your AI Career Potential"
+              gradientColors="linear-gradient(90deg, #38bdf8, #34d399, #8b5cf6, #38bdf8)"
+              gradientAnimationDuration={4}
+              style={{ padding: '0.5rem 0' }}
+              textClassName="auth-hero-animated-title"
+            />
+          </motion.div>
           <motion.p style={{ color: 'rgba(255,255,255,0.7)' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}>
             Sign in to access personalized career insights, ATS score analysis, and intelligent skill gap detection.
           </motion.p>
@@ -88,11 +85,17 @@ const LoginPageModern = () => {
         >
           <div className="auth-card auth-form-card auth-login-form-card" style={{ background: 'transparent', border: 'none', boxShadow: 'none' }}>
             <motion.div className="auth-login-form-head" style={{ textAlign: 'center', marginBottom: '2rem' }} variants={popItem}>
-              <h2 style={{ fontSize: '2rem', color: '#fff', marginBottom: '0.4rem', fontWeight: '700' }}>Welcome Back</h2>
+              <AnimatedText
+                text="Welcome Back"
+                gradientColors="linear-gradient(90deg, #38bdf8, #8b5cf6, #ec4899, #38bdf8)"
+                gradientAnimationDuration={3}
+                style={{ padding: '0.25rem 0 0.5rem' }}
+                textClassName="auth-animated-title"
+              />
               <p className="auth-subtext neon-glow-text">Log In To Career Insight</p>
             </motion.div>
             
-            {connectionMessage && <p className="warning-text">{connectionMessage}</p>}
+
             
             <motion.form onSubmit={handleSubmit} className="form-grid" variants={formStagger} initial="hidden" animate="visible">
               <motion.label className="field-group" variants={popItem}>
