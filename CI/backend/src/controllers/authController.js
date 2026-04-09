@@ -2,12 +2,12 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { User } from "../models/User.js";
 
-const createToken = (userId) =>
-  jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: "7d" });
+const createToken = (userId, role) =>
+  jwt.sign({ userId, role }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
 export const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password } = req.body;   
 
     if (!process.env.JWT_SECRET) {
       return res.status(500).json({ message: "JWT secret is not configured" });
@@ -27,8 +27,8 @@ export const registerUser = async (req, res) => {
     const user = await User.create({ name, email, password: hashedPassword });
 
     return res.status(201).json({
-      token: createToken(user._id),
-      user: { id: user._id, name: user.name, email: user.email }
+      token: createToken(user._id, user.role),
+      user: { id: user._id, name: user.name, email: user.email, role: user.role, status: user.status }
     });
   } catch (error) {
     return res.status(500).json({ message: "Registration failed", error: error.message });
@@ -59,9 +59,13 @@ export const loginUser = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
+    if (user.status === "Blocked") {
+      return res.status(403).json({ message: "Your account has been blocked. Contact support." });
+    }
+
     return res.json({
-      token: createToken(user._id),
-      user: { id: user._id, name: user.name, email: user.email }
+      token: createToken(user._id, user.role),
+      user: { id: user._id, name: user.name, email: user.email, role: user.role, status: user.status }
     });
   } catch (error) {
     return res.status(500).json({ message: "Login failed", error: error.message });
@@ -69,3 +73,4 @@ export const loginUser = async (req, res) => {
 };
 
 export const getMe = async (req, res) => res.json({ user: req.user });
+

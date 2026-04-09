@@ -36,11 +36,13 @@ export const AuthProvider = ({ children }) => {
   const login = async (payload) => {
     const data = await authApi.login(payload);
     persistAuth(data);
+    return data;
   };
 
   const register = async (payload) => {
     const data = await authApi.register(payload);
     persistAuth(data);
+    return data;
   };
 
   const logout = () => {
@@ -50,8 +52,10 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const isAdmin = user?.role === "admin";
+
   return (
-    <AuthContext.Provider value={{ token, user, login, register, logout }}>
+    <AuthContext.Provider value={{ token, user, isAdmin, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

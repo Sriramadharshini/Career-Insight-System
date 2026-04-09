@@ -40,8 +40,12 @@ const LoginPageModern = () => {
     setError("");
 
     try {
-      await login(formData);
-      navigate("/onboarding");
+      const data = await login(formData);
+      if (data?.user?.role === "admin") {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/onboarding");
+      }
     } catch (err) {
       setError(err.message || "Unable to connect. Please ensure the server is running.");
     }
