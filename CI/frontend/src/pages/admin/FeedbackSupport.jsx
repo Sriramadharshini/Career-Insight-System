@@ -4,7 +4,7 @@ import DataTable from '../../components/common/DataTable';
 import Pagination from '../../components/common/Pagination';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
 import { toast } from 'react-hot-toast';
-import emptyDataSvg from '../../assets/illustrations/empty-data.svg';
+import { FeedbackHeroIllustration, EmptyStateIllustration } from '../../components/admin/AdminIllustrations';
 import '../../styles/admin.css';
 
 const FeedbackSupport = () => {
@@ -68,9 +68,14 @@ const FeedbackSupport = () => {
   return (
     <div className="page-container page-fade-in">
       <div className="admin-page-header">
-        <div>
-          <h2 className="admin-page-title">Feedback & Support</h2>
-          <p className="admin-page-subtitle">Manage user feedback and support requests.</p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+          <div>
+            <h2 className="admin-page-title">Feedback & Support</h2>
+            <p className="admin-page-subtitle">Manage user feedback and support requests.</p>
+          </div>
+          <div style={{ width: '180px' }}>
+            <FeedbackHeroIllustration />
+          </div>
         </div>
       </div>
       <div className="admin-card">
@@ -79,7 +84,7 @@ const FeedbackSupport = () => {
             <div className="loading-spinner"></div>
           ) : items.length === 0 ? (
             <div className="admin-empty-state">
-              <img src={emptyDataSvg} className="admin-empty-icon" alt="No data" />
+              <EmptyStateIllustration color="indigo" />
               <p className="admin-empty-text">No feedback received yet.</p>
             </div>
           ) : (

@@ -27,6 +27,7 @@ export const AuthProvider = ({ children }) => {
   }, [token]);
 
   const persistAuth = (authData) => {
+    console.log(`[Auth] Persisting auth for ${authData.user.email} (Role: ${authData.user.role})`);
     localStorage.setItem("careerInsightToken", authData.token);
     localStorage.setItem("careerInsightUser", JSON.stringify(authData.user));
     setToken(authData.token);
@@ -39,11 +40,18 @@ export const AuthProvider = ({ children }) => {
     return data;
   };
 
+  const adminLogin = async (payload) => {
+    const data = await authApi.adminLogin(payload);
+    persistAuth(data);
+    return data;
+  };
+
   const register = async (payload) => {
     const data = await authApi.register(payload);
     persistAuth(data);
     return data;
   };
+
 
   const logout = () => {
     localStorage.removeItem("careerInsightToken");
@@ -55,10 +63,11 @@ export const AuthProvider = ({ children }) => {
   const isAdmin = user?.role === "admin";
 
   return (
-    <AuthContext.Provider value={{ token, user, isAdmin, login, register, logout }}>
+    <AuthContext.Provider value={{ token, user, isAdmin, login, adminLogin, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
+
 };
 
 export const useAuth = () => useContext(AuthContext);

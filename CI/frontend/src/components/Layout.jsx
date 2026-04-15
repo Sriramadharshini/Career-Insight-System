@@ -1,6 +1,7 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { Sparkles, Home } from "lucide-react";
+import { Home } from "lucide-react";
+import BrandLogo from "./common/BrandLogo";
 
 const Layout = () => {
   const { user, logout } = useAuth();
@@ -13,13 +14,7 @@ const Layout = () => {
       <header className={`topbar ${isPublicPage ? "topbar-public" : ""}`}>
         <div>
           <Link to="/" className="brand-block">
-            <span className="brand-mark" style={{ background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.2)' }}>
-              <Sparkles size={24} strokeWidth={2.5} color="#38bdf8" />
-            </span>
-            <div>
-              <h1 style={{ color: '#fff' }}>Career Insight</h1>
-              <p style={{ color: '#a1a1aa' }}>Intelligent career building platform</p>
-            </div>
+            <BrandLogo />
           </Link>
         </div>
         <nav>

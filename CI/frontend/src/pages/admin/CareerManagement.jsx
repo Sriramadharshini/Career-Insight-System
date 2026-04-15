@@ -6,8 +6,8 @@ import SearchBar from '../../components/common/SearchBar';
 import Modal from '../../components/common/Modal';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
 import { toast } from 'react-hot-toast';
-import { Plus } from 'lucide-react';
-import emptyDataSvg from '../../assets/illustrations/empty-data.svg';
+import { Plus, Briefcase, TrendingUp, DollarSign, Award, Info, FileText } from 'lucide-react';
+import { CareersHeroIllustration, EmptyStateIllustration } from '../../components/admin/AdminIllustrations';
 import '../../styles/admin.css';
 
 const emptyCareer = { name: '', industry: '', salaryRange: '', description: '', growthRate: 'Medium', requiredSkills: '', jobRoles: '' };
@@ -106,9 +106,14 @@ const CareerManagement = () => {
   return (
     <div className="page-container page-fade-in">
       <div className="admin-page-header">
-        <div>
-          <h2 className="admin-page-title">Career Paths</h2>
-          <p className="admin-page-subtitle">Manage career options and their required skills.</p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+          <div>
+            <h2 className="admin-page-title">Career Paths</h2>
+            <p className="admin-page-subtitle">Manage career options and their required skills.</p>
+          </div>
+          <div style={{ width: '180px' }}>
+            <CareersHeroIllustration />
+          </div>
         </div>
         <button onClick={() => handleOpenModal()} className="admin-button" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <Plus size={16} /> Add Career
@@ -122,7 +127,7 @@ const CareerManagement = () => {
             <div className="loading-spinner"></div>
           ) : careers.length === 0 ? (
             <div className="admin-empty-state">
-              <img src={emptyDataSvg} className="admin-empty-icon" alt="No data" />
+              <EmptyStateIllustration color="purple" />
               <p className="admin-empty-text">No career paths found.</p>
             </div>
           ) : (
@@ -132,46 +137,98 @@ const CareerManagement = () => {
       </div>
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={`${isEditing ? 'Edit' : 'Add'} Career Path`}>
-        <form onSubmit={handleSubmit}>
-          <div className="admin-form-row">
-            <div className="admin-form-group">
-              <label className="admin-label">Career Name</label>
-              <input required value={currentCareer.name} onChange={e=>setCurrentCareer({...currentCareer, name: e.target.value})} className="admin-input" />
+        <div className="admin-creation-container">
+          {/* Left Side: Info & Illustration */}
+          <div className="creation-info-panel">
+            <div className="creation-visual-box">
+              <CareersHeroIllustration />
             </div>
-            <div className="admin-form-group">
-              <label className="admin-label">Industry</label>
-              <input required value={currentCareer.industry} onChange={e=>setCurrentCareer({...currentCareer, industry: e.target.value})} className="admin-input" />
-            </div>
-          </div>
-          <div className="admin-form-row">
-            <div className="admin-form-group">
-              <label className="admin-label">Salary Range</label>
-              <input placeholder="e.g. $80k - $120k" value={currentCareer.salaryRange} onChange={e=>setCurrentCareer({...currentCareer, salaryRange: e.target.value})} className="admin-input" />
-            </div>
-            <div className="admin-form-group">
-              <label className="admin-label">Growth Rate</label>
-              <select value={currentCareer.growthRate} onChange={e=>setCurrentCareer({...currentCareer, growthRate: e.target.value})} className="admin-input">
-                <option value="High">High</option><option value="Medium">Medium</option><option value="Low">Low</option>
-              </select>
+            <div className="creation-help-card">
+              <h4><Info size={16} style={{ marginBottom: '-3px', marginRight: '8px' }} /> Pro Tip</h4>
+              <p>Adding clear descriptions and accurate salary ranges helps users make better-informed decisions about their future.</p>
             </div>
           </div>
-          <div className="admin-form-group">
-            <label className="admin-label">Required Skills (comma separated)</label>
-            <input placeholder="React, Node.js, SQL" value={currentCareer.requiredSkills} onChange={e=>setCurrentCareer({...currentCareer, requiredSkills: e.target.value})} className="admin-input" />
-          </div>
-          <div className="admin-form-group">
-            <label className="admin-label">Job Roles (comma separated)</label>
-            <input placeholder="Frontend Developer, Full Stack Engineer" value={currentCareer.jobRoles} onChange={e=>setCurrentCareer({...currentCareer, jobRoles: e.target.value})} className="admin-input" />
-          </div>
-          <div className="admin-form-group">
-            <label className="admin-label">Description</label>
-            <textarea rows="3" required value={currentCareer.description} onChange={e=>setCurrentCareer({...currentCareer, description: e.target.value})} className="admin-input" />
-          </div>
-          <div className="admin-action-row">
-            <button type="button" onClick={() => setIsModalOpen(false)} className="admin-button-link admin-button">Cancel</button>
-            <button type="submit" className="admin-button success">Save</button>
-          </div>
-        </form>
+
+          {/* Right Side: Form */}
+          <form onSubmit={handleSubmit} className="admin-form-hero">
+            <div className="admin-section-divider">
+              <span>Basic Information</span>
+            </div>
+            
+            <div className="admin-form-grid">
+              <div className="admin-form-group">
+                <label className="admin-label">Career Name</label>
+                <div className="admin-input-group">
+                  <Briefcase className="admin-input-icon" size={18} />
+                  <input required value={currentCareer.name} onChange={e=>setCurrentCareer({...currentCareer, name: e.target.value})} className="admin-input admin-input-with-icon" placeholder="e.g. Full Stack Developer" />
+                </div>
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Industry</label>
+                <div className="admin-input-group">
+                  <TrendingUp className="admin-input-icon" size={18} />
+                  <input required value={currentCareer.industry} onChange={e=>setCurrentCareer({...currentCareer, industry: e.target.value})} className="admin-input admin-input-with-icon" placeholder="e.g. Technology" />
+                </div>
+              </div>
+            </div>
+
+            <div className="admin-section-divider">
+              <span>Financials & Growth</span>
+            </div>
+
+            <div className="admin-form-grid">
+              <div className="admin-form-group">
+                <label className="admin-label">Salary Range</label>
+                <div className="admin-input-group">
+                  <DollarSign className="admin-input-icon" size={18} />
+                  <input placeholder="e.g. $80k - $120k" value={currentCareer.salaryRange} onChange={e=>setCurrentCareer({...currentCareer, salaryRange: e.target.value})} className="admin-input admin-input-with-icon" />
+                </div>
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Growth Rate</label>
+                <select value={currentCareer.growthRate} onChange={e=>setCurrentCareer({...currentCareer, growthRate: e.target.value})} className="admin-input">
+                  <option value="High">High Growth</option>
+                  <option value="Medium">Medium Stability</option>
+                  <option value="Low">Low / Specialized</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="admin-section-divider">
+              <span>Skills & Roles</span>
+            </div>
+
+            <div className="admin-form-group">
+              <label className="admin-label">Required Skills (comma separated)</label>
+              <div className="admin-input-group">
+                <Award className="admin-input-icon" size={18} />
+                <input placeholder="React, Node.js, SQL" value={currentCareer.requiredSkills} onChange={e=>setCurrentCareer({...currentCareer, requiredSkills: e.target.value})} className="admin-input admin-input-with-icon" />
+              </div>
+            </div>
+
+            <div className="admin-form-group">
+              <label className="admin-label">Job Roles (comma separated)</label>
+              <div className="admin-input-group">
+                <Briefcase className="admin-input-icon" size={18} />
+                <input placeholder="Frontend Developer, Full Stack Engineer" value={currentCareer.jobRoles} onChange={e=>setCurrentCareer({...currentCareer, jobRoles: e.target.value})} className="admin-input admin-input-with-icon" />
+              </div>
+            </div>
+
+            <div className="admin-section-divider">
+              <span>Details</span>
+            </div>
+
+            <div className="admin-form-group">
+              <label className="admin-label">Description</label>
+              <textarea rows="4" required value={currentCareer.description} onChange={e=>setCurrentCareer({...currentCareer, description: e.target.value})} className="admin-input" placeholder="Describe this career path in detail..." />
+            </div>
+
+            <div className="admin-action-row">
+              <button type="button" onClick={() => setIsModalOpen(false)} className="admin-button-link admin-button">Cancel</button>
+              <button type="submit" className="admin-button success">Save Career Path</button>
+            </div>
+          </form>
+        </div>
       </Modal>
 
       <ConfirmDialog isOpen={isDeleteOpen} onClose={() => setIsDeleteOpen(false)} onConfirm={confirmDelete} title="Delete Career" message={`Are you sure you want to delete ${currentCareer?.name}?`} confirmText="Delete" isDestructive={true} />

@@ -19,19 +19,20 @@ const SearchBar = ({ onSearch, placeholder = "Search..." }) => {
   }, [query, onSearch]);
 
   return (
-    <div className="admin-search-wrapper">
+    <div className="admin-search-bar">
       <div className="admin-search-icon">
-        <Search size={16} />
+        <Search size={18} />
       </div>
       <input
         type="text"
-        className="admin-input admin-search-input"
+        className="admin-search-input"
         placeholder={placeholder}
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
     </div>
   );
+
 };
 
 export default SearchBar;

@@ -34,7 +34,9 @@ export const adminApi = {
   // Dashboard & Analytics
   getDashboardStats: () => apiClient.get('/dashboard/stats'),
   getRecentUsers: () => apiClient.get('/dashboard/recent-users'),
+  getRecentActivity: () => apiClient.get('/dashboard/recent-activity'),
   getUserGrowth: (range) => apiClient.get(`/dashboard/user-growth?range=${range}`),
+
   getAnalytics: (type, params) => apiClient.get(`/analytics/${type}`, { params }),
 
   // Users

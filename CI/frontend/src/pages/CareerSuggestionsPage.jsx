@@ -1,5 +1,9 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { TrendingUp, Sparkles, Zap, ExternalLink, Video, Brain, Loader2, LayoutDashboard } from "lucide-react";
+import { 
+  TrendingUp, Sparkles, Zap, ExternalLink, Video, Brain, LayoutDashboard,
+  MessageSquare, Users, Lightbulb, Shield, Database, Code2, 
+  Terminal, Briefcase, Cloud, Workflow, CheckCircle2
+} from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { profileApi, resumeApi } from "../api";
@@ -42,7 +46,7 @@ const TRACK_META = {
 };
 
 const SKILL_ICON_MAP = {
-  // Languages
+  // Languages & Core
   react:       "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
   python:      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
   javascript:  "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
@@ -51,6 +55,7 @@ const SKILL_ICON_MAP = {
   html:        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg",
   css:         "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg",
   java:        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg",
+  cpp:         "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg",
   cplusplus:   "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg",
   csharp:      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg",
   php:         "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg",
@@ -58,21 +63,14 @@ const SKILL_ICON_MAP = {
   rust:        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rust/rust-original.svg",
   kotlin:      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg",
   swift:       "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/swift/swift-original.svg",
-  bash:        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bash/bash-original.svg",
   ruby:        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ruby/ruby-original.svg",
 
-  // Frameworks & Libraries
-  express:     "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg",
-  angular:     "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg",
-  vue:         "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg",
+  // Frameworks & Libs
   nextjs:      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg",
   redux:       "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redux/redux-original.svg",
   tailwind:    "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg",
   bootstrap:   "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg",
   sass:        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sass/sass-original.svg",
-  laravel:     "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-plain.svg",
-  flutter:     "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg",
-  firebase:    "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg",
   graphql:     "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg",
   django:      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg",
   spring:      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original.svg",
@@ -85,34 +83,66 @@ const SKILL_ICON_MAP = {
   postgresql:  "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg",
   mongodb:     "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg",
   redis:       "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg",
-  sqlite:      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg",
 
-  // Tools & Cloud
+  // Infrastructure
   docker:      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg",
   kubernetes:  "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg",
-  aws:         "https://cdn.rawgit.com/devicons/devicon/master/icons/amazonwebservices/amazonwebservices-original-wordmark.svg",
-  gcp:         "https://www.gstatic.com/images/branding/product/2x/google_cloud_64dp.png",
+  aws:         "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original.svg",
   azure:       "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg",
   git:         "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg",
   jenkins:     "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jenkins/jenkins-original.svg",
-  jira:        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jira/jira-original.svg",
-  postman:     "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postman/postman-original.svg",
-  terraform:   "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/terraform/terraform-original.svg",
-  prometheus:  "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/prometheus/prometheus-original.svg",
-  grafana:     "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/grafana/grafana-original.svg",
-  linux:       "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg",
-  slack:       "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/slack/slack-original.svg",
-  trello:      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/trello/trello-plain.svg",
-  npm:         "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/npm/npm-original-wordmark.svg",
-  yarn:        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/yarn/yarn-original.svg",
 
-  // Design & Apps
+  // Design
   figma:       "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg",
   photoshop:   "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/photoshop/photoshop-plain.svg",
-  illustrator: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/illustrator/illustrator-plain.svg",
-  xd:          "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/xd/xd-plain.svg",
-  vscode:      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg",
-  canva:       "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/canva/canva-original.svg",
+  canva:       "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/canva/canva-original.svg"
+};
+
+const SOFT_SKILL_MAP = [
+  { keywords: ["communication", "writing", "speaker", "presentation"], icon: MessageSquare, color: "#38bdf8" },
+  { keywords: ["leadership", "management", "team", "mentoring", "direction"], icon: Users, color: "#8b5cf6" },
+  { keywords: ["problem solving", "analytical", "critical thinking", "strategy", "insight" , "analysis"], icon: Brain, color: "#f59e0b" },
+  { keywords: ["creativity", "design", "innovative", "brainstorming", "ideation", "ui", "ux"], icon: Lightbulb, color: "#f472b6" },
+  { keywords: ["security", "privacy", "protection", "compliance", "audit"], icon: Shield, color: "#ef4444" },
+  { keywords: ["testing", "quality", "qa", "validation", "verification"], icon: CheckCircle2, color: "#10b981" },
+  { keywords: ["cloud", "serverless", "infrastructure", "scaling", "aws", "gcp", "azure"], icon: Cloud, color: "#0ea5e9" },
+  { keywords: ["api", "rest", "backend", "integration", "endpoint"], icon: Workflow, color: "#6366f1" },
+  { keywords: ["data", "db", "query", "optimize", "indexing", "statistics"], icon: Database, color: "#818cf8" },
+  { keywords: ["coding", "programming", "logic", "algorithm", "clean code"], icon: Code2, color: "#10b981" },
+  { keywords: ["terminal", "bash", "cli", "linux", "ops"], icon: Terminal, color: "#475569" },
+  { keywords: ["business", "marketing", "finance", "economics"], icon: Briefcase, color: "#f59e0b" }
+];
+
+const SkillIcon = ({ skill, trackColor }) => {
+  const lowerSkill = skill.toLowerCase();
+  
+  // 1. Try technical logos (Devicons)
+  const techKey = Object.keys(SKILL_ICON_MAP).find(k => lowerSkill.includes(k));
+  if (techKey) {
+    return (
+      <div style={{ width: 56, height: 56, borderRadius: "18px", background: "rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid rgba(255,255,255,0.12)", flexShrink: 0 }}>
+        <img src={SKILL_ICON_MAP[techKey]} alt={skill} style={{ width: 32, height: 32, objectFit: "contain" }} onError={(e) => { e.target.style.display = "none"; }}/>
+      </div>
+    );
+  }
+
+  // 2. Try soft skill categories (Lucide)
+  const softMatch = SOFT_SKILL_MAP.find(s => s.keywords.some(k => lowerSkill.includes(k)));
+  if (softMatch) {
+    const IconComp = softMatch.icon;
+    return (
+      <div style={{ width: 56, height: 56, borderRadius: "18px", background: `${softMatch.color}15`, color: softMatch.color, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, border: `1px solid ${softMatch.color}30` }}>
+        <IconComp size={28} />
+      </div>
+    );
+  }
+
+  // 3. Fallback
+  return (
+    <div style={{ width: 56, height: 56, borderRadius: "18px", background: `${trackColor}10`, color: trackColor, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, border: `1px solid ${trackColor}25` }}>
+      <Zap size={26} />
+    </div>
+  );
 };
 
 
@@ -142,7 +172,12 @@ const GlassCard = ({ children, gradient, style = {} }) => (
 
 // ─── Resource Link ────────────────────────────────────────────────────────────
 const ResourceLink = ({ href, index, name, focus, accent, isYoutube }) => {
-  const domain = new URL(href).hostname;
+  let domain = "google.com";
+  try {
+    domain = new URL(href).hostname;
+  } catch (e) {
+    console.warn("Invalid URL in ResourceLink:", href);
+  }
   const logoUrl = isYoutube 
     ? "https://www.google.com/s2/favicons?sz=128&domain=youtube.com"
     : `https://www.google.com/s2/favicons?sz=128&domain=${domain}`;
@@ -229,7 +264,9 @@ const CareerSuggestionsPage = () => {
   const trackKey = currentInsight?.trackKey || analysis?.careerTrack || "fullstack";
   const trackInfo = TRACK_META[trackKey] || TRACK_META.fullstack;
 
-  const suggestedSkills = currentInsight?.nextLevelSkills || analysis?.nextLevelSkills || [];
+  const rawSkills = currentInsight?.nextLevelSkills || analysis?.nextLevelSkills || [];
+  // Ensure strict uniqueness and limit to 8 skills for clean UI
+  const suggestedSkills = [...new Set(rawSkills)].slice(0, 8);
   const resources = currentInsight?.suggestedResources || analysis?.suggestedResources || defaultTrack;
   const displayTitle = currentInsight?.role || trackInfo.title;
   const roleSummary = currentInsight?.summary || null;
@@ -346,20 +383,11 @@ const CareerSuggestionsPage = () => {
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1.5rem" }}>
             {suggestedSkills.map((skill, index) => {
-              const lowerSkill = skill.toLowerCase();
-              const key = Object.keys(SKILL_ICON_MAP).find(k => lowerSkill.includes(k) || k.includes(lowerSkill));
-              const iconUrl = key ? SKILL_ICON_MAP[key] : null;
-
               return (
                 <motion.div key={skill} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.08 }}
                   whileHover={{ y: -8, scale: 1.02, backgroundColor: "rgba(255,255,255,0.06)", borderColor: `${trackInfo.color}40`, boxShadow: `0 20px 40px -10px ${trackInfo.color}20` }}
-                  style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "24px", padding: "2rem", display: "flex", alignItems: "flex-start", gap: "1.5rem", transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)", cursor: "pointer" }}>
-                  <div style={{ width: 56, height: 56, borderRadius: "18px", background: `${trackInfo.color}10`, color: trackInfo.color, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.8rem", flexShrink: 0, border: `1px solid ${trackInfo.color}25` }}>
-                    {iconUrl
-                      ? <img src={iconUrl} alt={skill} style={{ width: 32, height: 32, objectFit: "contain" }} onError={(e) => { e.target.style.display = "none"; }}/>
-                      : <TrendingUp size={26} />
-                    }
-                  </div>
+                  style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "24px", padding: "2rem", display: "flex", alignItems: "center", gap: "1.5rem", transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)", cursor: "pointer" }}>
+                  <SkillIcon skill={skill} trackColor={trackInfo.color} />
                   <div>
                     <h4 style={{ margin: "0 0 0.5rem", fontSize: "1.25rem", fontWeight: 800, color: "#fff", letterSpacing: "-0.2px" }}>{skill}</h4>
                     <p style={{ margin: 0, fontSize: "0.95rem", color: "#94a3b8", lineHeight: 1.6 }}>
@@ -367,7 +395,6 @@ const CareerSuggestionsPage = () => {
                     </p>
                   </div>
                 </motion.div>
-
               );
             })}
 

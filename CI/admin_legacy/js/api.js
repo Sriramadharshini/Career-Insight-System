@@ -3,8 +3,9 @@
  */
 
 const API_BASE_URL = window.location.origin.includes('localhost') 
-    ? 'http://localhost:5000/api' 
+    ? 'http://localhost:5002/api' 
     : '/api';
+
 
 const api = {
     async request(endpoint, options = {}) {
@@ -30,8 +31,10 @@ const api = {
                 if (response.status === 401 || response.status === 403) {
                     // Unauthorized or Forbidden - redirect to login if not already there
                     if (!window.location.pathname.includes('login.html')) {
-                        // console.warn('Auth error, redirecting...');
-                        // window.location.href = 'login.html';
+                        localStorage.removeItem('admin_token');
+                        localStorage.removeItem('admin_user');
+                        localStorage.removeItem('adminName');
+                        window.location.href = 'login.html';
                     }
                 }
                 throw new Error(data.message || 'API request failed');

@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import express from "express";
 import path from "path";
 import { connectDatabase } from "./config/db.js";
+import { ensureDefaultAdmin } from "./scripts/seedAdmin.js";
 import authRoutes from "./routes/authRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
 import resumeRoutes from "./routes/resumeRoutes.js";
@@ -75,7 +76,8 @@ app.use("/api/admin/skills", adminSkills);
 app.use("/api/admin/feedback", adminFeedback);
 
 connectDatabase()
-  .then(() => {
+  .then(async () => {
+    await ensureDefaultAdmin();
     app.listen(port, () => {
       console.log(`Server running on port ${port}`);
     });

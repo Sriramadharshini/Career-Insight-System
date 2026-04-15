@@ -553,7 +553,21 @@ export const analyzeResume = (resumeText = "", targetRole = "") => {
       }
     });
 
-    const roleSkillsToLearn = [...new Set([...missingRoleSkills.map(s => s.charAt(0).toUpperCase() + s.slice(1)), ...extraSkills])].slice(0, 8);
+    // Deduplicate and maintain order (Pre-existing skills in ROLE_RULES and SKILL_PROGRESSION are already somewhat ordered)
+    let roleSkillsToLearn = [...new Set([...missingRoleSkills.map(s => s.charAt(0).toUpperCase() + s.slice(1)), ...extraSkills])];
+    
+    // Final deduplication for safety (case-insensitive check)
+    const uniqueSkills = [];
+    const seen = new Set();
+    roleSkillsToLearn.forEach(s => {
+      const lower = s.toLowerCase();
+      if (!seen.has(lower)) {
+        seen.add(lower);
+        uniqueSkills.push(s);
+      }
+    });
+
+    roleSkillsToLearn = uniqueSkills.slice(0, 8);
 
     const rolePool = ExpandedData.questionBank[role] || ExpandedData.questionBank["Full Stack Developer"];
     const roleQuestions = [...rolePool].sort(() => 0.5 - Math.random()).slice(0, 10);

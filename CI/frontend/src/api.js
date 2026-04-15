@@ -51,7 +51,14 @@ export const authApi = {
       headers: createHeaders(),
       body: JSON.stringify(payload)
     }),
+  adminLogin: (payload) =>
+    apiRequest("/auth/admin/login", {
+      method: "POST",
+      headers: createHeaders(),
+      body: JSON.stringify(payload)
+    }),
   getMe: (token) =>
+
     apiRequest("/auth/me", {
       headers: createHeaders(token, false)
     })

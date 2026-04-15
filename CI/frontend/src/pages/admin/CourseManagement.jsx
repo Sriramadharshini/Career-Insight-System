@@ -2,19 +2,21 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { adminApi } from '../../services/adminApi';
 import DataTable from '../../components/common/DataTable';
 import Pagination from '../../components/common/Pagination';
+import SearchBar from '../../components/common/SearchBar';
 import Modal from '../../components/common/Modal';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
 import { toast } from 'react-hot-toast';
-import { Plus } from 'lucide-react';
-import emptyDataSvg from '../../assets/illustrations/empty-data.svg';
+import { Plus, BookOpen, Monitor, BarChart, Link as LinkIcon, Info, Tag, Layers } from 'lucide-react';
+import { CoursesHeroIllustration, EmptyStateIllustration } from '../../components/admin/AdminIllustrations';
 import '../../styles/admin.css';
+
 
 const emptyCourse = { name: '', platform: 'Other', url: '', price: 'Free', skillLevel: 'Beginner', description: '' };
 
 const CourseManagement = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [params, setParams] = useState({ page: 1, limit: 10 });
+  const [params, setParams] = useState({ page: 1, limit: 10, search: '' });
   const [totalPages, setTotalPages] = useState(1);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -34,11 +36,16 @@ const CourseManagement = () => {
 
   useEffect(() => { fetchCourses(); }, [fetchCourses]);
 
+  const handleSearch = useCallback((query) => {
+    setParams(prev => ({ ...prev, search: query, page: 1 }));
+  }, []);
+
   const handleOpenModal = (course = null) => {
     if (course) { setCurrentCourse(course); setIsEditing(true); } 
     else { setCurrentCourse(emptyCourse); setIsEditing(false); }
     setIsModalOpen(true);
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -87,19 +94,28 @@ const CourseManagement = () => {
   return (
     <div className="page-container page-fade-in">
       <div className="admin-page-header">
-        <div>
-          <h2 className="admin-page-title">Courses</h2>
-          <p className="admin-page-subtitle">Manage learning resources and courses.</p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+          <div>
+            <h2 className="admin-page-title">Courses</h2>
+            <p className="admin-page-subtitle">Manage learning resources and courses.</p>
+          </div>
+          <div style={{ width: '180px' }}>
+            <CoursesHeroIllustration />
+          </div>
         </div>
         <button onClick={() => handleOpenModal()} className="admin-button" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Plus size={16} /> Add Course</button>
       </div>
       <div className="admin-card">
+        <div className="admin-search-container">
+          <SearchBar onSearch={handleSearch} placeholder="Search courses or platforms..." />
+        </div>
         <div className="admin-table-container">
+
           {loading ? (
             <div className="loading-spinner"></div>
           ) : courses.length === 0 ? (
             <div className="admin-empty-state">
-              <img src={emptyDataSvg} className="admin-empty-icon" alt="No data" />
+              <EmptyStateIllustration color="blue" />
               <p className="admin-empty-text">No courses found.</p>
             </div>
           ) : (
@@ -109,34 +125,94 @@ const CourseManagement = () => {
       </div>
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={`${isEditing ? 'Edit' : 'Add'} Course`}>
-        <form onSubmit={handleSubmit}>
-          <div className="admin-form-group">
-            <label className="admin-label">Name</label>
-            <input required value={currentCourse.name} onChange={e=>setCurrentCourse({...currentCourse, name: e.target.value})} className="admin-input" />
-          </div>
-          <div className="admin-form-row">
-            <div className="admin-form-group">
-              <label className="admin-label">Platform</label>
-              <select value={currentCourse.platform} onChange={e=>setCurrentCourse({...currentCourse, platform: e.target.value})} className="admin-input">
-                <option value="Udemy">Udemy</option><option value="Coursera">Coursera</option><option value="YouTube">YouTube</option><option value="Free">Free</option><option value="Other">Other</option>
-              </select>
+        <div className="admin-creation-container">
+          <div className="creation-info-panel">
+            <div className="creation-visual-box">
+              <CoursesHeroIllustration />
             </div>
-            <div className="admin-form-group">
-              <label className="admin-label">Level</label>
-              <select value={currentCourse.skillLevel} onChange={e=>setCurrentCourse({...currentCourse, skillLevel: e.target.value})} className="admin-input">
-                <option value="Beginner">Beginner</option><option value="Intermediate">Intermediate</option><option value="Advanced">Advanced</option>
-              </select>
+            <div className="creation-help-card">
+              <h4><Info size={16} style={{ marginBottom: '-3px', marginRight: '8px' }} /> Engagement</h4>
+              <p>Featured courses appear at the top of recommendations. High-quality cover images and clear names improve CTR.</p>
             </div>
           </div>
-          <div className="admin-form-group">
-            <label className="admin-label">URL</label>
-            <input required value={currentCourse.url} onChange={e=>setCurrentCourse({...currentCourse, url: e.target.value})} className="admin-input" />
-          </div>
-          <div className="admin-action-row">
-            <button type="button" onClick={() => setIsModalOpen(false)} className="admin-button-link admin-button">Cancel</button>
-            <button type="submit" className="admin-button success">Save</button>
-          </div>
-        </form>
+
+          <form onSubmit={handleSubmit} className="admin-form-hero">
+            <div className="admin-section-divider">
+              <span>Main Curriculum</span>
+            </div>
+
+            <div className="admin-form-group">
+              <label className="admin-label">Course / Resource Name</label>
+              <div className="admin-input-group">
+                <BookOpen className="admin-input-icon" size={18} />
+                <input required value={currentCourse.name} onChange={e=>setCurrentCourse({...currentCourse, name: e.target.value})} className="admin-input admin-input-with-icon" placeholder="e.g. Master Modern React (2026)" />
+              </div>
+            </div>
+
+            <div className="admin-form-grid">
+              <div className="admin-form-group">
+                <label className="admin-label">Platform</label>
+                <div className="admin-input-group">
+                  <Monitor className="admin-input-icon" size={18} />
+                  <select value={currentCourse.platform} onChange={e=>setCurrentCourse({...currentCourse, platform: e.target.value})} className="admin-input admin-input-with-icon">
+                    <option value="Udemy">Udemy</option>
+                    <option value="Coursera">Coursera</option>
+                    <option value="YouTube">YouTube</option>
+                    <option value="Pluralsight">Pluralsight</option>
+                    <option value="LinkedIn Learning">LinkedIn Learning</option>
+                    <option value="Other">Other Platform</option>
+                  </select>
+                </div>
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Skill Level</label>
+                <div className="admin-input-group">
+                  <BarChart className="admin-input-icon" size={18} />
+                  <select value={currentCourse.skillLevel} onChange={e=>setCurrentCourse({...currentCourse, skillLevel: e.target.value})} className="admin-input admin-input-with-icon">
+                    <option value="Beginner">Beginner</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="admin-section-divider">
+              <span>Access & Pricing</span>
+            </div>
+
+            <div className="admin-form-grid">
+              <div className="admin-form-group">
+                <label className="admin-label">Course URL</label>
+                <div className="admin-input-group">
+                  <LinkIcon className="admin-input-icon" size={18} />
+                  <input required value={currentCourse.url} onChange={e=>setCurrentCourse({...currentCourse, url: e.target.value})} className="admin-input admin-input-with-icon" placeholder="https://www.udemy.com/course/..." />
+                </div>
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Price / Access Type</label>
+                <div className="admin-input-group">
+                  <Tag className="admin-input-icon" size={18} />
+                  <input value={currentCourse.price} onChange={e=>setCurrentCourse({...currentCourse, price: e.target.value})} className="admin-input admin-input-with-icon" placeholder="e.g. $19.99 or Free" />
+                </div>
+              </div>
+            </div>
+
+            <div className="admin-section-divider">
+              <span>Categorization</span>
+            </div>
+
+            <div className="admin-form-group">
+              <label className="admin-label">Short Description</label>
+              <textarea rows="3" value={currentCourse.description} onChange={e=>setCurrentCourse({...currentCourse, description: e.target.value})} className="admin-input" placeholder="Briefly explain what this course covers..." />
+            </div>
+
+            <div className="admin-action-row">
+              <button type="button" onClick={() => setIsModalOpen(false)} className="admin-button-link admin-button">Cancel</button>
+              <button type="submit" className="admin-button success">Save Course</button>
+            </div>
+          </form>
+        </div>
       </Modal>
       <ConfirmDialog isOpen={isDeleteOpen} onClose={() => setIsDeleteOpen(false)} onConfirm={confirmDelete} title="Delete Course" message="Are you sure?" confirmText="Delete" isDestructive={true} />
     </div>

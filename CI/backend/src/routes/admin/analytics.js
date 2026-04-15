@@ -4,6 +4,9 @@ import { User } from "../../models/User.js";
 import { Career } from "../../models/Career.js";
 import { Course } from "../../models/Course.js";
 import { Activity } from "../../models/Activity.js";
+import { Job } from "../../models/Job.js";
+import { Feedback } from "../../models/Feedback.js";
+
 
 const router = Router();
 
@@ -90,4 +93,82 @@ router.get("/top-courses", adminOnly, async (req, res) => {
   }
 });
 
+// GET /api/admin/analytics/careers
+router.get("/careers", adminOnly, async (req, res) => {
+  try {
+    const occupations = await Career.find().select("industry").lean();
+    const dist = {};
+    occupations.forEach(c => {
+      const field = c.industry || "Other";
+      dist[field] = (dist[field] || 0) + 1;
+    });
+    res.json({
+      labels: Object.keys(dist),
+      data: Object.values(dist)
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch career analytics", error: err.message });
+  }
+});
+
+// GET /api/admin/analytics/jobs
+router.get("/jobs", adminOnly, async (req, res) => {
+  try {
+    const jobs = await Job.find().select("jobType").lean();
+    const dist = {};
+    jobs.forEach(j => {
+      const type = j.jobType || "Other";
+      dist[type] = (dist[type] || 0) + 1;
+    });
+    res.json({
+      labels: Object.keys(dist),
+      data: Object.values(dist)
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch job analytics", error: err.message });
+  }
+});
+
+// GET /api/admin/analytics/courses
+router.get("/courses", adminOnly, async (req, res) => {
+  try {
+    const courseCount = await Course.countDocuments();
+    // Placeholder enrollment trend
+    res.json({
+      total: courseCount,
+      labels: ["Jan", "Feb", "Mar", "Apr", "May"],
+      data: [12, 18, 25, 30, 42]
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch course analytics", error: err.message });
+  }
+});
+
+// GET /api/admin/analytics/feedback
+router.get("/feedback", adminOnly, async (req, res) => {
+  try {
+    const feedbacks = await Feedback.find().select("rating").lean();
+    const total = feedbacks.length;
+    const average = total > 0 
+      ? (feedbacks.reduce((acc, f) => acc + (f.rating || 0), 0) / total).toFixed(1)
+      : 0;
+    
+    const distribution = { '1': 0, '2': 0, '3': 0, '4': 0, '5': 0 };
+    feedbacks.forEach(f => {
+      if (f.rating >= 1 && f.rating <= 5) {
+        distribution[f.rating] = (distribution[f.rating] || 0) + 1;
+      }
+    });
+
+    res.json({
+      total,
+      average: Number(average),
+      distribution
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch feedback analytics", error: err.message });
+  }
+});
+
 export default router;
+

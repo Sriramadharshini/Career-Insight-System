@@ -50,13 +50,15 @@ export const loginUser = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      console.log(`[Login] User not found: ${email}`);
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      console.log(`[Login] Incorrect password for: ${email}`);
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
     if (user.status === "Blocked") {
@@ -72,5 +74,49 @@ export const loginUser = async (req, res) => {
   }
 };
 
+export const adminLogin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!process.env.JWT_SECRET) {
+      return res.status(500).json({ message: "JWT secret is not configured" });
+    }
+
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password are required" });
+    }
+
+    const admin = await User.findOne({ email });
+
+    if (!admin) {
+      console.log(`[AdminLogin] Admin not found: ${email}`);
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    if (admin.role !== "admin") {
+      console.log(`[AdminLogin] User is not an admin: ${email}`);
+      return res.status(403).json({ message: "Unauthorized — You do not have admin privileges" });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, admin.password);
+    if (!isPasswordValid) {
+      console.log(`[AdminLogin] Incorrect password for admin: ${email}`);
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    if (admin.status === "Blocked") {
+      return res.status(403).json({ message: "Your admin account is restricted. Contact system super-admin." });
+    }
+
+    return res.json({
+      token: createToken(admin._id, admin.role),
+      user: { id: admin._id, name: admin.name, email: admin.email, role: admin.role, status: admin.status }
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Admin login failed", error: error.message });
+  }
+};
+
 export const getMe = async (req, res) => res.json({ user: req.user });
+
 

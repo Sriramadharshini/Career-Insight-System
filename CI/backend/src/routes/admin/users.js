@@ -2,8 +2,10 @@ import { Router } from "express";
 import { adminOnly } from "../../middleware/adminMiddleware.js";
 import { User } from "../../models/User.js";
 import { Activity } from "../../models/Activity.js";
+import { DEFAULT_ADMIN } from "../../config/defaultAdmin.js";
 
 const router = Router();
+const isDefaultAdmin = (user) => user?.email === DEFAULT_ADMIN.email;
 
 // GET /api/admin/users
 router.get("/", adminOnly, async (req, res) => {
@@ -59,8 +61,13 @@ router.post("/", adminOnly, async (req, res) => {
 // PUT /api/admin/users/:id
 router.put("/:id", adminOnly, async (req, res) => {
   try {
+    const existingUser = await User.findById(req.params.id).select("email");
+    if (!existingUser) return res.status(404).json({ message: "User not found" });
+    if (isDefaultAdmin(existingUser)) {
+      return res.status(403).json({ message: "The default admin account cannot be modified." });
+    }
+
     const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true }).select("-password");
-    if (!user) return res.status(404).json({ message: "User not found" });
     res.json({ message: "User updated successfully", user });
   } catch (err) {
     res.status(500).json({ message: "Failed to update user", error: err.message });
@@ -70,8 +77,13 @@ router.put("/:id", adminOnly, async (req, res) => {
 // DELETE /api/admin/users/:id
 router.delete("/:id", adminOnly, async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
+    const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({ message: "User not found" });
+    if (isDefaultAdmin(user)) {
+      return res.status(403).json({ message: "The default admin account cannot be deleted." });
+    }
+
+    await user.deleteOne();
     res.json({ message: "User deleted successfully" });
   } catch (err) {
     res.status(500).json({ message: "Failed to delete user", error: err.message });
@@ -82,8 +94,13 @@ router.delete("/:id", adminOnly, async (req, res) => {
 router.put("/:id/status", adminOnly, async (req, res) => {
   try {
     const { status } = req.body;
+    const existingUser = await User.findById(req.params.id).select("email");
+    if (!existingUser) return res.status(404).json({ message: "User not found" });
+    if (isDefaultAdmin(existingUser)) {
+      return res.status(403).json({ message: "The default admin account must remain active." });
+    }
+
     const user = await User.findByIdAndUpdate(req.params.id, { status }, { new: true }).select("-password");
-    if (!user) return res.status(404).json({ message: "User not found" });
     res.json({ message: `User status updated to ${status}`, user });
   } catch (err) {
     res.status(500).json({ message: "Failed to update status", error: err.message });
@@ -94,8 +111,13 @@ router.put("/:id/status", adminOnly, async (req, res) => {
 router.put("/:id/role", adminOnly, async (req, res) => {
   try {
     const { role } = req.body;
+    const existingUser = await User.findById(req.params.id).select("email");
+    if (!existingUser) return res.status(404).json({ message: "User not found" });
+    if (isDefaultAdmin(existingUser)) {
+      return res.status(403).json({ message: "The default admin account must keep the admin role." });
+    }
+
     const user = await User.findByIdAndUpdate(req.params.id, { role }, { new: true }).select("-password");
-    if (!user) return res.status(404).json({ message: "User not found" });
     res.json({ message: `User role updated to ${role}`, user });
   } catch (err) {
     res.status(500).json({ message: "Failed to update role", error: err.message });

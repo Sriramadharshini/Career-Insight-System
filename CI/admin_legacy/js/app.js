@@ -7,7 +7,13 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initApp() {
+    if (!localStorage.getItem('admin_token')) {
+        window.location.href = 'login.html';
+        return;
+    }
+
     setupNavigation();
+    setupLogout();
     updateDateTime();
     setInterval(updateDateTime, 1000);
     
@@ -21,6 +27,18 @@ function initApp() {
     
     // Load initial page (Dashboard)
     loadPage('dashboard');
+}
+
+function setupLogout() {
+    const logoutBtn = document.getElementById('logout-btn');
+    if (!logoutBtn) return;
+
+    logoutBtn.addEventListener('click', () => {
+        localStorage.removeItem('admin_token');
+        localStorage.removeItem('admin_user');
+        localStorage.removeItem('adminName');
+        window.location.href = 'login.html';
+    });
 }
 
 /**

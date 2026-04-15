@@ -2,19 +2,21 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { adminApi } from '../../services/adminApi';
 import DataTable from '../../components/common/DataTable';
 import Pagination from '../../components/common/Pagination';
+import SearchBar from '../../components/common/SearchBar';
 import Modal from '../../components/common/Modal';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
 import { toast } from 'react-hot-toast';
-import { Plus } from 'lucide-react';
-import emptyDataSvg from '../../assets/illustrations/empty-data.svg';
+import { Plus, Zap, Layers, TrendingUp, Award, Info, FileCode } from 'lucide-react';
+import { SkillsHeroIllustration, EmptyStateIllustration } from '../../components/admin/AdminIllustrations';
 import '../../styles/admin.css';
+
 
 const emptySkill = { name: '', category: 'Other', demandLevel: 'Medium' };
 
 const SkillsManagement = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [params, setParams] = useState({ page: 1, limit: 10 });
+  const [params, setParams] = useState({ page: 1, limit: 10, search: '' });
   const [totalPages, setTotalPages] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -32,6 +34,10 @@ const SkillsManagement = () => {
   }, [params]);
 
   useEffect(() => { fetchItems(); }, [fetchItems]);
+
+  const handleSearch = useCallback((query) => {
+    setParams(prev => ({ ...prev, search: query, page: 1 }));
+  }, []);
 
   const handleOpenModal = (item = null) => {
     if (item) { setCurrentItem(item); setIsEditing(true); } 
@@ -86,19 +92,28 @@ const SkillsManagement = () => {
   return (
     <div className="page-container page-fade-in">
       <div className="admin-page-header">
-        <div>
-          <h2 className="admin-page-title">Skills Library</h2>
-          <p className="admin-page-subtitle">Manage all recognized skills for career analysis.</p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+          <div>
+            <h2 className="admin-page-title">Skills Library</h2>
+            <p className="admin-page-subtitle">Manage all recognized skills for career analysis.</p>
+          </div>
+          <div style={{ width: '180px' }}>
+            <SkillsHeroIllustration />
+          </div>
         </div>
         <button onClick={() => handleOpenModal()} className="admin-button" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Plus size={16} /> Add Skill</button>
       </div>
       <div className="admin-card">
+        <div className="admin-search-container">
+          <SearchBar onSearch={handleSearch} placeholder="Search skills or categories..." />
+        </div>
         <div className="admin-table-container">
+
           {loading ? (
             <div className="loading-spinner"></div>
           ) : items.length === 0 ? (
             <div className="admin-empty-state">
-              <img src={emptyDataSvg} className="admin-empty-icon" alt="No data" />
+              <EmptyStateIllustration color="teal" />
               <p className="admin-empty-text">No skills found in the library.</p>
             </div>
           ) : (
@@ -108,30 +123,84 @@ const SkillsManagement = () => {
       </div>
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={`${isEditing ? 'Edit' : 'Add'} Skill`}>
-        <form onSubmit={handleSubmit}>
-          <div className="admin-form-group">
-            <label className="admin-label">Name</label>
-            <input required value={currentItem.name} onChange={e=>setCurrentItem({...currentItem, name: e.target.value})} className="admin-input" />
-          </div>
-          <div className="admin-form-row">
-            <div className="admin-form-group">
-              <label className="admin-label">Category</label>
-              <select value={currentItem.category} onChange={e=>setCurrentItem({...currentItem, category: e.target.value})} className="admin-input">
-                <option value="Frontend">Frontend</option><option value="Backend">Backend</option><option value="Database">Database</option><option value="DevOps">DevOps</option><option value="Design">Design</option><option value="Soft Skill">Soft Skill</option><option value="Other">Other</option>
-              </select>
+        <div className="admin-creation-container">
+          <div className="creation-info-panel">
+            <div className="creation-visual-box">
+              <SkillsHeroIllustration />
             </div>
-            <div className="admin-form-group">
-              <label className="admin-label">Demand Level</label>
-              <select value={currentItem.demandLevel} onChange={e=>setCurrentItem({...currentItem, demandLevel: e.target.value})} className="admin-input">
-                <option value="High">High</option><option value="Medium">Medium</option><option value="Low">Low</option>
-              </select>
+            <div className="creation-help-card">
+              <h4><Info size={16} style={{ marginBottom: '-3px', marginRight: '8px' }} /> Ecosystem</h4>
+              <p>Skills are the building blocks of career analysis. Ensure names are standardized (e.g., "Full Stack" instead of "Fullstack").</p>
             </div>
           </div>
-          <div className="admin-action-row">
-            <button type="button" onClick={() => setIsModalOpen(false)} className="admin-button-link admin-button">Cancel</button>
-            <button type="submit" className="admin-button success">Save</button>
-          </div>
-        </form>
+
+          <form onSubmit={handleSubmit} className="admin-form-hero">
+            <div className="admin-section-divider">
+              <span>Skill Identity</span>
+            </div>
+
+            <div className="admin-form-group">
+              <label className="admin-label">Skill Name</label>
+              <div className="admin-input-group">
+                <Zap className="admin-input-icon" size={18} />
+                <input required value={currentItem.name} onChange={e=>setCurrentItem({...currentItem, name: e.target.value})} className="admin-input admin-input-with-icon" placeholder="e.g. Artificial Intelligence" />
+              </div>
+            </div>
+
+            <div className="admin-section-divider">
+              <span>Classification</span>
+            </div>
+
+            <div className="admin-form-grid">
+              <div className="admin-form-group">
+                <label className="admin-label">Category</label>
+                <div className="admin-input-group">
+                  <Layers className="admin-input-icon" size={18} />
+                  <select value={currentItem.category} onChange={e=>setCurrentItem({...currentItem, category: e.target.value})} className="admin-input admin-input-with-icon">
+                    <option value="Frontend">Frontend Development</option>
+                    <option value="Backend">Backend / API</option>
+                    <option value="Database">Database Systems</option>
+                    <option value="DevOps">Cloud & DevOps</option>
+                    <option value="Design">UI/UX Design</option>
+                    <option value="Soft Skill">Interpersonal / Soft Skill</option>
+                    <option value="Other">Other Category</option>
+                  </select>
+                </div>
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Market Demand</label>
+                <div className="admin-input-group">
+                  <TrendingUp className="admin-input-icon" size={18} />
+                  <select value={currentItem.demandLevel} onChange={e=>setCurrentItem({...currentItem, demandLevel: e.target.value})} className="admin-input admin-input-with-icon">
+                    <option value="High">Extremely High</option>
+                    <option value="Medium">Moderate Stability</option>
+                    <option value="Low">Low / Specialized</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="admin-section-divider">
+              <span>Expertise Alignment</span>
+            </div>
+
+            <div className="admin-form-group">
+              <label className="admin-label" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <TrendingUp size={16} color="var(--accent-blue)" /> Featured / Trending Skill
+              </label>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>Marking a skill as trending will highlight it in the user's skill gap recommendations.</p>
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                <button type="button" onClick={() => setCurrentItem({...currentItem, trending: true})} className={`admin-button ${currentItem.trending ? '' : 'admin-button-link'}`} style={{ flex: 1 }}>Mark Trending</button>
+                <button type="button" onClick={() => setCurrentItem({...currentItem, trending: false})} className={`admin-button ${!currentItem.trending ? '' : 'admin-button-link'}`} style={{ flex: 1 }}>Standard Skill</button>
+              </div>
+            </div>
+
+            <div className="admin-action-row">
+              <button type="button" onClick={() => setIsModalOpen(false)} className="admin-button-link admin-button">Cancel</button>
+              <button type="submit" className="admin-button success"><Award size={16} style={{ marginRight: '8px' }} /> Save to Library</button>
+            </div>
+          </form>
+        </div>
       </Modal>
       <ConfirmDialog isOpen={isDeleteOpen} onClose={() => setIsDeleteOpen(false)} onConfirm={confirmDelete} title="Delete Skill" message="Are you sure?" confirmText="Delete" isDestructive={true} />
     </div>

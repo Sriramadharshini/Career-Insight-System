@@ -5,7 +5,7 @@ import Pagination from '../../components/common/Pagination';
 import SearchBar from '../../components/common/SearchBar';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
 import { toast } from 'react-hot-toast';
-import emptyDataSvg from '../../assets/illustrations/empty-data.svg';
+import { UsersHeroIllustration, EmptyStateIllustration } from '../../components/admin/AdminIllustrations';
 import '../../styles/admin.css';
 
 const UserManagement = () => {
@@ -23,19 +23,23 @@ const UserManagement = () => {
     setLoading(true);
     try {
       const data = await adminApi.getUsers(params);
-      setUsers(data.users);
-      setTotalPages(data.pages);
-      setTotalUsers(data.total);
+      setUsers(data.users || []);
+      setTotalPages(data.pages || 1);
+      setTotalUsers(data.total || 0);
     } catch (err) {
       toast.error('Failed to load users');
     } finally {
       setLoading(false);
     }
-  }, [params]);
+  }, [params.page, params.limit, params.search, params.status]); // Depend on values, not the object
 
   useEffect(() => {
-    fetchUsers();
+    const timer = setTimeout(() => {
+      fetchUsers();
+    }, 100); // Small debounce to prevent rapid re-fetching
+    return () => clearTimeout(timer);
   }, [fetchUsers]);
+
 
   const handleSearch = useCallback((query) => {
     setParams(prev => ({ ...prev, search: query, page: 1 }));
@@ -131,10 +135,16 @@ const UserManagement = () => {
   return (
     <div className="page-container page-fade-in">
       <div className="admin-page-header">
-        <div>
-          <h2 className="admin-page-title">User Management</h2>
-          <p className="admin-page-subtitle">Manage platform users, update statuses, and export data. ({totalUsers} total)</p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+          <div>
+            <h2 className="admin-page-title">User Management</h2>
+            <p className="admin-page-subtitle">Manage platform users, update statuses, and export data. ({totalUsers} total)</p>
+          </div>
+          <div style={{ width: '180px' }}>
+            <UsersHeroIllustration />
+          </div>
         </div>
+
         <button 
           onClick={handleExport}
           className="admin-button"
@@ -144,16 +154,14 @@ const UserManagement = () => {
       </div>
 
       <div className="admin-card">
-        <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
-          <div style={{ flex: 1, minWidth: '260px' }}>
-            <SearchBar onSearch={handleSearch} placeholder="Search by name or email..." />
-          </div>
-          <div>
+        <div className="admin-search-container">
+          <SearchBar onSearch={handleSearch} placeholder="Search by name or email..." />
+          <div style={{ display: 'flex', gap: '1rem' }}>
             <select 
               value={params.status} 
               onChange={handleFilterStatus}
               className="admin-input"
-              style={{ width: '180px', padding: '0.65rem 1rem', background: 'var(--bg-soft)' }}
+              style={{ width: '180px' }}
             >
               <option value="">All Statuses</option>
               <option value="Active">Active</option>
@@ -162,12 +170,14 @@ const UserManagement = () => {
           </div>
         </div>
 
+
+
         <div className="admin-table-container">
           {loading ? (
             <div className="loading-spinner"></div>
           ) : users.length === 0 ? (
             <div className="admin-empty-state">
-              <img src={emptyDataSvg} className="admin-empty-icon" alt="No data" />
+              <EmptyStateIllustration color="green" />
               <p className="admin-empty-text">No users found matching your criteria.</p>
             </div>
           ) : (

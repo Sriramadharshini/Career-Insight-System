@@ -235,11 +235,13 @@ export const generateCareerSuggestionsWithAI = async (resumeText) => {
     1. ONLY recommend roles based on skills, technologies, and experience that are EXPLICITLY written in the resume. Do NOT infer or assume hidden skills.
     2. Rank the top 3 roles by strength of evidence (number of matching keywords and relevance of projects/experience).
     3. Only suggest "Full Stack Developer" if the resume has STRONG evidence of BOTH frontend (React/Angular/Vue/HTML/CSS) AND backend (Node/Express/Python/Java/APIs) skills — at least 3 keywords each side.
-    4. nextLevelSkills must ONLY include skills the candidate does NOT already have (not mentioned in their resume).
-    5. Website URLs must be real, well-known, and directly relevant to the role (e.g. reactjs.org, docs.python.org, cloud.google.com).
-    6. YouTube queries must be specific (e.g. "React performance optimization tutorial 2025" not just "learn react").
-    7. The trackKey must exactly match one of the allowed values.
-    8. Provide exactly 3 roleSpecificInsights entries.
+    4. nextLevelSkills: Provide exactly 8 UNIQUE skills per role that the candidate does NOT already have. 
+    5. NO DUPLICATES: Ensure every skill in the list is unique.
+    6. LOGICAL ORDER: Arrange nextLevelSkills in a proper learning sequence, from foundational/beginner topics to advanced/specialized ones.
+    7. Website URLs must be real, well-known, and directly relevant to the role (e.g. reactjs.org, docs.python.org, cloud.google.com).
+    8. YouTube queries must be specific (e.g. "React performance optimization tutorial 2025" not just "learn react").
+    9. The trackKey must exactly match one of the allowed values.
+    10. Provide exactly 3 roleSpecificInsights entries.
 
     Resume Text:
     """
