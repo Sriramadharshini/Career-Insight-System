@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import FeedbackModal from "../components/common/FeedbackModal";
+import { useAuth } from "../context/AuthContext";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { BrainCircuit, LineChart, Target, ShieldCheck, ChevronDown, CheckCircle2, Zap, FileText, Sparkles, LayoutGrid, Check, Smile, Search, Rocket, BarChart3, Users } from "lucide-react";
@@ -35,6 +37,7 @@ const LandingPage = () => {
   const { scrollYProgress } = useScroll();
   const yPos = useTransform(scrollYProgress, [0, 1], [0, -100]);
   const [activeFaq, setActiveFaq] = useState(null);
+  const { user } = useAuth();
 
   const toggleFaq = (index) => {
     setActiveFaq(activeFaq === index ? null : index);
@@ -447,6 +450,7 @@ const LandingPage = () => {
           </div>
         </div>
       </footer>
+      <FeedbackModal />
     </div>
   );
 };

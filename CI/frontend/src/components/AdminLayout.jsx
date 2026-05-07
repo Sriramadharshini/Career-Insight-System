@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import { useAuth } from '../context/AuthContext';
-import { Menu, Home, LogOut } from 'lucide-react';
+import { Menu, LogOut } from 'lucide-react';
 import { Toaster } from 'react-hot-toast';
 import BrandLogo from './common/BrandLogo';
+import ModernHomeIcon from './common/ModernHomeIcon';
 import '../styles/admin.css';
 
 const AdminLayout = () => {
@@ -84,7 +85,7 @@ const AdminLayout = () => {
           className="admin-profile-pill"
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '28px', height: '28px', background: 'rgba(56, 189, 248, 0.1)', borderRadius: '6px' }}>
-              <Home size={16} />
+              <ModernHomeIcon size={16} />
             </div>
             <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#fff' }}>
               System Admin

@@ -1,7 +1,7 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { Home } from "lucide-react";
 import BrandLogo from "./common/BrandLogo";
+import ModernHomeIcon from "./common/ModernHomeIcon";
 
 const Layout = () => {
   const { user, logout } = useAuth();
@@ -12,12 +12,16 @@ const Layout = () => {
   return (
     <div className="app-shell">
       <header className={`topbar ${isPublicPage ? "topbar-public" : ""}`}>
-        <div>
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
           <Link to="/" className="brand-block">
             <BrandLogo />
           </Link>
+          {!isLandingPage && (
+            <div id="navbar-page-title" style={{ display: "flex", alignItems: "center" }}></div>
+          )}
         </div>
-        <nav>
+        <nav style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          <div id="navbar-page-actions" style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}></div>
           <Link
             to="/"
             title="Home"
@@ -44,7 +48,7 @@ const Layout = () => {
               e.currentTarget.style.boxShadow = 'none';
             }}
           >
-            <Home size={18} strokeWidth={2.2} />
+            <ModernHomeIcon size={18} />
           </Link>
           <details className="nav-dropdown nav-account-dropdown">
             <summary aria-label="Account menu">

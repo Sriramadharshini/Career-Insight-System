@@ -2,7 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { resumeApi } from "../api";
+import { NavbarActions } from "../components/common/NavbarPortals";
 import { useAuth } from "../context/AuthContext";
+import { LayoutDashboard } from "lucide-react";
 
 const TIME_LIMIT = 30;
 
@@ -88,6 +90,7 @@ const InterviewPrepPage = () => {
   const mediaRecorderRef= useRef(null);
   const chunksRef       = useRef([]);
   const timerRef        = useRef(null);
+  const pendingStreamRef= useRef(null);
 
   /* fetch questions */
   useEffect(() => {
@@ -126,47 +129,77 @@ const InterviewPrepPage = () => {
   useEffect(() => () => {
     if (videoRef.current?.srcObject)
       videoRef.current.srcObject.getTracks().forEach(t => t.stop());
+    if (pendingStreamRef.current)
+      pendingStreamRef.current.getTracks().forEach(t => t.stop());
   }, []);
 
   const formatTime = s => `${Math.floor(s/60)}:${(s%60)<10?"0":""}${s%60}`;
 
   /* video helpers */
-  const startVideoRecording = async () => {
-    if (!navigator.mediaDevices?.getUserMedia) {
-      alert("Your browser does not support video recording.");
-      setMode("text"); return;
+  /* Attach pending camera stream once the <video> element renders */
+  useEffect(() => {
+    if (mode === "video" && videoRef.current && pendingStreamRef.current) {
+      const stream = pendingStreamRef.current;
+      pendingStreamRef.current = null;
+      videoRef.current.srcObject = stream;
+
+      try {
+        const mr = new MediaRecorder(stream);
+        mediaRecorderRef.current = mr;
+        chunksRef.current = [];
+        mr.ondataavailable = e => { if (e.data.size > 0) chunksRef.current.push(e.data); };
+        mr.onstop = () => {
+          const blob = new Blob(chunksRef.current, { type: "video/webm" });
+          setAnswers(p => ({ ...p, [currentIndex]: URL.createObjectURL(blob) }));
+        };
+        mr.start();
+      } catch (recErr) {
+        console.error("MediaRecorder error:", recErr);
+        stream.getTracks().forEach(t => t.stop());
+        alert("Could not start recording. Falling back to Text Mode.");
+        setMode("text");
+      }
     }
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia(
-        { video: { width:{ideal:1280}, height:{ideal:720} }, audio: true }
-      );
-      if (videoRef.current) videoRef.current.srcObject = stream;
-      const mr = new MediaRecorder(stream);
-      mediaRecorderRef.current = mr;
-      chunksRef.current = [];
-      mr.ondataavailable = e => { if (e.data.size > 0) chunksRef.current.push(e.data); };
-      mr.onstop = () => {
-        const blob = new Blob(chunksRef.current, { type:"video/webm" });
-        setAnswers(p => ({ ...p, [currentIndex]: URL.createObjectURL(blob) }));
-      };
-      mr.start();
-    } catch (err) {
-      if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError")
-        alert("Camera/Microphone access denied. Please allow access in your browser settings.");
-      else if (err.name === "NotFoundError")
-        alert("No camera or microphone found.");
-      else
-        alert("Camera error. Falling back to Text Mode.");
-      setMode("text");
-    }
-  };
+  }, [mode, isActive]);
 
   const startInterview = async (selectedMode) => {
-    setMode(selectedMode); setIsActive(true); setTimeLeft(TIME_LIMIT);
-    setAnswers({}); setTimeSpent({}); setEvalResults(null);
-    setCurrentAnswer(""); setCurrentIndex(0);
-    if (selectedMode === "video") await startVideoRecording();
+    if (selectedMode === "video") {
+      /* ── Acquire camera BEFORE switching mode ── */
+      if (!navigator.mediaDevices?.getUserMedia) {
+        alert("Your browser does not support video recording.");
+        return;
+      }
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia(
+          { video: { width: { ideal: 1280 }, height: { ideal: 720 } }, audio: true }
+        );
+        pendingStreamRef.current = stream;      // store for useEffect
+      } catch (err) {
+        console.error("Camera access error:", err);
+        if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError")
+          alert("Camera/Microphone access denied. Please allow access in your browser settings.");
+        else if (err.name === "NotFoundError")
+          alert("No camera or microphone found.");
+        else if (err.name === "NotReadableError" || err.name === "AbortError")
+          alert("Camera is in use by another application. Please close it and try again.");
+        else
+          alert("Camera error: " + (err.message || err.name) + ". Falling back to Text Mode.");
+        setMode("text");
+        return;
+      }
+    }
+
+    /* ── Set state → triggers re-render → useEffect attaches stream ── */
+    setMode(selectedMode);
+    setIsActive(true);
+    setTimeLeft(TIME_LIMIT);
+    setAnswers({});
+    setTimeSpent({});
+    setEvalResults(null);
+    setCurrentAnswer("");
+    setCurrentIndex(0);
   };
+
 
   const handleBackToMode = () => {
     setIsActive(false); setIsFinished(false);
@@ -280,6 +313,31 @@ const InterviewPrepPage = () => {
                     radial-gradient(ellipse 60% 40% at 80% 110%, ${C.violet}12 0%, transparent 70%)` }} />
 
       <div style={{ maxWidth:920, margin:"0 auto", position:"relative", zIndex:1 }}>
+
+        {/* ── Navbar Actions ── */}
+        <NavbarActions>
+          <button onClick={() => navigate("/dashboard")}
+            style={{
+              background: "linear-gradient(135deg, #C026D3, #E879F9)",
+              border: "none",
+              color: "#ffffff", borderRadius: "10px", padding: "0.55rem 1.25rem",
+              fontSize: "0.85rem", fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem",
+              transition: "all 0.25s ease", boxShadow: "0 6px 15px rgba(192, 38, 211, 0.35)"
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = "linear-gradient(135deg, #E879F9, #F0ABFC)";
+              e.currentTarget.style.transform = "translateY(-2px)";
+              e.currentTarget.style.boxShadow = "0 8px 20px rgba(192, 38, 211, 0.5)";
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = "linear-gradient(135deg, #C026D3, #E879F9)";
+              e.currentTarget.style.transform = "none";
+              e.currentTarget.style.boxShadow = "0 6px 15px rgba(192, 38, 211, 0.35)";
+            }}>
+            <LayoutDashboard size={16} />
+            Dashboard
+          </button>
+        </NavbarActions>
 
         {/* ── Header ── */}
         <motion.header initial={{opacity:0,y:-16}} animate={{opacity:1,y:0}} transition={{duration:.5}}

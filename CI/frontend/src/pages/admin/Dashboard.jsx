@@ -175,43 +175,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Activity Bar */}
-      <div style={{ marginTop: '1.5rem' }}>
-        <div className="admin-card">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-            <div>
-              <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>Global Activity Stream</h3>
-              <p style={{ margin: '4px 0 0', fontSize: '0.8rem', color: 'var(--text-muted)' }}>Real-time updates from platform interactions</p>
-            </div>
-            <button className="admin-button" style={{ padding: '0.5rem 1rem', fontSize: '0.8rem' }}>Export Log</button>
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(380px, 1fr))', gap: '1rem' }}>
-            {data.recentActivity.length > 0 ? (
-              data.recentActivity.map((activity) => (
-                <div key={activity._id} style={{ display: 'flex', gap: '1.25rem', padding: '1.25rem', background: 'rgba(255,255,255,0.02)', borderRadius: '16px', border: '1px solid var(--border-soft)', alignItems: 'center' }}>
-                  <div className="admin-avatar" style={{ width: '44px', height: '44px', background: 'linear-gradient(135deg, var(--bg-soft), rgba(255,255,255,0.02))', color: 'var(--accent-blue)', fontSize: '0.85rem', fontWeight: 800, border: '1px solid var(--border-soft)' }}>
-                    {activity.user?.name?.charAt(0) || 'S'}
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--text-main)', lineHeight: 1.4 }}>
-                      <strong style={{ color: 'var(--accent-blue)', fontWeight: 700 }}>{activity.user?.name || 'System'}</strong> {activity.action} <span style={{ color: 'var(--accent-teal)', fontWeight: 600 }}>{activity.target}</span>
-                    </p>
-                    <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.75rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                      <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: 'var(--accent-blue)' }}></span>
-                      {new Date(activity.createdAt).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                    </p>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div style={{ gridColumn: '1 / -1', padding: '4rem 0', textAlign: 'center' }}>
-                <EmptyStateIllustration color="blue" />
-                <p style={{ color: 'var(--text-muted)', marginTop: '2rem', fontWeight: 600, fontSize: '1.1rem' }}>Initializing activity stream...</p>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
+
       
       <style>{`
         @keyframes ping {

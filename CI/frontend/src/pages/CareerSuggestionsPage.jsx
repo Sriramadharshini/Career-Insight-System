@@ -4,8 +4,10 @@ import {
   MessageSquare, Users, Lightbulb, Shield, Database, Code2, 
   Terminal, Briefcase, Cloud, Workflow, CheckCircle2
 } from "lucide-react";
+import ModernHomeIcon from "../components/common/ModernHomeIcon";
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { NavbarActions } from "../components/common/NavbarPortals";
 import { profileApi, resumeApi } from "../api";
 import { useAuth } from "../context/AuthContext";
 
@@ -277,8 +279,30 @@ const CareerSuggestionsPage = () => {
   return (
     <div style={{ minHeight: "100vh", background: "#050816", fontFamily: "'Inter','Outfit',system-ui,sans-serif", color: "#e2e8f0", fontSize: "18px" }}>
 
+      {/* ── NAVBAR PORTALS ── */}
+      <NavbarActions>
+        <button onClick={() => navigate(isFromProfile ? "/resume-view" : "/resume-upload")}
+          style={{
+            background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)",
+            color: "#e2e8f0", borderRadius: "8px", padding: "0.55rem 1rem",
+            fontSize: "0.85rem", fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: "0.4rem",
+            transition: "all 0.2s ease"
+          }}>
+          ← Back
+        </button>
+        <button onClick={() => navigate("/job-recommendations")}
+          style={{
+            background: "linear-gradient(135deg,#f59e0b,#d97706)", color: "#fff", border: "none",
+            borderRadius: "8px", padding: "0.55rem 1.25rem",
+            fontSize: "0.85rem", fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: "0.4rem",
+            boxShadow: "0 4px 15px rgba(245,158,11,0.3)", transition: "all 0.2s ease"
+          }}>
+          💼 Jobs
+        </button>
+      </NavbarActions>
+
       {/* ── HERO ── */}
-      <section style={{ position: "relative", overflow: "hidden", padding: "6rem 2rem 4rem" }}>
+      <section style={{ position: "relative", overflow: "hidden", padding: "2rem 2rem 4rem" }}>
         <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "100%", height: "100%", background: "radial-gradient(circle at 50% 0%, rgba(99,102,241,0.15) 0%, transparent 60%)", pointerEvents: "none" }} />
 
         <div style={{ maxWidth: 1200, margin: "0 auto", display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: "4rem", alignItems: "center" }}>
@@ -488,27 +512,7 @@ const CareerSuggestionsPage = () => {
         </div>
       </section>
 
-      {/* ── FOOTER CTA ── */}
-      <section style={{ maxWidth: 1200, margin: "0 auto", padding: "0 2rem 6rem", textAlign: "center" }}>
-        <div style={{ display: "flex", justifyContent: "center", gap: "1.5rem", flexWrap: "wrap" }}>
-          <button onClick={() => navigate("/resume-upload")}
-            style={{ padding: "1.2rem 2.5rem", borderRadius: "16px", background: "rgba(255,255,255,0.05)", color: "#fff", border: "1px solid rgba(255,255,255,0.1)", fontSize: "1.05rem", fontWeight: 700, cursor: "pointer", transition: "0.3s" }}>
-            ← Back to Analysis
-          </button>
-          <button onClick={() => navigate("/job-recommendations")}
-            style={{ padding: "1.2rem 2.5rem", borderRadius: "16px", background: "linear-gradient(135deg,#f59e0b,#d97706)", color: "#fff", border: "none", fontSize: "1.05rem", fontWeight: 700, cursor: "pointer", transition: "0.3s", boxShadow: "0 8px 24px rgba(245,158,11,0.3)" }}>
-            💼 Job Recommendations
-          </button>
-          <button onClick={() => navigate("/dashboard")}
-            style={{ padding: "1.2rem 2.5rem", borderRadius: "16px", background: "rgba(255,255,255,0.05)", color: "#fff", border: "1px solid rgba(255,255,255,0.1)", fontSize: "1.05rem", fontWeight: 700, cursor: "pointer", transition: "0.3s", display: "flex", alignItems: "center", gap: "0.6rem" }}>
-            <LayoutDashboard size={18} /> Dashboard
-          </button>
-          <button onClick={() => navigate("/profile")}
-            style={{ padding: "1.2rem 2.5rem", borderRadius: "16px", background: "rgba(255,255,255,0.05)", color: "#fff", border: "1px solid rgba(255,255,255,0.1)", fontSize: "1.05rem", fontWeight: 700, cursor: "pointer", transition: "0.3s" }}>
-            ✏️ Update Profile
-          </button>
-        </div>
-      </section>
+
 
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@700;800;900&display=swap');

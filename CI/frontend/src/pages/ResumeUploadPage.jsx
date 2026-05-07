@@ -419,12 +419,12 @@ const ResumeUploadPage = () => {
                 </div>
               </div>
               <motion.button whileHover={{ scale:1.04 }} whileTap={{ scale:0.97 }}
-                onClick={() => navigate("/career-suggestions", { state: { isFromProfile: false } })}
+                onClick={() => navigate("/career-hub")}
                 style={{ padding:"0.75rem 1.75rem", background:"linear-gradient(135deg,#059669,#10b981)",
                   color:"#fff", border:"none", borderRadius:"12px", fontSize:"0.92rem", fontWeight:700,
                   cursor:"pointer", fontFamily:"inherit", whiteSpace:"nowrap",
                   boxShadow:"0 4px 20px rgba(16,185,129,0.4)" }}>
-                View Career Suggestions →
+                Explore Career Path →
               </motion.button>
             </motion.div>
 

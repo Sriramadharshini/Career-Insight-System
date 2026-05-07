@@ -14,7 +14,7 @@ export const uploadResume = async (req, res) => {
     const extractedText = await extractResumeText(req.file.path);
     const analysis = analyzeResume(extractedText, targetRole);
 
-    // ── AI-powered career suggestion enrichment ────────────────────────────────
+    // ── AI-powered career suggestion enrichment
     let aiCareerData = null;
     try {
       if (process.env.GEMINI_API_KEY) {
@@ -172,8 +172,8 @@ export const evaluateInterview = async (req, res) => {
 
           let maxPossibleScore = qna.length * 10;
           let percentage = maxPossibleScore > 0 ? Math.round((totalScore / maxPossibleScore) * 100) : 0;
-          let overallFeedback = percentage >= 80 ? "Excellent performance! You demonstrated strong knowledge." 
-                             : percentage >= 60 ? "Good job, but there's room for improvement in technical depth." 
+          let overallFeedback = percentage >= 80 ? "Excellent performance! You demonstrated strong knowledge."
+                             : percentage >= 60 ? "Good job, but there's room for improvement in technical depth."
                              : "You need to practice more and focus on core technical concepts.";
 
           return res.json({

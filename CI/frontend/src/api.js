@@ -124,3 +124,12 @@ export const resumeApi = {
       headers: createHeaders(token, false)
     })
 };
+
+export const feedbackApi = {
+  submit: (token, payload) =>
+    apiRequest("/feedback", {
+      method: "POST",
+      headers: createHeaders(token),
+      body: JSON.stringify(payload)
+    })
+};

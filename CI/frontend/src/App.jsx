@@ -16,6 +16,7 @@ import CareerDashboard from "./pages/CareerDashboard";
 import TemplateSelectPage from "./pages/TemplateSelectPage";
 import InterviewPrepPage from "./pages/InterviewPrepPage";
 import JobRecommendationsPage from "./pages/JobRecommendationsPage";
+import CareerHubPage from "./pages/CareerHubPage";
 
 // Admin Pages
 import Dashboard from "./pages/admin/Dashboard";
@@ -136,6 +137,14 @@ const App = () => {
           element={
             <ProtectedRoute>
               <JobRecommendationsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/career-hub"
+          element={
+            <ProtectedRoute>
+              <CareerHubPage />
             </ProtectedRoute>
           }
         />

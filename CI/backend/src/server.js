@@ -7,6 +7,7 @@ import { ensureDefaultAdmin } from "./scripts/seedAdmin.js";
 import authRoutes from "./routes/authRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
 import resumeRoutes from "./routes/resumeRoutes.js";
+import feedbackRoutes from "./routes/feedbackRoutes.js";
 
 // Admin Routes
 import adminDashboard from "./routes/admin/dashboard.js";
@@ -62,6 +63,7 @@ app.get("/", (_req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/resume", resumeRoutes);
+app.use("/api/feedback", feedbackRoutes);
 
 // ── Admin Routes ─────────────────────────────────────────────
 app.use("/api/admin/dashboard", adminDashboard);

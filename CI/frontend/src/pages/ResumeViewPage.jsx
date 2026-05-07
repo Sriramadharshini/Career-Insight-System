@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { profileApi, resumeApi } from "../api";
+import { NavbarActions } from "../components/common/NavbarPortals";
 import { useAuth } from "../context/AuthContext";
 
 // ── Shared helper: tag list ───────────────────────────────────────────────────
@@ -440,8 +441,8 @@ const ResumeViewPage = () => {
     setAnalyzing(true);
     try {
       await resumeApi.analyzeProfile(token, profile);
-      // Navigate directly to career suggestions for users who built a profile
-      navigate("/career-suggestions", { state: { isFromProfile: true } }); 
+      // Navigate to the Career Hub after creating a resume
+      navigate("/career-hub", { state: { isFromProfile: true } }); 
     } catch (err) {
       console.error("Analysis failed:", err);
       alert("Analysis failed. Please try again.");
@@ -506,32 +507,8 @@ const ResumeViewPage = () => {
         paddingBottom: "5rem", transition: "background 0.4s ease",
         fontFamily: "'Inter', system-ui, sans-serif"
       }}>
-        {/* Action bar */}
-        <div className="resume-action-bar no-print" style={{
-          position: "sticky", top: 0, zIndex: 100,
-          background: "rgba(15, 23, 42, 0.85)",
-          backdropFilter: "blur(25px)",
-          borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
-          padding: "0.85rem 2rem", display: "flex",
-          alignItems: "center", justifyContent: "space-between",
-          boxShadow: "0 10px 40px rgba(0,0,0,0.3)"
-        }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-          <div style={{
-            background: "linear-gradient(135deg,#6366f1,#8b5cf6)", borderRadius: "10px",
-            width: "36px", height: "36px", display: "flex", alignItems: "center",
-            justifyContent: "center", fontSize: "1rem", color: "#fff",
-            boxShadow: "0 4px 12px rgba(99,102,241,0.3)"
-          }}>✦</div>
-          <div>
-            <h2 style={{ margin: 0, fontSize: "0.95rem", fontWeight: 700, color: "#fff" }}>Resume Preview</h2>
-            <p style={{ margin: 0, fontSize: "0.85rem", color: "#94a2b8" }}>
-              Template: <span style={{ color: "#a5b4fc", fontWeight: 600 }}>{templateLabels[profile.template] || "Modern"}</span>
-              {profile.personalInfo?.fullName && ` · ${profile.personalInfo.fullName}`}
-            </p>
-          </div>
-        </div>
-        <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
+        {/* Action bar PORTALS */}
+        <NavbarActions>
           <button onClick={() => navigate("/profile")}
             style={{
               background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)",
@@ -563,7 +540,7 @@ const ResumeViewPage = () => {
               boxShadow: analyzing ? "none" : "0 4px 15px rgba(16,185,129,0.3)", display: "flex",
               alignItems: "center", gap: "0.4rem"
             }}>
-            {analyzing ? "Analyzing..." : "✨ Get Career Insights"}
+            {analyzing ? "Analyzing..." : "✨ Explore Career Path"}
           </motion.button>
           <motion.button onClick={handlePrint}
             whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
@@ -575,8 +552,7 @@ const ResumeViewPage = () => {
             }}>
             ⬇ Download PDF
           </motion.button>
-        </div>
-      </div>
+        </NavbarActions>
 
       <AnimatePresence>
         {analyzing && (

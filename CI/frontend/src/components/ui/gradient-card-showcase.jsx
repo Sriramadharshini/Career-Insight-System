@@ -166,21 +166,26 @@ export default function SkewCards({ cards }) {
 
         /* ── Action button — gradient branded ─────────────────────── */
         .skew-action-btn {
-          display: inline-block;
-          font-size: 0.9rem;
-          font-weight: 700;
-          color: #ffffff;
-          padding: 0.55rem 1.2rem;
-          border-radius: 8px;
+          display: inline-flex;
+          align-items: center;
+          align-self: flex-start;
+          font-family: 'Inter', sans-serif;
+          font-size: 1.1rem;
+          font-weight: 800;
+          color: #0f172a;
+          white-space: nowrap;
+          padding: 0.9rem 1.8rem;
+          border-radius: 12px;
           cursor: pointer;
-          transition: all 0.3s ease;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           letter-spacing: 0.01em;
-          box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+          box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+          margin-top: auto;
         }
         .skew-card-group:hover .skew-action-btn {
-          filter: brightness(1.15);
-          box-shadow: 0 6px 20px rgba(0,0,0,0.5);
-          transform: translateX(4px);
+          filter: brightness(1.2);
+          box-shadow: 0 8px 25px rgba(0,0,0,0.45);
+          transform: translateY(-2px) translateX(4px);
         }
       `}</style>
     </>

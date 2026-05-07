@@ -6,7 +6,7 @@ import { useAuth } from "../context/AuthContext";
 const scoreColors = {
   contactInfo: "score-blue",
   professionalSummary: "score-teal",
-  education: "score-gold",
+  education: "score-gold", 
   skills: "score-violet",
   experience: "score-green",
   projects: "score-rose"
@@ -34,7 +34,8 @@ const ResumeAnalysisPage = () => {
     return (
       <section className="panel">
         <h2>Resume Analysis</h2>
-        <p>No analyzed resume found yet.</p>
+        <
+          p>No analyzed resume found yet.</p>
         <Link className="button-link button-primary" to="/resume-upload">
           Go to Resume Upload
         </Link>
@@ -66,8 +67,8 @@ const ResumeAnalysisPage = () => {
           <span className="eyebrow">Next Step</span>
           <h3>Continue to career suggestions</h3>
           <div className="analysis-action-buttons">
-            <button type="button" onClick={() => navigate("/career-suggestions", { state: { isFromProfile: false } })}>
-              View Career Suggestions
+            <button type="button" onClick={() => navigate("/career-hub")}>
+              Explore Career Path
             </button>
           </div>
         </div>

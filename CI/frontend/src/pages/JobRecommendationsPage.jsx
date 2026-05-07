@@ -16,10 +16,9 @@ import {
   RefreshCw,
   Target,
   ChevronRight,
-  ChevronLeft,
   Rocket
 } from "lucide-react";
-
+import { NavbarActions } from "../components/common/NavbarPortals";
 const BG = "#050b18";
 const TEXT = "#f0f4ff";
 const MUTED = "#8a96b0";
@@ -267,8 +266,39 @@ const JobRecommendationsPage = () => {
   return (
     <div style={{ minHeight: "100vh", background: "#020308", color: TEXT, fontFamily: "'Outfit', sans-serif", position: "relative", overflow: "hidden" }}>
       
+      {/* ── NAVBAR PORTALS ── */}
+      <NavbarActions>
+        <button onClick={() => navigate(-1)}
+          style={{
+            background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)",
+            color: "#e2e8f0", borderRadius: "8px", padding: "0.55rem 1rem",
+            fontSize: "0.85rem", fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: "0.4rem",
+            transition: "all 0.2s ease"
+          }}>
+          <ArrowLeft size={15} /> Back
+        </button>
+        <button onClick={handleRefresh}
+          style={{
+            background: "linear-gradient(135deg,#38bdf8,#0ea5e9)", color: "#fff", border: "none",
+            borderRadius: "8px", padding: "0.55rem 1.25rem",
+            fontSize: "0.85rem", fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: "0.4rem",
+            boxShadow: "0 4px 15px rgba(56,189,248,0.3)", transition: "all 0.2s ease"
+          }}>
+          <RefreshCw size={15} /> Refresh AI
+        </button>
+        <button onClick={() => navigate("/interview-prep")}
+          style={{
+            background: "linear-gradient(135deg,#6366f1,#8b5cf6)", color: "#fff", border: "none",
+            borderRadius: "8px", padding: "0.55rem 1.25rem",
+            fontSize: "0.85rem", fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: "0.4rem",
+            boxShadow: "0 4px 15px rgba(99,102,241,0.3)", transition: "all 0.2s ease"
+          }}>
+          <Target size={15} /> Interview Prep
+        </button>
+      </NavbarActions>
+
       {/* Hero Header */}
-      <div style={{ maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 1, padding: "0 2rem" }}>
+      <div style={{ maxWidth: 1200, margin: "2rem auto 0", position: "relative", zIndex: 1, padding: "0 2rem" }}>
         
         <header style={{ 
           marginBottom: "6rem", 
@@ -345,13 +375,7 @@ const JobRecommendationsPage = () => {
                  Top Strategic Matches
                </h2>
                <div style={{ display: "flex", gap: "1rem" }}>
-                 <motion.button
-                   whileHover={{ scale: 1.05, background: "rgba(255,255,255,0.08)" }} whileTap={{ scale: 0.95 }}
-                   onClick={handleRefresh}
-                   style={{ display: "flex", alignItems: "center", gap: "0.7rem", padding: "0.7rem 1.4rem", borderRadius: "14px", background: "rgba(255,255,255,0.04)", border: `1px solid ${BORDER}`, color: TEXT, fontWeight: 800, cursor: "pointer" }}
-                 >
-                   <RefreshCw size={18} /> Refresh AI
-                 </motion.button>
+                 {/* Refresh AI button has been moved to the primary navbar */}
                </div>
             </div>
 
@@ -401,50 +425,7 @@ const JobRecommendationsPage = () => {
           </div>
         )}
 
-        <section style={{ maxWidth: 1000, margin: "6rem auto 0", padding: "0 2rem" }}>
-          <div style={{ 
-            background: "linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(139, 92, 246, 0.05))", 
-            border: `1px solid ${BORDER}`, 
-            borderRadius: "40px", 
-            padding: "4rem", 
-            display: "flex", 
-            alignItems: "center", 
-            justifyContent: "space-between", 
-            gap: "3rem",
-            flexWrap: "wrap",
-            position: "relative",
-            overflow: "hidden"
-          }}>
-            <div style={{ position: "absolute", top: -20, right: -20, opacity: 0.1 }}>
-               <Rocket size={120} color={VIOLET} />
-            </div>
-            
-            <div style={{ flex: 1, minWidth: 320, position: "relative", zIndex: 1 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1.25rem" }}>
-                <Target color={ROSE} size={32} />
-                <h3 style={{ margin: 0, fontSize: "2.4rem", fontWeight: 1000, color: "#fff", letterSpacing: "-1px" }}>Ready to Transition?</h3>
-              </div>
-              <p style={{ margin: 0, fontSize: "1.25rem", color: MUTED, lineHeight: 1.8, fontWeight: 500 }}>
-                Analyze your strategic fit. Refine your delivery with our AI simulator or backtrack to overview for a comprehensive audit.
-              </p>
-            </div>
-            
-            <div style={{ display: "flex", gap: "1.25rem", flexWrap: "wrap", position: "relative", zIndex: 1 }}>
-              <motion.button 
-                whileHover={{ y: -5, boxShadow: `0 10px 25px ${INDIGO}40` }}
-                onClick={() => navigate("/dashboard")} 
-                style={{ padding: "1.1rem 2.2rem", borderRadius: "18px", background: "rgba(255,255,255,0.04)", color: "#fff", border: `1px solid ${BORDER}`, fontWeight: 850, fontSize: "1.05rem", cursor: "pointer", transition: "0.3s", display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                <LayoutDashboard size={20} /> Dashboard
-              </motion.button>
-              <motion.button 
-                whileHover={{ y: -5, scale: 1.02, boxShadow: `0 15px 35px ${INDIGO}50` }}
-                onClick={() => navigate("/interview-prep")} 
-                style={{ padding: "1.1rem 2.5rem", borderRadius: "18px", background: `linear-gradient(135deg, ${INDIGO}, ${VIOLET})`, color: "#fff", border: "none", fontWeight: 850, fontSize: "1.05rem", cursor: "pointer", transition: "0.3s", display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                Interview Prep <ChevronRight size={20} />
-              </motion.button>
-            </div>
-          </div>
-        </section>
+        <div style={{ height: "4rem" }}></div>
 
         <style>{`
           @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap');
