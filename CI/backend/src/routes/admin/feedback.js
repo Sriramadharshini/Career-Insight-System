@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { adminOnly } from "../../middleware/adminMiddleware.js";
 import { Feedback } from "../../models/Feedback.js";
+import { SystemSetting } from "../../models/SystemSetting.js";
 
 const router = Router();
 
@@ -10,13 +11,24 @@ router.get("/", adminOnly, async (req, res) => {
     const { type = "", status = "" } = req.query;
     const query = {};
     if (type) query.type = type;
-    if (status) query.status = status;
+    if (status) {
+      if (status === 'active') {
+        query.status = { $ne: 'Archived' };
+      } else {
+        query.status = status;
+      }
+    } else {
+      query.status = { $ne: 'Archived' }; // Default to not returning archived
+    }
 
     const feedbacks = await Feedback.find(query)
       .sort({ createdAt: -1 })
       .populate("user", "name email");
 
-    res.json({ feedbacks });
+    const settings = await SystemSetting.findOne();
+    const feedbackEnabled = settings ? settings.feedbackEnabled : true;
+
+    res.json({ feedbacks, feedbackEnabled });
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch feedback", error: err.message });
   }

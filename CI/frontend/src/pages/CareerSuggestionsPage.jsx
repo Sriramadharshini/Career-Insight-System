@@ -236,6 +236,22 @@ const LoadingView = () => (
   </div>
 );
 
+export const normalizeDomainName = (name) => {
+  if (!name || typeof name !== 'string') return name;
+  const n = name.trim().toLowerCase();
+  if (['full stack', 'full-stack', 'fullstack', 'full stack developer'].includes(n)) return 'Full Stack Development';
+  if (['front end', 'front-end', 'frontend', 'frontend developer', 'ui developer'].includes(n)) return 'Frontend Development';
+  if (['back end', 'back-end', 'backend', 'backend developer'].includes(n)) return 'Backend Development';
+  if (n === 'api' || n === 'rest api' || n === 'restful api') return 'API Design & Integration';
+  if (n === 'microservices' || n === 'micro-services') return 'Microservices Architecture';
+  if (n === 'performance' || n === 'performance optimization') return 'Performance & Scalability';
+  if (n === 'testing' || n === 'qa' || n === 'unit testing') return 'Testing & Quality Assurance';
+  if (['react', 'reactjs', 'react.js'].includes(n)) return 'React.js';
+  if (['node', 'nodejs', 'node.js'].includes(n)) return 'Node.js';
+  if (['vue', 'vuejs', 'vue.js'].includes(n)) return 'Vue.js';
+  return name.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+};
+
 // ─── Main Page ────────────────────────────────────────────────────────────────
 const CareerSuggestionsPage = () => {
   const { token } = useAuth();
@@ -256,6 +272,12 @@ const CareerSuggestionsPage = () => {
       setProfile(prof);
       setAnalysis(anal);
       setLoading(false);
+      
+      // Log career suggestions view
+      fetch("http://localhost:5002/api/resume/log-career-view", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` }
+      }).catch(e => console.error("Failed to log view", e));
     });
   }, [token]);
 
@@ -267,10 +289,45 @@ const CareerSuggestionsPage = () => {
   const trackInfo = TRACK_META[trackKey] || TRACK_META.fullstack;
 
   const rawSkills = currentInsight?.nextLevelSkills || analysis?.nextLevelSkills || [];
-  // Ensure strict uniqueness and limit to 8 skills for clean UI
-  const suggestedSkills = [...new Set(rawSkills)].slice(0, 8);
-  const resources = currentInsight?.suggestedResources || analysis?.suggestedResources || defaultTrack;
-  const displayTitle = currentInsight?.role || trackInfo.title;
+  
+  // Strict case-insensitive uniqueness and normalization for skills
+  const suggestedSkills = [];
+  const seenSkills = new Set();
+  rawSkills.forEach(s => {
+    if (typeof s === 'string') {
+      const normalized = normalizeDomainName(s);
+      const lower = normalized.toLowerCase();
+      if (!seenSkills.has(lower)) {
+        seenSkills.add(lower);
+        suggestedSkills.push(normalized);
+      }
+    }
+  });
+  
+  // Strict uniqueness for resources based on URL and Name
+  let rawResources = currentInsight?.suggestedResources || analysis?.suggestedResources || defaultTrack;
+  const uniqueWebsites = [];
+  const seenUrls = new Set();
+  (rawResources?.websites || []).forEach(w => {
+    if (!seenUrls.has(w.url)) {
+      seenUrls.add(w.url);
+      uniqueWebsites.push(w);
+    }
+  });
+
+  const uniqueYoutube = [];
+  const seenYoutube = new Set();
+  (rawResources?.youtube || []).forEach(y => {
+    const lowerQ = typeof y === 'string' ? y.toLowerCase().trim() : '';
+    if (lowerQ && !seenYoutube.has(lowerQ)) {
+      seenYoutube.add(lowerQ);
+      uniqueYoutube.push(y);
+    }
+  });
+
+  const resources = { websites: uniqueWebsites, youtube: uniqueYoutube };
+  let displayTitle = currentInsight?.role || trackInfo.title;
+  displayTitle = normalizeDomainName(displayTitle);
   const roleSummary = currentInsight?.summary || null;
   const isAI = analysis?.aiCareerSuggestions === true;
 
@@ -346,7 +403,7 @@ const CareerSuggestionsPage = () => {
                       border: selectedRoleIndex !== idx ? "1px solid rgba(255,255,255,0.1)" : "1px solid transparent"
                     }}
                   >
-                    {insight.role}
+                    {normalizeDomainName(insight.role)}
                   </button>
                 ))}
               </div>

@@ -41,7 +41,7 @@ const GlobalDefs = () => (
 );
 
 export const DashboardHeroIllustration = () => (
-  <svg viewBox="0 0 400 240" style={{ width: '100%', height: 'auto', filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))' }}>
+  <svg viewBox="0 0 400 240" style={{ width: '100%', height: 'auto', filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))', borderRadius: 'var(--radius-md)' }}>
     <GlobalDefs />
     <g opacity="0.3">
       <path d="M50 200 L350 200 M50 180 L350 180 M50 160 L350 160 M50 140 L350 140" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
@@ -58,7 +58,7 @@ export const DashboardHeroIllustration = () => (
 );
 
 export const AnalyticsHeroIllustration = () => (
-  <svg viewBox="0 0 400 240" style={{ width: '100%', height: 'auto', filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))' }}>
+  <svg viewBox="0 0 400 240" style={{ width: '100%', height: 'auto', filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))', borderRadius: 'var(--radius-md)' }}>
     <GlobalDefs />
     <g transform="translate(40, 20)">
       <circle cx="160" cy="100" r="80" fill="url(#glowPurple)" filter="url(#glassBlur)" opacity="0.3" />
@@ -75,7 +75,7 @@ export const AnalyticsHeroIllustration = () => (
 );
 
 export const UsersHeroIllustration = () => (
-  <svg viewBox="0 0 400 240" style={{ width: '100%', height: 'auto', filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))' }}>
+  <svg viewBox="0 0 400 240" style={{ width: '100%', height: 'auto', filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))', borderRadius: 'var(--radius-md)' }}>
     <GlobalDefs />
     <g opacity="0.3">
       <circle cx="200" cy="120" r="100" stroke="url(#glowGreen)" strokeWidth="1" fill="none" />
@@ -93,7 +93,7 @@ export const UsersHeroIllustration = () => (
 );
 
 export const JobsHeroIllustration = () => (
-  <svg viewBox="0 0 400 240" style={{ width: '100%', height: 'auto', filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))' }}>
+  <svg viewBox="0 0 400 240" style={{ width: '100%', height: 'auto', filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))', borderRadius: 'var(--radius-md)' }}>
     <GlobalDefs />
     <rect x="80" y="80" width="80" height="120" rx="4" fill="url(#glowOrange)" opacity="0.15" stroke="url(#glowOrange)" strokeWidth="2" />
     <rect x="180" y="40" width="80" height="160" rx="4" fill="url(#glowOrange)" opacity="0.1" stroke="url(#glowOrange)" strokeWidth="1" />
@@ -109,7 +109,7 @@ export const JobsHeroIllustration = () => (
 );
 
 export const CareersHeroIllustration = () => (
-  <svg viewBox="0 0 400 240" style={{ width: '100%', height: 'auto', filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))' }}>
+  <svg viewBox="0 0 400 240" style={{ width: '100%', height: 'auto', filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))', borderRadius: 'var(--radius-md)' }}>
     <GlobalDefs />
     <path d="M60 180 C 140 180, 160 80, 240 80" fill="none" stroke="url(#glowPurple)" strokeWidth="4" strokeLinecap="round" strokeDasharray="8 8" opacity="0.5" />
     <path d="M60 180 C 120 180, 140 120, 260 140" fill="none" stroke="url(#glowPurple)" strokeWidth="6" strokeLinecap="round" />
@@ -124,7 +124,7 @@ export const CareersHeroIllustration = () => (
 );
 
 export const CoursesHeroIllustration = () => (
-  <svg viewBox="0 0 400 240" style={{ width: '100%', height: 'auto', filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))' }}>
+  <svg viewBox="0 0 400 240" style={{ width: '100%', height: 'auto', filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))', borderRadius: 'var(--radius-md)' }}>
     <GlobalDefs />
     <g transform="translate(60, 40)">
       <rect x="0" y="80" width="160" height="40" rx="8" fill="rgba(34, 211, 238, 0.1)" stroke="url(#glowCyan)" strokeWidth="2" />
@@ -144,7 +144,7 @@ export const CoursesHeroIllustration = () => (
 );
 
 export const AssessmentsHeroIllustration = () => (
-  <svg viewBox="0 0 400 240" style={{ width: '100%', height: 'auto', filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))' }}>
+  <svg viewBox="0 0 400 240" style={{ width: '100%', height: 'auto', filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))', borderRadius: 'var(--radius-md)' }}>
     <GlobalDefs />
     <path d="M100 120 A 80 80 0 1 1 260 120" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="12" strokeLinecap="round" />
     <path d="M100 120 A 80 80 0 0 1 200 45" fill="none" stroke="url(#glowOrange)" strokeWidth="12" strokeLinecap="round" />
@@ -158,7 +158,7 @@ export const AssessmentsHeroIllustration = () => (
 );
 
 export const NotificationsHeroIllustration = () => (
-  <svg viewBox="0 0 400 240" style={{ width: '100%', height: 'auto', filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))' }}>
+  <svg viewBox="0 0 400 240" style={{ width: '100%', height: 'auto', filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))', borderRadius: 'var(--radius-md)' }}>
     <GlobalDefs />
     <circle cx="200" cy="120" r="15" fill="url(#glowPink)" />
     <circle cx="200" cy="120" r="40" fill="none" stroke="url(#glowPink)" strokeWidth="3" opacity="0.8" strokedasharray="8 4" />
@@ -178,7 +178,7 @@ export const NotificationsHeroIllustration = () => (
 );
 
 export const SkillsHeroIllustration = () => (
-  <svg viewBox="0 0 400 240" style={{ width: '100%', height: 'auto', filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))' }}>
+  <svg viewBox="0 0 400 240" style={{ width: '100%', height: 'auto', filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))', borderRadius: 'var(--radius-md)' }}>
     <GlobalDefs />
     <path d="M200 40 L260 75 L260 145 L200 180 L140 145 L140 75 Z" fill="rgba(45, 212, 191, 0.1)" stroke="url(#glowTeal)" strokeWidth="2" />
     <path d="M200 80 L230 100 L230 140 L200 160 L170 140 L170 100 Z" fill="url(#glowTeal)" opacity="0.3" filter="url(#glassBlur)" />
@@ -196,7 +196,7 @@ export const SkillsHeroIllustration = () => (
 );
 
 export const FeedbackHeroIllustration = () => (
-  <svg viewBox="0 0 400 240" style={{ width: '100%', height: 'auto', filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))' }}>
+  <svg viewBox="0 0 400 240" style={{ width: '100%', height: 'auto', filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))', borderRadius: 'var(--radius-md)' }}>
     <GlobalDefs />
     <path d="M120 60 L240 60 A 20 20 0 0 1 260 80 L260 140 A 20 20 0 0 1 240 160 L160 160 L120 190 L120 160 L100 160 A 20 20 0 0 1 80 140 L80 80 A 20 20 0 0 1 100 60 Z" fill="rgba(129, 140, 248, 0.15)" stroke="url(#glowIndigo)" strokeWidth="2" />
     

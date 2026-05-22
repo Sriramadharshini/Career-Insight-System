@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useSettings } from "../context/SettingsContext";
 import { motion, AnimatePresence } from "framer-motion";
 import loginIllustration from "../assets/login_illustration_v2.png";
 import { AnimatedText } from "../components/ui/animated-shiny-text";
@@ -33,15 +34,28 @@ const popItem = {
 const LoginPageModern = () => {
   const navigate = useNavigate();
   const { login, adminLogin } = useAuth();
+  const { settings } = useSettings();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [isAdminMode, setIsAdminMode] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    if (settings?.maintenanceMode) {
+      setIsAdminMode(true);
+    }
+  }, [settings?.maintenanceMode]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
+
+    if (!isAdminMode && settings?.maintenanceMode) {
+      setError("User access is currently restricted due to emergency maintenance.");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -131,7 +145,7 @@ const LoginPageModern = () => {
               }}
             >
               <button
-                onClick={() => { setIsAdminMode(false); setError(""); }}
+                onClick={() => { if (!settings?.maintenanceMode) { setIsAdminMode(false); setError(""); } }}
                 className={`mode-btn ${!isAdminMode ? 'active' : ''}`}
                 style={{
                   flex: 1,
@@ -144,7 +158,8 @@ const LoginPageModern = () => {
                   border: 'none',
                   background: !isAdminMode ? 'rgba(56, 189, 248, 0.1)' : 'transparent',
                   color: !isAdminMode ? '#38bdf8' : '#a1a1aa',
-                  cursor: 'pointer',
+                  cursor: settings?.maintenanceMode ? 'not-allowed' : 'pointer',
+                  opacity: settings?.maintenanceMode ? 0.4 : 1,
                   fontWeight: 600,
                   transition: 'all 0.2s'
                 }}
@@ -282,7 +297,11 @@ const LoginPageModern = () => {
               animate={{ opacity: 1 }}
               transition={{ delay: 1.2 }}
             >
-              Don&apos;t have an account? <Link to="/register" style={{ color: '#38bdf8', fontWeight: '600', marginLeft: '0.5rem' }}>Create account</Link>
+              {settings?.allowRegistration !== false ? (
+                <>Don&apos;t have an account? <Link to="/register" style={{ color: '#38bdf8', fontWeight: '600', marginLeft: '0.5rem' }}>Create account</Link></>
+              ) : (
+                <>New user registrations are currently disabled by the administrator.</>
+              )}
             </motion.p>
           </div>
         </motion.div>

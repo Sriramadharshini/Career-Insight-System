@@ -442,6 +442,7 @@ const ResumeViewPage = () => {
     try {
       await resumeApi.analyzeProfile(token, profile);
       // Navigate to the Career Hub after creating a resume
+      localStorage.setItem("activeFlow", "build");
       navigate("/career-hub", { state: { isFromProfile: true } }); 
     } catch (err) {
       console.error("Analysis failed:", err);

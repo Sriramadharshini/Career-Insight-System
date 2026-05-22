@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { User } from "../models/User.js";
+import { Activity } from "../models/Activity.js";
 
 const createToken = (userId, role) =>
   jwt.sign({ userId, role }, process.env.JWT_SECRET, { expiresIn: "1d" });
@@ -17,6 +18,12 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ message: "Name, email, and password are required" });
     }
 
+    const { SystemSetting } = await import("../models/SystemSetting.js");
+    const settings = await SystemSetting.findOne().lean();
+    if (settings && settings.allowRegistration === false) {
+      return res.status(403).json({ message: "User registration is currently disabled." });
+    }
+
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
@@ -24,7 +31,20 @@ export const registerUser = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({ name, email, password: hashedPassword });
+    const user = await User.create({ 
+      name, 
+      email, 
+      password: hashedPassword,
+      isOnline: true,
+      lastActiveAt: new Date()
+    });
+
+    await Activity.create({
+      user: user._id,
+      action: "registered",
+      target: "Platform",
+      type: "user"
+    }).catch(e => console.error("Activity logging failed:", e));
 
     return res.status(201).json({
       token: createToken(user._id, user.role),
@@ -54,6 +74,11 @@ export const loginUser = async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
+    if (user.role === "admin") {
+      console.log(`[Login] Admin attempted to login via user portal: ${email}`);
+      return res.status(403).json({ message: "Unauthorized Access. Please use the Admin Login portal." });
+    }
+
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
@@ -64,6 +89,17 @@ export const loginUser = async (req, res) => {
     if (user.status === "Blocked") {
       return res.status(403).json({ message: "Your account has been blocked. Contact support." });
     }
+
+    user.isOnline = true;
+    user.lastActiveAt = new Date();
+    await user.save();
+
+    await Activity.create({
+      user: user._id,
+      action: "logged in",
+      target: "Platform",
+      type: "user"
+    }).catch(e => console.error("Activity logging failed:", e));
 
     return res.json({
       token: createToken(user._id, user.role),
@@ -118,5 +154,16 @@ export const adminLogin = async (req, res) => {
 };
 
 export const getMe = async (req, res) => res.json({ user: req.user });
+
+export const logoutUser = async (req, res) => {
+  try {
+    if (req.user) {
+      await User.findByIdAndUpdate(req.user._id, { isOnline: false, lastActiveAt: new Date() });
+    }
+    return res.json({ message: "Logged out successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "Logout failed", error: error.message });
+  }
+};
 
 

@@ -35,9 +35,11 @@ export const adminApi = {
   getDashboardStats: () => apiClient.get('/dashboard/stats'),
   getRecentUsers: () => apiClient.get('/dashboard/recent-users'),
   getRecentActivity: () => apiClient.get('/dashboard/recent-activity'),
+  getLoggedInUsers: () => apiClient.get('/dashboard/logged-in-users'),
   getUserGrowth: (range) => apiClient.get(`/dashboard/user-growth?range=${range}`),
 
   getAnalytics: (type, params) => apiClient.get(`/analytics/${type}`, { params }),
+  getComprehensiveAnalytics: (period) => apiClient.get(`/analytics/comprehensive?period=${period}`),
 
   // Users
   getUsers: (params) => apiClient.get('/users', { params }),
@@ -85,6 +87,10 @@ export const adminApi = {
   // Feedback
   getFeedback: (params) => apiClient.get('/feedback', { params }),
   getFeedbackSummary: () => apiClient.get('/feedback/summary'),
-  resolveFeedback: (id) => apiClient.patch(`/feedback/${id}/resolve`),
+  updateFeedbackStatus: (id, status) => apiClient.put(`/feedback/${id}/status`, { status }),
   deleteFeedback: (id) => apiClient.delete(`/feedback/${id}`),
+
+  // Settings
+  getSettings: () => apiClient.get('/settings'),
+  updateSettings: (data) => apiClient.put('/settings', data),
 };

@@ -1,3 +1,5 @@
+import { normalizeDomainName } from './aiAnalyzer.js';
+
 const ATS_KEYWORDS = [
   "javascript", "react", "node", "mongodb", "express", "python", "sql", "api", "git",
   "communication", "problem solving", "teamwork", "html", "css", "docker", "aws", "typescript",
@@ -471,14 +473,25 @@ export const analyzeResume = (resumeText = "", targetRole = "") => {
   };
 
   // ── Career Suggestion Enhancements ──────────────────────────────────────────
-  const nextLevelSkills = [];
+  const rawNextLevelSkills = [];
   extractedSkills.forEach(s => {
     if (SKILL_PROGRESSION[s]) {
       SKILL_PROGRESSION[s].forEach(ns => {
-        if (!extractedSkills.includes(ns.toLowerCase()) && !nextLevelSkills.includes(ns)) {
-          nextLevelSkills.push(ns);
+        if (!extractedSkills.includes(ns.toLowerCase()) && !rawNextLevelSkills.includes(ns)) {
+          rawNextLevelSkills.push(ns);
         }
       });
+    }
+  });
+
+  const nextLevelSkills = [];
+  const seenNextLevel = new Set();
+  rawNextLevelSkills.forEach(s => {
+    const normalized = normalizeDomainName(s);
+    const lower = normalized.toLowerCase();
+    if (!seenNextLevel.has(lower)) {
+      seenNextLevel.add(lower);
+      nextLevelSkills.push(normalized);
     }
   });
 
@@ -518,7 +531,18 @@ export const analyzeResume = (resumeText = "", targetRole = "") => {
     }
   }
 
-  const suggestedResources = TRACK_RESOURCES[careerTrack] || TRACK_RESOURCES.fullstack;
+  // Dynamically map resources to the specific next skills
+  const rootSkillsToLearn = nextLevelSkills.slice(0, 6);
+  const rootSuggestedResources = {
+    websites: rootSkillsToLearn.length > 0 ? rootSkillsToLearn.slice(0, 5).map(skill => ({
+      name: `${skill} Documentation & Guides`,
+      url: `https://www.google.com/search?q=${encodeURIComponent(skill + " official documentation tutorial")}`,
+      focus: `Master core concepts of ${skill}`
+    })) : (TRACK_RESOURCES[careerTrack] || TRACK_RESOURCES.fullstack).websites,
+    youtube: rootSkillsToLearn.length > 0 ? rootSkillsToLearn.slice(0, 5).map(skill => 
+      `${skill} full course tutorial for beginners`
+    ) : (TRACK_RESOURCES[careerTrack] || TRACK_RESOURCES.fullstack).youtube
+  };
 
   // Derive exactly 10 interview questions
   const primaryRole = recommendedRoles[0] || "Full Stack Developer";
@@ -554,29 +578,44 @@ export const analyzeResume = (resumeText = "", targetRole = "") => {
     });
 
     // Deduplicate and maintain order (Pre-existing skills in ROLE_RULES and SKILL_PROGRESSION are already somewhat ordered)
-    let roleSkillsToLearn = [...new Set([...missingRoleSkills.map(s => s.charAt(0).toUpperCase() + s.slice(1)), ...extraSkills])];
+    let rawRoleSkillsToLearn = [...missingRoleSkills.map(s => s.charAt(0).toUpperCase() + s.slice(1)), ...extraSkills];
     
-    // Final deduplication for safety (case-insensitive check)
+    // Final deduplication for safety (case-insensitive check) and normalization
     const uniqueSkills = [];
     const seen = new Set();
-    roleSkillsToLearn.forEach(s => {
-      const lower = s.toLowerCase();
+    rawRoleSkillsToLearn.forEach(s => {
+      const normalized = normalizeDomainName(s);
+      const lower = normalized.toLowerCase();
       if (!seen.has(lower)) {
         seen.add(lower);
-        uniqueSkills.push(s);
+        uniqueSkills.push(normalized);
       }
     });
 
-    roleSkillsToLearn = uniqueSkills.slice(0, 8);
+    const roleSkillsToLearn = uniqueSkills.slice(0, 8);
 
     const rolePool = ExpandedData.questionBank[role] || ExpandedData.questionBank["Full Stack Developer"];
-    const roleQuestions = [...rolePool].sort(() => 0.5 - Math.random()).slice(0, 10);
+    const roleQuestions = [...rolePool].sort(() => 0.5 - Math.random()).slice(0, 30);
+
+    const roleSkillsFinal = roleSkillsToLearn.length > 0 ? roleSkillsToLearn : ["System Design", "Advanced Architecture", "Performance Optimization", "Leadership & Mentoring", "Agile Methodologies"];
+    
+    // Dynamically generate suggested resources mapped perfectly to the exact skills
+    const dynamicSuggestedResources = {
+      websites: roleSkillsFinal.slice(0, 5).map(skill => ({
+        name: `${skill} Official Docs & Guides`,
+        url: `https://www.google.com/search?q=${encodeURIComponent(skill + " official documentation tutorial")}`,
+        focus: `Master core concepts of ${skill}`
+      })),
+      youtube: roleSkillsFinal.slice(0, 5).map(skill => 
+        `${skill} full course tutorial for beginners`
+      )
+    };
 
     return {
       role,
       trackKey,
-      nextLevelSkills: roleSkillsToLearn.length > 0 ? roleSkillsToLearn : ["System Design", "Advanced Architecture", "Performance Optimization", "Leadership & Mentoring", "Agile Methodologies"],
-      suggestedResources: recommendedResources,
+      nextLevelSkills: roleSkillsFinal,
+      suggestedResources: dynamicSuggestedResources,
       interviewQuestions: roleQuestions
     };
   });
@@ -598,8 +637,8 @@ export const analyzeResume = (resumeText = "", targetRole = "") => {
     certifications,
     learningPathways,
     careerTrack,
-    nextLevelSkills: nextLevelSkills.slice(0, 6),
-    suggestedResources,
+    nextLevelSkills: rootSkillsToLearn,
+    suggestedResources: rootSuggestedResources,
     roleSpecificInsights
   };
 };

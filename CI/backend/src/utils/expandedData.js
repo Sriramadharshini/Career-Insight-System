@@ -28,7 +28,13 @@ export const ROLE_RULES = [
   { role: "Penetration Tester", keywords: ["kali linux","metasploit","wireshark","nmap","burp suite","red team"] },
   { role: "React Developer", keywords: ["react","redux","hooks","next.js","frontend"] },
   { role: "Node.js Developer", keywords: ["node.js","express","npm","restful api","backend"] },
-  { role: "Python Developer", keywords: ["python","django","flask","fastapi","scripting","automation"] }
+  { role: "Python Developer", keywords: ["python","django","flask","fastapi","scripting","automation"] },
+  { role: "Web Application Development", keywords: ["react","node","express","mongodb","sql","full stack","web","app"] },
+  { role: "Frontend Engineering", keywords: ["react","vue","angular","javascript","typescript","css","ui"] },
+  { role: "UI Engineering", keywords: ["figma","react","css","html","javascript","ui","ux"] },
+  { role: "JavaScript Development", keywords: ["javascript","typescript","node","react","express","es6"] },
+  { role: "Cloud Architecture", keywords: ["aws","azure","gcp","architecture","infrastructure","cloud"] },
+  { role: "Data Engineering & Analytics", keywords: ["sql","python","pandas","spark","etl","tableau","big data"] }
 ];
 
 // Helper to easily populate track resources dynamically
@@ -230,7 +236,7 @@ ROLE_RULES.forEach(r => {
   ROLE_TO_TRACK[r.role] = r.role.toLowerCase();
 });
 
-// A robust list of 10 relevant questions for each of the 30 roles.
+// A robust list of 25+ relevant questions for each of the 30 roles.
 export const questionBank = {};
 
 ROLE_RULES.forEach(r => {
@@ -245,20 +251,50 @@ ROLE_RULES.forEach(r => {
     `How do you ensure the quality, scalability, and security of your work in this role?`,
     `Can you explain a highly technical concept from your work to a non-technical stakeholder?`,
     `What tools or libraries do you consider indispensable for a ${roleName}, and why?`,
-    `Where do you see the future of this specific specialization heading in the next 3-5 years?`
+    `Where do you see the future of this specific specialization heading in the next 3-5 years?`,
+    `Describe your process for gathering requirements and translating them into technical architecture for a ${roleName} task.`,
+    `How do you handle technical debt while still pushing out new features?`,
+    `Tell me about a time when you disagreed with a senior engineer or manager on a technical implementation. How did you resolve it?`,
+    `What are the most common security vulnerabilities you have encountered as a ${roleName}, and how do you mitigate them?`,
+    `Explain how you would design a highly available system related to your core expertise.`,
+    `Describe a situation where a deployment failed in production. What steps did you take to fix it and prevent recurrence?`,
+    `What metrics do you track to evaluate the performance or success of your work?`,
+    `How do you manage cross-team collaboration with product managers, QA, and designers?`,
+    `Tell me about the hardest code review or architectural review you have ever participated in.`,
+    `How do you approach writing tests (unit, integration, e2e) for your systems?`,
+    `If you were handed a massive legacy codebase today as a ${roleName}, how would you safely begin refactoring it?`,
+    `Explain the principles of observability (logging, metrics, tracing) in the context of your applications.`,
+    `Describe a time you automated a repetitive task that saved your team significant time.`,
+    `How do you evaluate whether to build a solution in-house or adopt an external third-party dependency?`,
+    `What is the most innovative solution you have engineered as a ${roleName}?`
   ];
 });
 
 // Default fallback Full Stack
 questionBank["Full Stack Developer"] = [
-  "Explain the difference between SQL and NoSQL databases.",
-  "How do you handle state management in complex frontend applications?",
-  "Describe your process for securing a RESTful API.",
-  "How do you approach optimizing the performance of a slow web application?",
-  "Explain the principles of CI/CD and your experience with it.",
-  "How do you manage authentication and authorization across the stack?",
-  "What is your approach to handling database migrations without downtime?",
-  "Describe the pros and cons of microservices vs monolithic architecture.",
-  "How do you ensure your application is accessible to all users?",
-  "Can you write a scalable search endpoint that queries a database and returns paginated results?"
+  "Explain the difference between SQL and NoSQL databases and when you would choose one over the other.",
+  "How do you handle state management in complex frontend applications (e.g., Redux, Context, Zustand)?",
+  "Describe your process for securing a RESTful API against common attacks like CSRF and XSS.",
+  "How do you approach optimizing the performance of a slow web application from both frontend and backend perspectives?",
+  "Explain the principles of CI/CD and your experience configuring deployment pipelines.",
+  "How do you manage authentication and authorization (e.g., JWT, OAuth2) across the stack?",
+  "What is your approach to handling database migrations without incurring downtime?",
+  "Describe the pros and cons of microservices vs monolithic architecture in a rapidly scaling startup.",
+  "How do you ensure your application is fully accessible (a11y) to all users?",
+  "Can you write a scalable search endpoint that queries a database and returns paginated results?",
+  "How do you design an API rate limiter to prevent abuse?",
+  "Explain how CORS works and how you would configure it securely on your backend.",
+  "Describe a time you optimized a slow database query. What indexes or structural changes did you apply?",
+  "How do you handle real-time data updates (WebSockets, SSE) in a Full Stack environment?",
+  "What is Server-Side Rendering (SSR) vs Static Site Generation (SSG), and when would you use them?",
+  "Explain how Docker and containerization fit into a modern Full Stack workflow.",
+  "Describe your approach to comprehensive error handling and logging across frontend and backend boundaries.",
+  "How do you structure a massive frontend application to avoid giant monolithic component files?",
+  "What are the trade-offs of using an ORM versus writing raw SQL queries?",
+  "Explain how you would implement a distributed caching layer using Redis.",
+  "How do you handle file uploads and cloud storage securely in a web application?",
+  "Describe a scenario where you had to debug a memory leak in Node.js or the browser.",
+  "What strategies do you use to ensure consistent data validation between your client and server?",
+  "Explain how you would implement a robust background job queue for processing heavy tasks.",
+  "How do you approach API versioning without breaking existing mobile or third-party clients?"
 ];

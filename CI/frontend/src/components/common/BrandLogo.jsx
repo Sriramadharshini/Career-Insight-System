@@ -9,7 +9,7 @@ const BrandLogo = ({ size = 24, showText = true, className = "" }) => {
         placeItems: 'center',
         width: '44px',
         height: '44px',
-        borderRadius: '12px',
+        borderRadius: 'var(--radius-md)',
         background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.25) 0%, rgba(56, 189, 248, 0.1) 100%)',
         color: '#38bdf8',
         boxShadow: '0 8px 24px rgba(56, 189, 248, 0.25)',

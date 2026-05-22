@@ -54,6 +54,9 @@ export const AuthProvider = ({ children }) => {
 
 
   const logout = () => {
+    if (token) {
+      authApi.logout(token).catch(e => console.error("Logout API failed", e));
+    }
     localStorage.removeItem("careerInsightToken");
     localStorage.removeItem("careerInsightUser");
     setToken(null);

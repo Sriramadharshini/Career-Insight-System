@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { feedbackApi } from "../../api";
 import { useAuth } from "../../context/AuthContext";
+import { useSettings } from "../../context/SettingsContext";
 import { toast } from "react-hot-toast";
 import { MessageSquarePlus, Star, X, Send } from "lucide-react";
 
 const FeedbackModal = () => {
   const { token } = useAuth();
+  const { settings } = useSettings();
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [rating, setRating] = useState(0);
@@ -37,7 +39,7 @@ const FeedbackModal = () => {
     }
   };
 
-  if (!token) return null;
+  if (!token || settings?.feedbackEnabled === false) return null;
 
   return (
     <>
@@ -86,7 +88,7 @@ const FeedbackModal = () => {
               position: "fixed", bottom: "9rem", right: "2rem", zIndex: 1000,
               background: "linear-gradient(160deg, #111116 0%, #0c0c10 100%)",
               border: "1px solid rgba(255,255,255,0.1)",
-              borderRadius: "20px", width: "400px", maxWidth: "calc(100vw - 2rem)",
+              borderRadius: "var(--radius-lg)", width: "400px", maxWidth: "calc(100vw - 2rem)",
               padding: "2rem", boxShadow: "0 20px 50px rgba(0,0,0,0.6)",
               animation: "slideUpModal 0.3s ease"
             }}
@@ -106,7 +108,7 @@ const FeedbackModal = () => {
                 onClick={() => setIsOpen(false)}
                 style={{
                   background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
-                  borderRadius: "10px", padding: "0.4rem", cursor: "pointer", color: "#a1a1aa",
+                  borderRadius: "var(--radius-sm)", padding: "0.4rem", cursor: "pointer", color: "#a1a1aa",
                   transition: "all 0.2s ease", display: "flex"
                 }}
                 onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.1)"; }}
@@ -160,7 +162,7 @@ const FeedbackModal = () => {
                   width: "100%", resize: "vertical",
                   background: "rgba(255,255,255,0.04)",
                   border: "1px solid rgba(255,255,255,0.1)",
-                  borderRadius: "12px", padding: "0.85rem",
+                  borderRadius: "var(--radius-md)", padding: "0.85rem",
                   color: "#fafafa", fontSize: "0.9rem", lineHeight: 1.6,
                   fontFamily: "inherit", transition: "border-color 0.2s ease",
                   outline: "none", boxSizing: "border-box"
@@ -177,7 +179,7 @@ const FeedbackModal = () => {
                 onClick={() => { reset(); setIsOpen(false); }}
                 style={{
                   background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
-                  borderRadius: "10px", padding: "0.6rem 1rem",
+                  borderRadius: "var(--radius-md)", padding: "0.6rem 1rem",
                   color: "#a1a1aa", fontSize: "0.85rem", fontWeight: 600,
                   cursor: "pointer", transition: "all 0.2s ease"
                 }}
@@ -192,7 +194,7 @@ const FeedbackModal = () => {
                 style={{
                   display: "flex", alignItems: "center", gap: "0.5rem",
                   background: submitting ? "rgba(99,102,241,0.4)" : "linear-gradient(135deg, #6366f1, #8b5cf6)",
-                  border: "none", borderRadius: "10px", padding: "0.6rem 1.25rem",
+                  border: "none", borderRadius: "var(--radius-md)", padding: "0.6rem 1.25rem",
                   color: "#fff", fontSize: "0.85rem", fontWeight: 700,
                   cursor: submitting ? "not-allowed" : "pointer",
                   boxShadow: "0 6px 15px rgba(99,102,241,0.35)",

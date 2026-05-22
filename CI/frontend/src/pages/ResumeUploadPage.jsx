@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { resumeApi } from "../api";
 import { useAuth } from "../context/AuthContext";
+import { useSettings } from "../context/SettingsContext";
 import { Zap, Briefcase, Target, Award, TrendingUp, CheckCircle, AlertCircle, Shield, Globe } from "lucide-react";
 
 
@@ -125,38 +126,40 @@ const AnimatedBar = ({ value, max, color, delay = 0 }) => {
 };
 
 // ─── Upload Zone ──────────────────────────────────────────────────────────────
-const UploadZone = ({ file, onFile }) => {
+const UploadZone = ({ file, onFile, disabled }) => {
   const [dragging, setDragging] = useState(false);
   const inputRef = useRef(null);
   const onDrop = useCallback(e => {
+    if (disabled) return;
     e.preventDefault(); setDragging(false);
     const f = e.dataTransfer.files?.[0];
     if (f) onFile(f);
-  }, [onFile]);
+  }, [onFile, disabled]);
   return (
     <div
-      onDragOver={e => { e.preventDefault(); setDragging(true); }}
-      onDragLeave={() => setDragging(false)}
+      onDragOver={e => { if (!disabled) { e.preventDefault(); setDragging(true); } }}
+      onDragLeave={() => { if (!disabled) setDragging(false); }}
       onDrop={onDrop}
-      onClick={() => inputRef.current?.click()}
+      onClick={() => { if (!disabled) inputRef.current?.click(); }}
       style={{
-        border: `2px dashed ${dragging ? "#6366f1" : file ? "#10b981" : "rgba(99,102,241,0.35)"}`,
-        borderRadius: "16px", padding: "2.5rem 2rem", textAlign: "center", cursor: "pointer",
-        background: dragging ? "rgba(99,102,241,0.08)" : file ? "rgba(16,185,129,0.05)" : "rgba(255,255,255,0.02)",
+        border: `2px dashed ${disabled ? "rgba(255,255,255,0.1)" : dragging ? "#6366f1" : file ? "#10b981" : "rgba(99,102,241,0.35)"}`,
+        borderRadius: "16px", padding: "2.5rem 2rem", textAlign: "center", cursor: disabled ? "not-allowed" : "pointer",
+        background: disabled ? "rgba(255,255,255,0.02)" : dragging ? "rgba(99,102,241,0.08)" : file ? "rgba(16,185,129,0.05)" : "rgba(255,255,255,0.02)",
         transition: "all 0.3s ease",
-        boxShadow: dragging ? "0 0 30px rgba(99,102,241,0.2)" : "none"
+        boxShadow: dragging && !disabled ? "0 0 30px rgba(99,102,241,0.2)" : "none",
+        opacity: disabled ? 0.6 : 1
       }}>
       <input ref={inputRef} type="file" accept=".pdf,.doc,.docx,.txt"
-        style={{ display:"none" }} onChange={e => onFile(e.target.files?.[0])} />
-      <motion.div animate={{ y: dragging ? -8 : 0 }} transition={{ type:"spring" }}>
-        <div style={{ fontSize: "3rem", marginBottom: "0.75rem" }}>
-          {file ? "✅" : dragging ? "📂" : "📄"}
+        style={{ display:"none" }} onChange={e => onFile(e.target.files?.[0])} disabled={disabled} />
+      <motion.div animate={{ y: dragging && !disabled ? -8 : 0 }} transition={{ type:"spring" }}>
+        <div style={{ fontSize: "3rem", marginBottom: "0.75rem", filter: disabled ? "grayscale(1)" : "none" }}>
+          {disabled ? "🚫" : file ? "✅" : dragging ? "📂" : "📄"}
         </div>
-        <p style={{ fontSize: "1rem", fontWeight: 700, color: file ? "#10b981" : "#f1f5f9", margin: "0 0 0.4rem" }}>
-          {file ? file.name : "Drop your resume here"}
+        <p style={{ fontSize: "1rem", fontWeight: 700, color: disabled ? "#64748b" : file ? "#10b981" : "#f1f5f9", margin: "0 0 0.4rem" }}>
+          {disabled ? "Uploads Disabled" : file ? file.name : "Drop your resume here"}
         </p>
         <p style={{ fontSize: "0.82rem", color: "#64748b", margin: 0 }}>
-          {file ? `${(file.size / 1024).toFixed(1)} KB · Click to change` : "PDF, DOCX, TXT supported · Click or drag & drop"}
+          {disabled ? "The administrator has temporarily paused resume uploads." : file ? `${(file.size / 1024).toFixed(1)} KB · Click to change` : "PDF, DOCX, TXT supported · Click or drag & drop"}
         </p>
       </motion.div>
     </div>
@@ -254,6 +257,7 @@ const AnalyzingOverlay = () => (
 // ─── Main Page ────────────────────────────────────────────────────────────────
 const ResumeUploadPage = () => {
   const { token } = useAuth();
+  const { settings } = useSettings();
   const navigate = useNavigate();
   const location = useLocation();
   const [file, setFile] = useState(null);
@@ -279,6 +283,7 @@ const ResumeUploadPage = () => {
     setError(""); setLoading(true);
     try {
       const data = await resumeApi.upload(token, file, targetRole);
+      localStorage.setItem("activeFlow", "upload");
       setAnalysis(data);
       setTimeout(() => resultsRef.current?.scrollIntoView({ behavior:"smooth", block:"start" }), 200);
     } catch (err) { setError(err.message); }
@@ -365,7 +370,7 @@ const ResumeUploadPage = () => {
             Upload PDF or DOCX — our AI will scan it and return your ATS score instantly
           </p>
           <form onSubmit={handleSubmit}>
-            <UploadZone file={file} onFile={setFile} />
+            <UploadZone file={file} onFile={setFile} disabled={settings?.resumeUploads === false} />
             {error && (
               <motion.div initial={{ opacity:0, scale:0.95 }} animate={{ opacity:1, scale:1 }}
                 style={{ marginTop:"1.5rem", padding:"1rem 1.25rem", background:"rgba(239,68,68,0.1)", border:"1px solid rgba(239,68,68,0.3)", borderRadius:"12px", display:"flex", alignItems:"center", gap:"0.75rem" }}>
@@ -376,9 +381,10 @@ const ResumeUploadPage = () => {
                 </div>
               </motion.div>
             )}
-            <motion.button type="submit" whileHover={{ scale:1.02 }} whileTap={{ scale:0.98 }}
-              style={{ width:"100%", marginTop:"2rem", padding:"1.1rem", background:"linear-gradient(135deg,#4f46e5,#7c3aed)", color:"#fff", border:"none", borderRadius:"14px", fontSize:"1rem", fontWeight:800, cursor:"pointer", fontFamily:"inherit", boxShadow:"0 4px 25px rgba(99,102,241,0.4)" }}>
-              ✦ Analyze Resume Now
+            <motion.button type="submit" whileHover={settings?.resumeUploads !== false ? { scale:1.02 } : {}} whileTap={settings?.resumeUploads !== false ? { scale:0.98 } : {}}
+              disabled={settings?.resumeUploads === false}
+              style={{ width:"100%", marginTop:"2rem", padding:"1.1rem", background: settings?.resumeUploads === false ? "#333" : "linear-gradient(135deg,#4f46e5,#7c3aed)", color: settings?.resumeUploads === false ? "#777" : "#fff", border:"none", borderRadius:"14px", fontSize:"1rem", fontWeight:800, cursor: settings?.resumeUploads === false ? "not-allowed" : "pointer", fontFamily:"inherit", boxShadow: settings?.resumeUploads === false ? "none" : "0 4px 25px rgba(99,102,241,0.4)" }}>
+              {settings?.resumeUploads === false ? "Uploads Disabled" : "✦ Analyze Resume Now"}
             </motion.button>
           </form>
         </motion.div>

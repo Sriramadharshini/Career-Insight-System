@@ -10,7 +10,7 @@ const ConfirmDialog = ({ isOpen, onClose, onConfirm, title, message, confirmText
           color: 'var(--text-muted)',
           background: 'var(--bg-soft)',
           padding: '1rem',
-          borderRadius: '12px',
+          borderRadius: 'var(--radius-md)',
           border: '1px solid var(--border-soft)',
           margin: 0
         }}>

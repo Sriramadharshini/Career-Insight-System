@@ -70,6 +70,22 @@ const PLATFORMS = [
   }
 ];
 
+const normalizeJobTitle = (title) => {
+  if (!title) return title;
+  let t = title.trim();
+  
+  // Standardize core domain names to prevent variations
+  t = t.replace(/full[- ]?stack/i, "Full Stack");
+  t = t.replace(/front[- ]?end/i, "Frontend");
+  t = t.replace(/back[- ]?end/i, "Backend");
+  t = t.replace(/react\.?js/i, "React.js");
+  t = t.replace(/node\.?js/i, "Node.js");
+  t = t.replace(/vue\.?js/i, "Vue.js");
+  
+  // Capitalize words for clean presentation
+  return t.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+};
+
 /* ─── Components ────────────────────────────────────────────── */
 const Orb = ({ x, y, size, color, delay }) => (
   <motion.div
@@ -224,8 +240,24 @@ const JobRecommendationsPage = () => {
         resumeApi.getLatest(token),
         resumeApi.getJobRecommendations(token)
       ]);
+      const rawJobs = Array.isArray(jData) ? jData : [];
+      
+      const uniqueJobs = [];
+      const seenTitles = new Set();
+      
+      rawJobs.forEach(job => {
+        if (!job || !job.title) return;
+        const normalizedTitle = normalizeJobTitle(job.title);
+        const lower = normalizedTitle.toLowerCase();
+        
+        if (!seenTitles.has(lower)) {
+          seenTitles.add(lower);
+          uniqueJobs.push({ ...job, title: normalizedTitle });
+        }
+      });
+      
       setAnalysis(aData);
-      setJobs(Array.isArray(jData) ? jData : []);
+      setJobs(uniqueJobs);
     } catch (err) {
       console.error("Fetch error", err);
       if (err.noResume) {

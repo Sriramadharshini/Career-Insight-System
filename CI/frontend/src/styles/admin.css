@@ -13,9 +13,10 @@
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  --radius-lg: 20px;
-  --radius-md: 12px;
-  --radius-xl: 32px;
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-xl: 40px;
+  --radius-sm: 10px;
   --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -64,14 +65,14 @@
 .status-bar-bg {
   height: 6px;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 999px;
+  border-radius: var(--radius-xl);
   overflow: hidden;
 }
 
 .status-bar-fill {
   height: 100%;
   background: linear-gradient(90deg, #38bdf8, #8b5cf6);
-  border-radius: 999px;
+  border-radius: var(--radius-xl);
   box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
 }
 
@@ -98,7 +99,7 @@
   align-items: center;
   gap: 1rem;
   padding: 0.75rem 1rem;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   color: var(--text-muted);
   text-decoration: none;
   font-size: 0.9rem;
@@ -115,15 +116,32 @@
 }
 
 .nav-item-v2.active {
-  background: rgba(56, 189, 248, 0.05);
+  background: rgba(56, 189, 248, 0.06);
   color: #fff;
   box-shadow: inset 0 0 0 1px rgba(56, 189, 248, 0.1);
+}
+
+.nav-item-v2 .nav-active-indicator {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 0;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: #38bdf8;
+  transition: height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-item-v2.active .nav-active-indicator {
+  height: 60%;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
 }
 
 .icon-box {
   width: 32px;
   height: 32px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -146,6 +164,7 @@
 .box-pink { background: rgba(255, 55, 95, 0.15); color: #ff375f; border: 1px solid rgba(255, 55, 95, 0.2); }
 .box-teal { background: rgba(102, 212, 207, 0.15); color: #66d4cf; border: 1px solid rgba(102, 212, 207, 0.2); }
 .box-indigo { background: rgba(94, 92, 230, 0.15); color: #5e5ce6; border: 1px solid rgba(94, 92, 230, 0.2); }
+.box-gray { background: rgba(161, 161, 170, 0.12); color: #a1a1aa; border: 1px solid rgba(161, 161, 170, 0.18); }
 
 /* Standardized Search Bar System */
 .admin-search-container {
@@ -307,7 +326,7 @@
   background: rgba(56, 189, 248, 0.05);
   border-left: 4px solid var(--accent-blue);
   padding: 1.5rem;
-  border-radius: 0 16px 16px 0;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
 }
 
 .creation-help-card h4 {
@@ -437,7 +456,7 @@
 .admin-stat-icon {
   width: 54px;
   height: 54px;
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -506,7 +525,7 @@
 /* Status Badges */
 .admin-status-badge {
     padding: 0.35rem 0.85rem;
-    border-radius: 999px;
+    border-radius: var(--radius-xl);
     font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -531,7 +550,7 @@
   align-items: center;
   justify-content: center;
   padding: 0.75rem 1.50rem;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   font-weight: 600;
   font-size: 0.9rem;
   border: none;
@@ -578,7 +597,7 @@
   height: 48px;
   border: 3px solid rgba(255, 255, 255, 0.1);
   border-top: 3px solid var(--accent-blue);
-  border-radius: 50%;
+  border-radius: var(--radius-xl);
   animation: spin 0.8s linear infinite;
   margin: 4rem auto;
 }
@@ -630,7 +649,7 @@
   font-weight: 600;
   cursor: pointer;
   padding: 0.6rem 1rem;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   transition: all 0.2s ease;
 }
 
@@ -671,3 +690,522 @@
   }
 }
 
+/* ========= NEW DASHBOARD SYSTEM ========= */
+
+.dashboard-stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+.dash-stat-card {
+  padding: 1.25rem 1.5rem !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.dash-stat-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35) !important;
+}
+
+.dash-chart-card {
+  padding: 1.5rem !important;
+}
+
+.dash-chart-card:hover {
+  transform: translateY(-2px) !important;
+}
+
+.dash-card-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #fafafa;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.dash-card-subtitle {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  color: #71717a;
+  font-weight: 500;
+}
+
+.dash-badge {
+  padding: 0.35rem 0.85rem;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-sm);
+  font-size: 0.7rem;
+  color: #71717a;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  letter-spacing: 0.04em;
+}
+
+.dash-activity-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.7rem 0.85rem;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  transition: all 0.2s ease;
+}
+
+.dash-activity-item:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.dashboard-live-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 1rem;
+  background: rgba(74, 222, 128, 0.06);
+  border: 1px solid rgba(74, 222, 128, 0.12);
+  border-radius: var(--radius-md);
+  position: relative;
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-xl);
+  background: #4ade80;
+}
+
+.live-dot-ping {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-xl);
+  background: #4ade80;
+  animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* Dashboard responsive */
+@media (max-width: 1200px) {
+  .dashboard-stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-stats-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   RECHARTS GLOBAL DARK THEME OVERRIDES
+   ═══════════════════════════════════════════════════════════ */
+
+/* Force all Recharts tooltip wrappers to dark theme */
+.recharts-tooltip-wrapper {
+  outline: none !important;
+}
+
+.recharts-default-tooltip {
+  background: rgba(9, 9, 11, 0.95) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: var(--radius-md) !important;
+  padding: 10px 14px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+.recharts-default-tooltip .recharts-tooltip-label {
+  color: #fafafa !important;
+  font-weight: 700 !important;
+  font-size: 0.85rem !important;
+  margin-bottom: 4px !important;
+}
+
+.recharts-default-tooltip .recharts-tooltip-item {
+  color: #e4e4e7 !important;
+  font-size: 0.8rem !important;
+  padding: 2px 0 !important;
+}
+
+.recharts-default-tooltip .recharts-tooltip-item-name {
+  color: #a1a1aa !important;
+}
+
+.recharts-default-tooltip .recharts-tooltip-item-value {
+  color: #fafafa !important;
+  font-weight: 600 !important;
+}
+
+/* Force chart surface and background to be transparent */
+.recharts-surface {
+  background: transparent !important;
+}
+
+.recharts-wrapper {
+  background: transparent !important;
+}
+
+/* Recharts cartesian grid - ensure no white areas */
+.recharts-cartesian-grid-bg {
+  fill: transparent !important;
+}
+
+/* Cursor hover bar on charts - dark themed */
+.recharts-cursor {
+  fill: rgba(255, 255, 255, 0.04) !important;
+  stroke: none !important;
+}
+
+.recharts-rectangle.recharts-tooltip-cursor {
+  fill: rgba(255, 255, 255, 0.04) !important;
+}
+
+/* Active dot styling */
+.recharts-active-dot circle {
+  stroke: rgba(56, 189, 248, 0.3) !important;
+}
+
+/* Legend text color */
+.recharts-legend-item-text {
+  color: #a1a1aa !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CAREER TRENDS SECTION — Analytics Page
+   ═══════════════════════════════════════════════════════════ */
+
+.career-trends-section {
+  margin-top: 1.5rem;
+  animation: pageFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.career-trends-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.career-trends-header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.career-trends-header-left h3 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #fafafa;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.career-trends-header-left p {
+  font-size: 0.8rem;
+  color: #71717a;
+  margin: 0.15rem 0 0;
+  font-weight: 500;
+}
+
+.ct-live-pulse {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  background: rgba(74, 222, 128, 0.06);
+  border: 1px solid rgba(74, 222, 128, 0.12);
+  border-radius: var(--radius-xl);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #4ade80;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.ct-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-xl);
+  background: #4ade80;
+  animation: ctPulse 2s ease-in-out infinite;
+}
+
+@keyframes ctPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.5); }
+  50% { opacity: 0.6; box-shadow: 0 0 0 6px rgba(74, 222, 128, 0); }
+}
+
+.ct-summary-stats {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.ct-summary-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.9rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  color: #a1a1aa;
+  font-weight: 600;
+}
+
+.ct-summary-pill .ct-pill-value {
+  color: #fafafa;
+  font-weight: 800;
+}
+
+/* Career Trends Charts Grid */
+.ct-charts-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Trending Technologies Grid */
+.ct-tech-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.ct-tech-card {
+  background: rgba(28, 28, 30, 0.6);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+  padding: 1.15rem 1.25rem;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.ct-tech-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--ct-accent, #38bdf8), transparent);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.ct-tech-card:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+.ct-tech-card:hover::before {
+  opacity: 1;
+}
+
+.ct-tech-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+}
+
+.ct-tech-name-section {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.ct-tech-rank {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.ct-tech-info {
+  min-width: 0;
+}
+
+.ct-tech-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fafafa;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ct-tech-category {
+  font-size: 0.7rem;
+  color: #71717a;
+  margin: 2px 0 0;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ct-growth-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.72rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+
+.ct-growth-up {
+  background: rgba(74, 222, 128, 0.1);
+  color: #4ade80;
+  border: 1px solid rgba(74, 222, 128, 0.15);
+}
+
+.ct-growth-down {
+  background: rgba(248, 113, 113, 0.1);
+  color: #f87171;
+  border: 1px solid rgba(248, 113, 113, 0.15);
+}
+
+.ct-growth-neutral {
+  background: rgba(161, 161, 170, 0.1);
+  color: #a1a1aa;
+  border: 1px solid rgba(161, 161, 170, 0.12);
+}
+
+.ct-tech-card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ct-progress-container {
+  flex: 1;
+  min-width: 0;
+}
+
+.ct-progress-bar-bg {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+.ct-progress-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-xl);
+  transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.ct-progress-bar-fill::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 20px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25));
+  border-radius: var(--radius-xl);
+}
+
+.ct-user-count {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #a1a1aa;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.ct-user-count span {
+  color: #fafafa;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.ct-demand-badge {
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.ct-demand-high {
+  background: rgba(251, 191, 36, 0.1);
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.15);
+}
+
+.ct-demand-medium {
+  background: rgba(56, 189, 248, 0.1);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.15);
+}
+
+.ct-demand-low {
+  background: rgba(161, 161, 170, 0.08);
+  color: #71717a;
+  border: 1px solid rgba(161, 161, 170, 0.12);
+}
+
+/* Career Trends empty state */
+.ct-empty-state {
+  padding: 3rem 2rem;
+  text-align: center;
+  border: 1px dashed rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.ct-empty-state p {
+  color: #71717a;
+  font-size: 0.9rem;
+  margin: 0.75rem 0 0;
+}
+
+/* Responsive for Career Trends */
+@media (max-width: 1100px) {
+  .ct-charts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .ct-tech-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .career-trends-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .ct-summary-stats {
+    gap: 0.75rem;
+  }
+}

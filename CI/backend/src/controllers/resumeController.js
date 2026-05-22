@@ -2,6 +2,7 @@ import { Resume } from "../models/Resume.js";
 import { analyzeResume } from "../utils/atsScorer.js";
 import { extractResumeText } from "../utils/extractResumeText.js";
 import { analyzeResumeWithAI, evaluateInterviewAnswersWithAI, generateCareerSuggestionsWithAI, generateJobRecommendationsWithAI, evaluateVideoInterview as evaluateVideoHeuristic } from '../utils/aiAnalyzer.js';
+import { Activity } from "../models/Activity.js";
 import fs from "fs";
 
 export const uploadResume = async (req, res) => {
@@ -18,7 +19,7 @@ export const uploadResume = async (req, res) => {
     let aiCareerData = null;
     try {
       if (process.env.GEMINI_API_KEY) {
-        aiCareerData = await generateCareerSuggestionsWithAI(extractedText);
+        aiCareerData = await generateCareerSuggestionsWithAI(extractedText, false);
       }
     } catch (aiErr) {
       console.warn("AI career suggestions failed, using static fallback:", aiErr.message);
@@ -30,6 +31,7 @@ export const uploadResume = async (req, res) => {
         recommendedRoles: aiCareerData.recommendedRoles || analysis.recommendedRoles,
         careerTrack: aiCareerData.careerTrack || analysis.careerTrack,
         roleSpecificInsights: aiCareerData.roleSpecificInsights || analysis.roleSpecificInsights,
+        interviewQuestions: (aiCareerData.roleSpecificInsights?.[0]?.interviewQuestions) || analysis.interviewQuestions,
         aiCareerSuggestions: true
       })
     };
@@ -39,8 +41,30 @@ export const uploadResume = async (req, res) => {
       originalName: req.file.originalname,
       filePath: req.file.path,
       extractedText,
+      isFromProfile: false,
       ...finalAnalysis
     });
+
+    await Activity.create({
+      user: req.user._id,
+      action: "Uploaded",
+      target: "Resume",
+      type: "resume"
+    }).catch(e => console.error("Activity logging failed:", e));
+
+    await Activity.create({
+      user: req.user._id,
+      action: "analyzed",
+      target: "Resume Analysis AI",
+      type: "ai"
+    }).catch(e => console.error("Activity logging failed:", e));
+
+    await Activity.create({
+      user: req.user._id,
+      action: "identified gaps",
+      target: "Skill Gap Analysis AI",
+      type: "ai"
+    }).catch(e => console.error("Activity logging failed:", e));
 
     return res.status(201).json(resume);
   } catch (error) {
@@ -58,7 +82,12 @@ export const getLatestResume = async (req, res) => {
     if (!req.user || !req.user._id) {
       return res.status(401).json({ message: "User context missing" });
     }
-    const resume = await Resume.findOne({ user: req.user._id }).sort({ createdAt: -1 });
+    const { isFromProfile } = req.query;
+    let query = { user: req.user._id };
+    if (isFromProfile !== undefined) {
+      query.isFromProfile = isFromProfile === "true";
+    }
+    const resume = await Resume.findOne(query).sort({ createdAt: -1 });
     return res.json(resume || null);
   } catch (error) {
     console.error("Fetch resume error:", error);
@@ -106,7 +135,7 @@ export const analyzeCurrentProfile = async (req, res) => {
     let aiCareerData = null;
     try {
       if (process.env.GEMINI_API_KEY) {
-        aiCareerData = await generateCareerSuggestionsWithAI(text);
+        aiCareerData = await generateCareerSuggestionsWithAI(text, true);
       }
     } catch (aiErr) {
       console.warn("AI career suggestions failed for profile, using static fallback:", aiErr.message);
@@ -118,6 +147,7 @@ export const analyzeCurrentProfile = async (req, res) => {
         recommendedRoles: aiCareerData.recommendedRoles || analysis.recommendedRoles,
         careerTrack: aiCareerData.careerTrack || analysis.careerTrack,
         roleSpecificInsights: aiCareerData.roleSpecificInsights || analysis.roleSpecificInsights,
+        interviewQuestions: (aiCareerData.roleSpecificInsights?.[0]?.interviewQuestions) || analysis.interviewQuestions,
         aiCareerSuggestions: true
       })
     };
@@ -135,6 +165,27 @@ export const analyzeCurrentProfile = async (req, res) => {
       },
       { upsert: true, new: true }
     );
+
+    await Activity.create({
+      user: req.user._id,
+      action: "Created",
+      target: "Resume from Profile",
+      type: "resume"
+    }).catch(e => console.error("Activity logging failed:", e));
+
+    await Activity.create({
+      user: req.user._id,
+      action: "analyzed",
+      target: "Resume Analysis AI",
+      type: "ai"
+    }).catch(e => console.error("Activity logging failed:", e));
+
+    await Activity.create({
+      user: req.user._id,
+      action: "identified gaps",
+      target: "Skill Gap Analysis AI",
+      type: "ai"
+    }).catch(e => console.error("Activity logging failed:", e));
 
     return res.status(200).json(resume);
   } catch (error) {
@@ -244,6 +295,20 @@ export const evaluateInterview = async (req, res) => {
     if (accuracy > 75) confidenceLevel = "Advanced";
     else if (accuracy > 40) confidenceLevel = "Intermediate";
     
+    await Activity.create({
+      user: req.user._id,
+      action: "Attended",
+      target: "Mock Interview",
+      type: "interview"
+    }).catch(e => console.error("Activity logging failed:", e));
+
+    await Activity.create({
+      user: req.user._id,
+      action: "completed",
+      target: "Mock Interview AI",
+      type: "ai"
+    }).catch(e => console.error("Activity logging failed:", e));
+
     return res.status(200).json({
       role,
       totalScore: accuracy,
@@ -267,6 +332,21 @@ export const evaluateVideoInterview = async (req, res) => {
       return res.status(400).json({ success: false, message: "Invalid questionTimings payload." });
     }
     const result = evaluateVideoHeuristic(questionTimings, role || "Professional");
+    
+    await Activity.create({
+      user: req.user._id,
+      action: "Attended",
+      target: "Video Mock Interview",
+      type: "interview"
+    }).catch(e => console.error("Activity logging failed:", e));
+
+    await Activity.create({
+      user: req.user._id,
+      action: "completed",
+      target: "Mock Interview AI",
+      type: "ai"
+    }).catch(e => console.error("Activity logging failed:", e));
+
     return res.status(200).json({ success: true, results: result });
   } catch (error) {
     console.error("Video Interview Evaluation Error:", error);
@@ -279,17 +359,49 @@ export const getJobRecommendations = async (req, res) => {
       return res.status(200).json([]);
     }
 
-    const resume = await Resume.findOne({ user: req.user._id }).sort({ createdAt: -1 });
+    const { isFromProfile } = req.query;
+    let query = { user: req.user._id };
+    if (isFromProfile !== undefined) {
+      query.isFromProfile = isFromProfile === "true";
+    }
+
+    const resume = await Resume.findOne(query).sort({ createdAt: -1 });
     
     if (!resume) {
       return res.status(200).json([]); 
     }
 
+    const targetRoles = resume.recommendedRoles && resume.recommendedRoles.length > 0
+      ? resume.recommendedRoles.join(", ")
+      : "";
+
     // Pass recommendations directly if they exist from analysis, or generate new ones
     const recommendations = await generateJobRecommendationsWithAI(
       resume.extractedText || "",
-      resume.recommendedRoles?.[0] || ""
+      targetRoles,
+      resume.isFromProfile
     );
+
+    await Activity.create({
+      user: req.user._id,
+      action: "Accessed",
+      target: "Job Recommendations",
+      type: "job"
+    }).catch(e => console.error("Activity logging failed:", e));
+
+    await Activity.create({
+      user: req.user._id,
+      action: "generated",
+      target: "Career Recommendation AI",
+      type: "ai"
+    }).catch(e => console.error("Activity logging failed:", e));
+
+    await Activity.create({
+      user: req.user._id,
+      action: "provided",
+      target: "AI Career Guidance",
+      type: "ai"
+    }).catch(e => console.error("Activity logging failed:", e));
 
     return res.json(recommendations || []);
   } catch (error) {

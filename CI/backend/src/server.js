@@ -8,6 +8,8 @@ import authRoutes from "./routes/authRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
 import resumeRoutes from "./routes/resumeRoutes.js";
 import feedbackRoutes from "./routes/feedbackRoutes.js";
+import communityRoutes from "./routes/communityRoutes.js";
+import settingsRoutes from "./routes/settingsRoutes.js";
 
 // Admin Routes
 import adminDashboard from "./routes/admin/dashboard.js";
@@ -20,6 +22,7 @@ import adminNotifications from "./routes/admin/notifications.js";
 import adminAnalytics from "./routes/admin/analytics.js";
 import adminSkills from "./routes/admin/skills.js";
 import adminFeedback from "./routes/admin/feedback.js";
+import adminSettings from "./routes/admin/settings.js";
 
 dotenv.config();
 
@@ -59,11 +62,38 @@ app.get("/", (_req, res) => {
   res.json({ name: "Career Insight API", status: "running", clientUrl });
 });
 
+// ── Global Maintenance Middleware ────────────────────────────
+app.use(async (req, res, next) => {
+  // Allow admin routes, auth login, and public settings endpoint
+  if (
+    req.path.startsWith('/api/admin') || 
+    req.path.startsWith('/api/auth') || 
+    req.path === '/api/settings/public'
+  ) {
+    return next();
+  }
+  
+  try {
+    const { SystemSetting } = await import("./models/SystemSetting.js");
+    const settings = await SystemSetting.findOne().lean();
+    
+    if (settings && settings.maintenanceMode) {
+      return res.status(503).json({ message: "Platform is undergoing emergency maintenance. Please try again later." });
+    }
+  } catch (err) {
+    console.error("Maintenance check failed:", err);
+  }
+  
+  next();
+});
+
 // ── Existing Routes ──────────────────────────────────────────
+app.use("/api/settings", settingsRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/resume", resumeRoutes);
 app.use("/api/feedback", feedbackRoutes);
+app.use("/api/community", communityRoutes);
 
 // ── Admin Routes ─────────────────────────────────────────────
 app.use("/api/admin/dashboard", adminDashboard);
@@ -76,6 +106,7 @@ app.use("/api/admin/notifications", adminNotifications);
 app.use("/api/admin/analytics", adminAnalytics);
 app.use("/api/admin/skills", adminSkills);
 app.use("/api/admin/feedback", adminFeedback);
+app.use("/api/admin/settings", adminSettings);
 
 connectDatabase()
   .then(async () => {

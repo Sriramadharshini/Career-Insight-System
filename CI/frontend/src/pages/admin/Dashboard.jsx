@@ -1,51 +1,59 @@
 import React, { useEffect, useState } from 'react';
 import { adminApi } from '../../services/adminApi';
 import { toast } from 'react-hot-toast';
-import StatCard from '../../components/common/StatCard';
-import { 
-  Users, CheckSquare, Building2, GraduationCap, 
-  MessageSquare, Briefcase 
-} from 'lucide-react';
-import { 
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer 
-} from 'recharts';
-import { DashboardHeroIllustration, EmptyStateIllustration } from '../../components/admin/AdminIllustrations';
+import { Users, Brain, Zap, Star, TrendingUp, Clock, Server, FileText, MessageSquare, Briefcase } from 'lucide-react';
 import '../../styles/admin.css';
+import { formatDistanceToNow } from 'date-fns';
 
+import dashboardIllustration from '../../assets/admin-illustrations/dashboard.png';
+
+const getActivityIcon = (type) => {
+  const iconMap = {
+    user: { icon: Users, color: '#4ade80', bg: 'rgba(74, 222, 128, 0.1)' },
+    ai: { icon: Brain, color: '#22d3ee', bg: 'rgba(34, 211, 238, 0.1)' },
+    feedback: { icon: Star, color: '#fbbf24', bg: 'rgba(251, 191, 36, 0.1)' },
+    career: { icon: TrendingUp, color: '#8b5cf6', bg: 'rgba(139, 92, 246, 0.1)' },
+    interview: { icon: Zap, color: '#f472b6', bg: 'rgba(244, 114, 182, 0.1)' },
+    system: { icon: Server, color: '#38bdf8', bg: 'rgba(56, 189, 248, 0.1)' },
+    resume: { icon: FileText, color: '#a78bfa', bg: 'rgba(167, 139, 250, 0.1)' },
+    community: { icon: MessageSquare, color: '#fdba74', bg: 'rgba(253, 186, 116, 0.1)' },
+    job: { icon: Briefcase, color: '#60a5fa', bg: 'rgba(96, 165, 250, 0.1)' },
+  };
+  return iconMap[type] || iconMap.system;
+};
+
+const DashStatCard = ({ title, value, icon: Icon, color, trend, trendUp }) => (
+  <div className="admin-card dash-stat-card">
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+      <div style={{ width: '42px', height: '42px', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', justifyContent: 'center', background: `color-mix(in srgb, ${color} 12%, transparent)`, color: color, border: `1px solid color-mix(in srgb, ${color} 20%, transparent)` }}>
+        <Icon size={20} />
+      </div>
+      {trend && (
+        <span style={{ fontSize: '0.75rem', fontWeight: 700, color: trendUp ? '#4ade80' : '#f87171', background: trendUp ? 'rgba(74, 222, 128, 0.08)' : 'rgba(248, 113, 113, 0.08)', padding: '0.2rem 0.6rem', borderRadius: 'var(--radius-sm)', border: `1px solid ${trendUp ? 'rgba(74, 222, 128, 0.15)' : 'rgba(248, 113, 113, 0.15)'}` }}>
+          {trendUp ? '↑' : '↓'} {trend}
+        </span>
+      )}
+    </div>
+    <p style={{ margin: 0, fontSize: '1.65rem', fontWeight: 800, color: '#fafafa', letterSpacing: '-0.02em' }}>{value}</p>
+    <p style={{ margin: '0.25rem 0 0', fontSize: '0.8rem', fontWeight: 600, color: '#71717a', textTransform: 'uppercase', letterSpacing: '0.03em' }}>{title}</p>
+  </div>
+);
 
 const Dashboard = () => {
-  const [data, setData] = useState({
-    stats: null,
-    recentUsers: [],
-    recentActivity: [],
-    growthData: []
-  });
+  const [data, setData] = useState({ stats: null, recentActivity: [] });
+  const [loggedInUsers, setLoggedInUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const [statsData, usersData, activityData, growth] = await Promise.all([
+        const [statsData, activityData, loggedInUsersData] = await Promise.all([
           adminApi.getDashboardStats(),
-          adminApi.getRecentUsers(),
           adminApi.getRecentActivity(),
-          adminApi.getUserGrowth('weekly')
+          adminApi.getLoggedInUsers()
         ]);
-        
-        let formattedGrowth = [];
-        if (growth.labels && growth.data) {
-          formattedGrowth = growth.labels.map((date, i) => ({
-            date: new Date(date).toLocaleDateString(undefined, { weekday: 'short' }),
-            users: growth.data[i]
-          }));
-        }
-
-        setData({
-          stats: statsData,
-          recentUsers: usersData.users || [],
-          recentActivity: activityData.activity || [],
-          growthData: formattedGrowth
-        });
+        setData({ stats: statsData, recentActivity: activityData.activity || [] });
+        setLoggedInUsers(loggedInUsersData.users || []);
       } catch (error) {
         console.error("Dashboard error:", error);
         toast.error("Failed to load dashboard data.");
@@ -66,128 +74,107 @@ const Dashboard = () => {
 
   return (
     <div className="page-container page-fade-in">
-      <div className="admin-page-header" style={{ marginBottom: '2rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
-          <div>
-            <h2 className="admin-page-title" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Platform Overview</h2>
-            <p className="admin-page-subtitle" style={{ fontSize: '1rem' }}>Unified management center for user growth, career metrics, and system activity.</p>
-          </div>
-          <div style={{ width: '220px' }}>
-            <DashboardHeroIllustration />
-          </div>
-        </div>
-        <div className="admin-card" style={{ padding: '1rem 1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'rgba(56, 189, 248, 0.05)', borderRadius: '16px' }}>
-          <div style={{ position: 'relative' }}>
-            <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#32D74B' }}></div>
-            <div style={{ position: 'absolute', top: 0, left: 0, width: '12px', height: '12px', borderRadius: '50%', background: '#32D74B', animation: 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite' }}></div>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-main)', lineHeight: 1 }}>System Healthy</span>
-            <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '2px' }}>All services operational</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Summary Matrix */}
-      <div className="admin-stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
-        <StatCard title="Total Platform Users" value={data.stats?.users || 0} icon={Users} colorClass="var(--accent-blue)" />
-        <StatCard title="Active Career Tracks" value={data.stats?.careers || 0} icon={Briefcase} colorClass="#BF5AF2" />
-        <StatCard title="Verified Assessments" value={data.stats?.assessments || 0} icon={CheckSquare} colorClass="var(--success)" />
-        <StatCard title="Industry Opportunities" value={data.stats?.jobs || 0} icon={Building2} colorClass="var(--accent-gold)" />
-      </div>
-
-      {/* Main Analytics Row */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.8fr 1fr', gap: '1.5rem', marginTop: '1.5rem' }}>
-        {/* Growth Analytics */}
-        <div className="admin-card" style={{ display: 'flex', flexDirection: 'column' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+      <div style={{ marginBottom: '2rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+            <img src={dashboardIllustration} alt="Dashboard Illustration" style={{ width: '80px', height: '80px', objectFit: 'contain', borderRadius: 'var(--radius-md)' }} />
             <div>
-              <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-main)', margin: 0, letterSpacing: '-0.3px' }}>User Acquisition Trend</h3>
-              <p style={{ margin: '4px 0 0', fontSize: '0.8rem', color: 'var(--text-muted)' }}>Daily growth metrics for the last 7 days</p>
-            </div>
-            <div style={{ padding: '0.4rem 0.8rem', background: 'rgba(255,255,255,0.03)', borderRadius: '8px', fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 700, border: '1px solid var(--border-soft)' }}>
-              WEEKLY VIEW
+              <h2 className="admin-page-title" style={{ fontSize: '1.85rem', marginBottom: '0.4rem' }}>Dashboard</h2>
+              <p className="admin-page-subtitle" style={{ fontSize: '0.95rem' }}>Platform overview, recent activity, and system status.</p>
             </div>
           </div>
-          <div style={{ height: '350px', width: '100%', marginTop: 'auto' }}>
-            {data.growthData.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={data.growthData}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
-                  <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{fill: 'var(--text-muted)', fontSize: 13, fontWeight: 500}} dy={15} />
-                  <YAxis axisLine={false} tickLine={false} tick={{fill: 'var(--text-muted)', fontSize: 13}} dx={-15} />
-                  <Tooltip 
-                    cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 2 }}
-                    contentStyle={{ 
-                      borderRadius: '16px', 
-                      background: 'rgba(15, 15, 20, 0.98)',
-                      border: '1px solid var(--border-soft)', 
-                      backdropFilter: 'blur(20px)',
-                      padding: '12px',
-                      boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
-                    }}
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="users" 
-                    stroke="var(--accent-blue)" 
-                    strokeWidth={4} 
-                    dot={{ r: 6, fill: '#050816', strokeWidth: 3, stroke: 'var(--accent-blue)' }} 
-                    activeDot={{ r: 9, fill: 'var(--accent-blue)', strokeWidth: 0 }} 
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%', color: 'var(--text-muted)', gap: '1rem' }}>
-                <div style={{ opacity: 0.3 }}><DashboardHeroIllustration /></div>
-                <p style={{ fontWeight: 500 }}>System is gathering acquisition data...</p>
-              </div>
+          <div className="dashboard-live-badge">
+            <div className="live-dot" style={{ borderRadius: 'var(--radius-xl)' }}></div>
+            <div className="live-dot-ping" style={{ borderRadius: 'var(--radius-xl)' }}></div>
+            <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#4ade80' }}>LIVE</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="dashboard-stats-row">
+        <DashStatCard title="Active Users" value={data.stats?.users || 0} icon={Users} color="#38bdf8" trend="Live" trendUp={true} />
+        <DashStatCard title="AI Requests Today" value={data.stats?.aiRequestsToday || 0} icon={Brain} color="#8b5cf6" trend="Today" trendUp={true} />
+        <DashStatCard title="Mock Interviews" value={data.stats?.mockInterviews || 0} icon={Zap} color="#22d3ee" trend="Total" trendUp={true} />
+        <DashStatCard title="Feedback Count" value={data.stats?.feedbackCount || 0} icon={Star} color="#fbbf24" trend="Total" trendUp={true} />
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginTop: '1.5rem' }}>
+        {/* Recent Activity */}
+        <div className="admin-card dash-chart-card">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+            <h3 className="dash-card-title">Recent Activity</h3>
+            <span className="dash-badge" style={{ background: 'rgba(74, 222, 128, 0.08)', color: '#4ade80', border: '1px solid rgba(74, 222, 128, 0.15)' }}>LIVE FEED</span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            {data.recentActivity?.length > 0 ? data.recentActivity.slice(0, 8).map((item) => {
+              const activityMeta = getActivityIcon(item.type);
+              const IconComp = activityMeta.icon;
+              return (
+                <div key={item._id} className="dash-activity-item">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                    <div style={{ width: '34px', height: '34px', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center', background: activityMeta.bg, color: activityMeta.color, flexShrink: 0 }}>
+                      <IconComp size={16} />
+                    </div>
+                    <span style={{ fontSize: '0.85rem', color: '#e4e4e7', fontWeight: 500 }}>
+                      {item.user?.name || 'User'} {item.action.toLowerCase()} {item.target === 'Platform' ? '' : item.target.toLowerCase()}
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <Clock size={12} style={{ color: '#52525b' }} />
+                    <span style={{ fontSize: '0.75rem', color: '#71717a', fontWeight: 500 }}>
+                      {formatDistanceToNow(new Date(item.createdAt), { addSuffix: true })}
+                    </span>
+                  </div>
+                </div>
+              );
+            }) : (
+              <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', textAlign: 'center', padding: '2rem 0' }}>No recent activity.</div>
             )}
           </div>
         </div>
 
-        {/* Recent Newcomers */}
-        <div className="admin-card">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>Recent Members</h3>
-            <span style={{ fontSize: '0.75rem', color: 'var(--accent-blue)', fontWeight: 700, cursor: 'pointer' }}>View All</span>
+        {/* Logged-in Users */}
+        <div className="admin-card dash-chart-card">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+            <h3 className="dash-card-title">Logged-in Users</h3>
+            <span className="dash-badge" style={{ background: 'rgba(56, 189, 248, 0.08)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.15)' }}>ACTIVE USERS</span>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            {data.recentUsers.map((user) => (
-              <div key={user._id} className="admin-list-item" style={{ background: 'rgba(255,255,255,0.02)', padding: '1rem', borderRadius: '14px', border: '1px solid var(--border-soft)' }}>
-                <div className="admin-list-user" style={{ gap: '1rem' }}>
-                  <div className="admin-avatar" style={{ width: '42px', height: '42px', fontSize: '0.95rem', background: 'var(--bg-soft)', border: '1px solid var(--border-soft)' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            {loggedInUsers.length > 0 ? loggedInUsers.map((user) => (
+              <div key={user._id} className="dash-activity-item" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem 1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                  <div style={{ width: '34px', height: '34px', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8', flexShrink: 0, fontWeight: 700, fontSize: '0.9rem' }}>
                     {user.name.charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <p style={{ margin: 0, fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-main)' }}>{user.name}</p>
-                    <p style={{ margin: '2px 0 0', fontSize: '0.75rem', color: 'var(--text-muted)' }}>{user.email}</p>
+                    <span style={{ fontSize: '0.85rem', color: '#e4e4e7', fontWeight: 600, display: 'block' }}>
+                      {user.name}
+                    </span>
+                    <span style={{ fontSize: '0.75rem', color: '#71717a', fontWeight: 500, display: 'block' }}>
+                      {user.email}
+                    </span>
                   </div>
                 </div>
-                <div style={{ textAlign: 'right' }}>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 700, background: 'rgba(255,255,255,0.05)', padding: '2px 6px', borderRadius: '4px' }}>
-                    {new Date(user.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                <div>
+                  <span style={{ fontSize: '0.7rem', fontWeight: 700, color: user.status === 'Active' ? '#4ade80' : '#f87171', background: user.status === 'Active' ? 'rgba(74, 222, 128, 0.08)' : 'rgba(248, 113, 113, 0.08)', border: `1px solid ${user.status === 'Active' ? 'rgba(74, 222, 128, 0.15)' : 'rgba(248, 113, 113, 0.15)'}`, padding: '0.2rem 0.6rem', borderRadius: 'var(--radius-sm)' }}>
+                    {user.status}
                   </span>
                 </div>
               </div>
-            ))}
+            )) : (
+              <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', textAlign: 'center', padding: '2rem 0' }}>No logged-in users.</div>
+            )}
           </div>
         </div>
       </div>
 
-
-      
       <style>{`
         @keyframes ping {
-          75%, 100% {
-            transform: scale(2.5);
-            opacity: 0;
-          }
+          75%, 100% { transform: scale(2.5); opacity: 0; }
         }
       `}</style>
     </div>
   );
 };
-
 
 export default Dashboard;

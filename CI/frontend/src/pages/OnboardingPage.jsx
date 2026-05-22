@@ -81,7 +81,10 @@ const OnboardingPage = () => {
                 </div>
               ),
               actionLabel: "Start Building Now →",
-              onClick: () => navigate("/profile"),
+              onClick: () => {
+                localStorage.setItem("activeFlow", "build");
+                navigate("/profile");
+              },
             },
             {
               title: "Upload an Existing Resume",
@@ -99,7 +102,10 @@ const OnboardingPage = () => {
                 </div>
               ),
               actionLabel: "Analyze Resume Now →",
-              onClick: () => navigate("/resume-upload"),
+              onClick: () => {
+                localStorage.setItem("activeFlow", "upload");
+                navigate("/resume-upload");
+              },
             },
           ]}
         />

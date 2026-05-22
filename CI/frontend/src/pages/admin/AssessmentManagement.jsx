@@ -197,7 +197,7 @@ const AssessmentManagement = () => {
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 {currentItem.options.map((opt, idx) => (
-                  <div key={idx} style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '0.5rem', borderRadius: '12px', border: '1px solid var(--border-soft)' }}>
+                  <div key={idx} style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '0.5rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-soft)' }}>
                     <div className="admin-input-group" style={{ flex: 1 }}>
                       <ListChecks className="admin-input-icon" size={16} />
                       <input required placeholder="Option text" value={opt.text} onChange={e=>updateOption(idx, 'text', e.target.value)} className="admin-input admin-input-with-icon" />
@@ -206,7 +206,7 @@ const AssessmentManagement = () => {
                       <Award className="admin-input-icon" size={16} />
                       <input required type="number" placeholder="Wt." value={opt.weightage} onChange={e=>updateOption(idx, 'weightage', e.target.value)} className="admin-input admin-input-with-icon" />
                     </div>
-                    <button type="button" onClick={() => removeOption(idx)} style={{ background: 'rgba(239, 68, 68, 0.1)', border: 'none', color: 'var(--danger)', cursor: 'pointer', padding: '0.6rem', borderRadius: '8px' }}><Trash2 size={16}/></button>
+                    <button type="button" onClick={() => removeOption(idx)} style={{ background: 'rgba(239, 68, 68, 0.1)', border: 'none', color: 'var(--danger)', cursor: 'pointer', padding: '0.6rem', borderRadius: 'var(--radius-sm)' }}><Trash2 size={16}/></button>
                   </div>
                 ))}
               </div>

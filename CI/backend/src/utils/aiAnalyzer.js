@@ -10,6 +10,30 @@ const cleanJsonResponse = (text) => {
   return text.replace(/```(?:json)?\n?([\s\S]*?)\n?```/g, "$1").trim();
 };
 
+export const normalizeDomainName = (name) => {
+  if (!name || typeof name !== 'string') return name;
+  const n = name.trim().toLowerCase();
+  
+  // Broad Domains
+  if (['full stack', 'full-stack', 'fullstack', 'full stack developer'].includes(n)) return 'Full Stack Development';
+  if (['front end', 'front-end', 'frontend', 'frontend developer', 'ui developer'].includes(n)) return 'Frontend Development';
+  if (['back end', 'back-end', 'backend', 'backend developer'].includes(n)) return 'Backend Development';
+  
+  // Specific Core Concepts (often incorrectly outputted as standalone random skills)
+  if (n === 'api' || n === 'rest api' || n === 'restful api') return 'API Design & Integration';
+  if (n === 'microservices' || n === 'micro-services') return 'Microservices Architecture';
+  if (n === 'performance' || n === 'performance optimization') return 'Performance & Scalability';
+  if (n === 'testing' || n === 'qa' || n === 'unit testing') return 'Testing & Quality Assurance';
+  
+  // Specific Tools
+  if (['react', 'reactjs', 'react.js'].includes(n)) return 'React.js';
+  if (['node', 'nodejs', 'node.js'].includes(n)) return 'Node.js';
+  if (['vue', 'vuejs', 'vue.js'].includes(n)) return 'Vue.js';
+  
+  // Default to Title Case
+  return name.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+};
+
 const FALLBACK_JOBS = [
   {
     title: "Junior Frontend Developer",
@@ -62,6 +86,43 @@ const FALLBACK_JOBS = [
     hot: true
   }
 ];
+
+const generateDynamicFallbackJobs = (targetRolesString) => {
+  if (!targetRolesString) return FALLBACK_JOBS;
+  const roles = targetRolesString.split(",").map(r => r.trim()).filter(Boolean);
+  if (roles.length === 0) return FALLBACK_JOBS;
+
+  const dynamicJobs = [];
+  roles.forEach((role, idx) => {
+    // Exact role match
+    dynamicJobs.push({
+      title: `${role}`,
+      type: "Full-time",
+      salary: "$70k - $100k",
+      exp: "2-4 yrs",
+      location: idx % 2 === 0 ? "Remote" : "Hybrid",
+      skills: [role.split(" ")[0], "Architecture", "Agile"],
+      match: Math.floor(88 + (Math.random() * 10)),
+      hot: idx === 0
+    });
+    
+    // Junior variant
+    if (idx < 2) {
+      dynamicJobs.push({
+        title: `Junior ${role}`,
+        type: "Full-time",
+        salary: "$50k - $75k",
+        exp: "0-2 yrs",
+        location: "Remote",
+        skills: ["Core Concepts", "Debugging", "Teamwork"],
+        match: Math.floor(82 + (Math.random() * 10)),
+        hot: false
+      });
+    }
+  });
+
+  return dynamicJobs.slice(0, 8);
+};
 
 
 export const analyzeResumeWithAI = async (resumeText) => {
@@ -187,7 +248,7 @@ export const evaluateInterviewAnswersWithAI = async (answers, role) => {
   }
 };
 
-export const generateCareerSuggestionsWithAI = async (resumeText) => {
+export const generateCareerSuggestionsWithAI = async (resumeText, isFromProfile = false) => {
   if (!process.env.GEMINI_API_KEY) {
     throw new Error("GEMINI_API_KEY is missing in environment variables.");
   }
@@ -196,9 +257,19 @@ export const generateCareerSuggestionsWithAI = async (resumeText) => {
     genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
   }
 
+  const contextInstruction = isFromProfile
+    ? `ANALYSIS CONTEXT: [Build Resume Flow]
+    The user entered structured profile details inside the platform (including specific Skills, Education, Projects, Internships, Preferred Role, and Career Level).
+    Do NOT limit your suggestions to just their manually entered 'Preferred Role'. Intelligently analyze their complete profile—skills, project scopes, experience, and technologies—to predict and recommend a broader set of suitable career domains. For example, if they list React, Node, and MongoDB, don't just suggest 'MERN Stack Developer'; also suggest broader domains like 'Frontend Engineering', 'Full Stack Development', or 'Web Application Architecture'.`
+    : `ANALYSIS CONTEXT: [Upload Resume Flow]
+    The user uploaded an existing resume document which was parsed to unstructured text.
+    Perform deep keyword extraction and holistic profile analysis. Do NOT just regurgitate exact job titles found in the text. Predict and recommend a diverse mix of direct role matches and related, alternative career domains that maximize their current market value based on their underlying technical skills and experience.`;
+
   const prompt = `
-    You are an expert career counselor and AI career coach with deep knowledge of the tech industry.
-    Analyze the following resume text and generate highly personalized career growth suggestions.
+    You are an expert career counselor, technical recruiter, and AI career coach with deep knowledge of the tech industry.
+    ${contextInstruction}
+    
+    Analyze the following resume/profile text and generate highly personalized career growth suggestions.
     Do NOT wrap the response in markdown code blocks (\`\`\`json ... \`\`\`), output raw JSON only.
 
     Based on the skills, experience, education, and projects in the resume, provide a structured JSON response:
@@ -226,22 +297,31 @@ export const generateCareerSuggestionsWithAI = async (resumeText) => {
               "Specific YouTube search query 4 for this role",
               "Specific YouTube search query 5 for this role"
             ]
-          }
+          },
+          "interviewQuestions": [
+            "Tailored mock interview technical or situational question 1 specifically for this role based on their profile",
+            "Tailored mock interview technical or situational question 2 specifically for this role based on their profile",
+            "Tailored mock interview technical or situational question 3 specifically for this role based on their profile",
+            "... (generate exactly 25 unique, highly specific questions here)"
+          ]
         }
       ]
     }
 
     CRITICAL RULES — FOLLOW EXACTLY:
-    1. ONLY recommend roles based on skills, technologies, and experience that are EXPLICITLY written in the resume. Do NOT infer or assume hidden skills.
-    2. Rank the top 3 roles by strength of evidence (number of matching keywords and relevance of projects/experience).
-    3. Only suggest "Full Stack Developer" if the resume has STRONG evidence of BOTH frontend (React/Angular/Vue/HTML/CSS) AND backend (Node/Express/Python/Java/APIs) skills — at least 3 keywords each side.
-    4. nextLevelSkills: Provide exactly 8 UNIQUE skills per role that the candidate does NOT already have. 
-    5. NO DUPLICATES: Ensure every skill in the list is unique.
-    6. LOGICAL ORDER: Arrange nextLevelSkills in a proper learning sequence, from foundational/beginner topics to advanced/specialized ones.
-    7. Website URLs must be real, well-known, and directly relevant to the role (e.g. reactjs.org, docs.python.org, cloud.google.com).
-    8. YouTube queries must be specific (e.g. "React performance optimization tutorial 2025" not just "learn react").
-    9. The trackKey must exactly match one of the allowed values.
-    10. Provide exactly 3 roleSpecificInsights entries.
+    1. INTELLIGENT DOMAIN EXPANSION: Do NOT restrict recommendations only to the user's explicitly stated preferred role or exact keywords. Analyze their entire profile to suggest broader, alternative, and related career domains. Provide a diverse mix of direct matches and related high-potential career paths (e.g., expand a specific stack into broader engineering domains).
+    2. Rank the top 3 roles by predictive fit, ensuring a mix of specialized roles and broader domain-level tracks.
+    3. Ensure the recommendations feel intelligent, adaptive, and career-oriented, uncovering hidden potential matches based on their skill overlap.
+    4. TERMINOLOGY STANDARDIZATION: Use strict, professional industry standards for all naming. For example, ALWAYS output "Full Stack Development" (never "Full stack" or "Full-stack"). Output "React.js" (never "react").
+    5. nextLevelSkills: Provide exactly 8 UNIQUE, HIGH-LEVEL skills/technologies per role that the candidate does NOT already have. Do not output vague standalone terms like "API", output "API Design & Integration".
+    6. NO DUPLICATES: Ensure every skill in the list is unique and properly capitalized.
+    7. LOGICAL ORDER: Arrange nextLevelSkills in a proper learning sequence, from foundational/beginner topics to advanced/specialized ones.
+    8. RESOURCES MUST MATCH SKILLS: The learning resources (websites and youtube) MUST EXACTLY match the skills recommended in 'nextLevelSkills'.
+    9. Website URLs must be real, well-known, and directly relevant to the specific nextLevelSkills.
+    10. YouTube queries must be highly specific to the exact nextLevelSkills recommended.
+    11. The trackKey must exactly match one of the allowed values.
+    11. Provide exactly 3 roleSpecificInsights entries.
+    12. Generate exactly 25 highly tailored, role-specific technical/situational mock interview questions inside "interviewQuestions" for EACH role. Do not use generic pools; use the skills and context of their profile to make the questions highly personalized and diverse.
 
     Resume Text:
     """
@@ -261,6 +341,43 @@ export const generateCareerSuggestionsWithAI = async (resumeText) => {
     try {
       const cleaned = cleanJsonResponse(outputText);
       const parsedData = JSON.parse(cleaned || "{}");
+      
+      // Programmatically override the AI's suggested resources to guarantee 100% synchronization
+      if (parsedData.roleSpecificInsights && Array.isArray(parsedData.roleSpecificInsights)) {
+        parsedData.roleSpecificInsights.forEach(insight => {
+          if (insight.role) insight.role = normalizeDomainName(insight.role);
+
+          if (insight.nextLevelSkills && Array.isArray(insight.nextLevelSkills)) {
+            // Case-insensitive deduplication and normalization to prevent duplicate resources
+            const uniqueSkills = [];
+            const seen = new Set();
+            insight.nextLevelSkills.forEach(s => {
+              if (typeof s === 'string') {
+                const normalized = normalizeDomainName(s);
+                const lower = normalized.toLowerCase();
+                if (!seen.has(lower)) {
+                  seen.add(lower);
+                  uniqueSkills.push(normalized);
+                }
+              }
+            });
+            insight.nextLevelSkills = uniqueSkills;
+
+            const skillsToLearn = insight.nextLevelSkills.slice(0, 5);
+            insight.suggestedResources = {
+              websites: skillsToLearn.map(skill => ({
+                name: `${skill} Official Docs & Guides`,
+                url: `https://www.google.com/search?q=${encodeURIComponent(skill + " official documentation tutorial")}`,
+                focus: `Master core concepts of ${skill}`
+              })),
+              youtube: skillsToLearn.map(skill => 
+                `${skill} Full Course Tutorial For Beginners`
+              )
+            };
+          }
+        });
+      }
+      
       return parsedData;
     } catch (parseError) {
       console.warn("AI Career JSON Parse Error, using null fallback");
@@ -352,7 +469,7 @@ export const evaluateVideoInterview = (questionTimings, role) => {
   };
 };
 // ── AI job recommendations specifically tailored to experience level ──
-export const generateJobRecommendationsWithAI = async (resumeText, targetRole = "") => {
+export const generateJobRecommendationsWithAI = async (resumeText, targetRole = "", isFromProfile = false) => {
   if (!process.env.GEMINI_API_KEY) {
     throw new Error("GEMINI_API_KEY is missing in environment variables.");
   }
@@ -361,9 +478,19 @@ export const generateJobRecommendationsWithAI = async (resumeText, targetRole = 
     genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
   }
 
+  const contextInstruction = isFromProfile
+    ? `ANALYSIS CONTEXT: [Build Resume Flow - Structured Profile Data]
+    The user entered structured profile details inside the platform (including specific Skills, Education, Projects, Internships, Preferred Role, and Career Level).
+    Focus on matching exactly 8 highly personalized, relevant jobs that perfectly fit their preferred role and the technologies they explicitly built their profile with (e.g. if they have React.js, Node.js, MongoDB, match them with MERN stack roles, web developer, frontend/backend roles).`
+    : `ANALYSIS CONTEXT: [Upload Resume Flow - Unstructured Document Text]
+    The user uploaded an existing resume document which was parsed to unstructured text.
+    Extract the user's practical experience level, certifications, timeline, and domain of expertise. Match them with exactly 8 jobs that align with their parsed document keywords and existing industry experience (e.g. if they have Python, Machine Learning, match with AI/ML Engineer, Data Scientist, ML-related roles).`;
+
   const prompt = `
     You are an expert technical recruiter and AI talent matcher.
-    Analyze the following resume text and generate exactly 8 highly personalized job recommendations.
+    ${contextInstruction}
+    
+    Analyze the following resume/profile text and generate exactly 8 highly personalized job recommendations.
     Do NOT wrap the response in markdown code blocks (\`\`\`json ... \`\`\`), output raw JSON only.
 
     CRITICAL REQUIREMENTS:
@@ -372,7 +499,8 @@ export const generateJobRecommendationsWithAI = async (resumeText, targetRole = 
        - If they are Mid-Level: Suggest roles requiring 3-5 years (e.g., "Software Engineer II", "Senior Developer").
        - If they are Experienced/Senior: Suggest roles requiring 6+ years (e.g., "Lead Architect", "Staff Engineer", "VP of Tech").
     2. CONTENT MATCHING: Roles must align with their listed technologies, projects, and career path.
-    3. FORMAT: Return a JSON array of objects with exactly this structure:
+    3. ROLE SYNCHRONIZATION: The jobs you recommend MUST strictly fall under the 'User's Recommended Career Roles' provided below. For example, if the recommended roles are "Frontend Developer, MERN Stack Developer", you must generate jobs like "React.js Developer", "Frontend Engineer", "MERN Stack Developer". Do not generate jobs outside of these domains.
+    4. FORMAT: Return a JSON array of objects with exactly this structure:
        {
          "title": "Exact Role Title",
          "type": "Full-time" or "Contract",
@@ -384,12 +512,12 @@ export const generateJobRecommendationsWithAI = async (resumeText, targetRole = 
          "hot": Boolean (True if it matches their skills > 85%)
        }
 
-    Resume Text:
+    Resume/Profile Text:
     """
     ${resumeText}
     """
 
-    User's Tagged Target Role: ${targetRole || "Based on profile findings"}
+    User's Recommended Career Roles: ${targetRole || "Based on profile findings"}
   `;
 
   try {
@@ -418,16 +546,16 @@ export const generateJobRecommendationsWithAI = async (resumeText, targetRole = 
         jobs = parsedData.jobs;
       }
 
-      return jobs.length > 0 ? jobs : FALLBACK_JOBS;
+      return jobs.length > 0 ? jobs : generateDynamicFallbackJobs(targetRole);
     } catch (parseError) {
       console.warn("AI Job Recs JSON Parse Error, using fallback");
       fs.appendFileSync("ai_debug.log", `\n[${new Date().toISOString()}] JOB RECS JSON PARSE ERROR\nRaw AI Output:\n${outputText}\n`);
-      return FALLBACK_JOBS;
+      return generateDynamicFallbackJobs(targetRole);
     }
 
   } catch (error) {
     console.error("AI Job Recommendations Error:", error);
     // If AI fails completely (404, quota, etc), return fallback jobs so the user isn't blocked
-    return FALLBACK_JOBS;
+    return generateDynamicFallbackJobs(targetRole);
   }
 };

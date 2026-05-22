@@ -76,7 +76,7 @@ const AdminLayout = () => {
             padding: '0.4rem 1rem 0.4rem 0.5rem',
             background: 'rgba(255,255,255,0.03)',
             border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: '10px',
+            borderRadius: 'var(--radius-md)',
             cursor: 'pointer',
             transition: 'background 0.2s',
             color: '#38bdf8'
@@ -84,7 +84,7 @@ const AdminLayout = () => {
           onClick={() => navigate('/')}
           className="admin-profile-pill"
           >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '28px', height: '28px', background: 'rgba(56, 189, 248, 0.1)', borderRadius: '6px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '28px', height: '28px', background: 'rgba(56, 189, 248, 0.1)', borderRadius: 'var(--radius-sm)' }}>
               <ModernHomeIcon size={16} />
             </div>
             <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#fff' }}>
@@ -99,7 +99,7 @@ const AdminLayout = () => {
               border: '1px solid rgba(239, 68, 68, 0.2)',
               color: '#f87171',
               padding: '0.4rem 0.85rem',
-              borderRadius: '8px',
+              borderRadius: 'var(--radius-sm)',
               fontSize: '0.8rem',
               fontWeight: 600,
               cursor: 'pointer',

@@ -7,7 +7,7 @@ const feedbackSchema = new mongoose.Schema(
     userEmail: { type: String, trim: true, lowercase: true },
     message: { type: String, required: true },
     rating: { type: Number, min: 1, max: 5, default: 3 },
-    status: { type: String, enum: ["Pending", "Resolved"], default: "Pending" }
+    status: { type: String, enum: ["Pending", "Resolved", "Archived"], default: "Pending" }
   },
   { timestamps: true }
 );

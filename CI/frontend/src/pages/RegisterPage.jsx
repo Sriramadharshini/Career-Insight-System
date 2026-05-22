@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useSettings } from "../context/SettingsContext";
 import { motion } from "framer-motion";
 import registerIllustration from "../assets/register_illustration_v2.png";
 import { AnimatedText } from "../components/ui/animated-shiny-text";
@@ -32,6 +33,7 @@ const popItem = {
 const RegisterPage = () => {
   const navigate = useNavigate();
   const { register } = useAuth();
+  const { settings } = useSettings();
   const [formData, setFormData] = useState({ name: "", email: "", password: "", confirmPassword: "", phone: "" });
   const [error, setError] = useState("");
 
@@ -148,12 +150,28 @@ const RegisterPage = () => {
 
               {error && <p className="error-text" style={{ color: '#ff453a' }}>{error}</p>}
 
+              {settings?.allowRegistration === false && (
+                <div style={{ color: '#ff453a', background: 'rgba(255, 69, 58, 0.1)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem', textAlign: 'center', border: '1px solid rgba(255, 69, 58, 0.2)' }}>
+                  User registration is currently disabled by the administrator.
+                </div>
+              )}
+
               <motion.div style={{ marginTop: '0.5rem' }} variants={popItem}>
                 <motion.button
                   type="submit"
-                  style={{ width: '100%', padding: '0.8rem', fontSize: '1rem', background: 'linear-gradient(135deg, #a78bfa, #ec4899)', border: 'none', color: '#fff', borderRadius: '12px' }}
-                  whileHover={{ scale: 1.02, boxShadow: '0 0 20px rgba(167, 139, 250, 0.4)' }}
-                  whileTap={{ scale: 0.98 }}
+                  disabled={settings?.allowRegistration === false}
+                  style={{ 
+                    width: '100%', 
+                    padding: '0.8rem', 
+                    fontSize: '1rem', 
+                    background: settings?.allowRegistration === false ? '#333' : 'linear-gradient(135deg, #a78bfa, #ec4899)', 
+                    border: 'none', 
+                    color: settings?.allowRegistration === false ? '#777' : '#fff', 
+                    borderRadius: '12px',
+                    cursor: settings?.allowRegistration === false ? 'not-allowed' : 'pointer'
+                  }}
+                  whileHover={settings?.allowRegistration !== false ? { scale: 1.02, boxShadow: '0 0 20px rgba(167, 139, 250, 0.4)' } : {}}
+                  whileTap={settings?.allowRegistration !== false ? { scale: 0.98 } : {}}
                 >
                   Join the Network
                 </motion.button>

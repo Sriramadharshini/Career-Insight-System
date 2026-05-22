@@ -16,7 +16,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
           disabled={currentPage === 1}
           style={{
             display: 'flex', alignItems: 'center', gap: '0.4rem',
-            padding: '0.5rem 1rem', borderRadius: '8px',
+            padding: '0.5rem 1rem', borderRadius: 'var(--radius-sm)',
             background: currentPage === 1 ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.05)',
             border: '1px solid var(--border-soft)',
             color: currentPage === 1 ? 'var(--text-muted)' : 'var(--text-main)',
@@ -34,7 +34,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
           disabled={currentPage === totalPages}
           style={{
             display: 'flex', alignItems: 'center', gap: '0.4rem',
-            padding: '0.5rem 1rem', borderRadius: '8px',
+            padding: '0.5rem 1rem', borderRadius: 'var(--radius-sm)',
             background: currentPage === totalPages ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.05)',
             border: '1px solid var(--border-soft)',
             color: currentPage === totalPages ? 'var(--text-muted)' : 'var(--text-main)',

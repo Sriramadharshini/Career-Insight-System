@@ -58,8 +58,12 @@ export const authApi = {
       body: JSON.stringify(payload)
     }),
   getMe: (token) =>
-
     apiRequest("/auth/me", {
+      headers: createHeaders(token, false)
+    }),
+  logout: (token) =>
+    apiRequest("/auth/logout", {
+      method: "POST",
       headers: createHeaders(token, false)
     })
 };
@@ -97,10 +101,13 @@ export const resumeApi = {
       body: formData
     });
   },
-  getLatest: (token) =>
-    apiRequest("/resume", {
+  getLatest: (token) => {
+    const activeFlow = localStorage.getItem("activeFlow");
+    const query = activeFlow ? `?isFromProfile=${activeFlow === "build"}` : "";
+    return apiRequest(`/resume${query}`, {
       headers: createHeaders(token, false)
-    }),
+    });
+  },
   analyzeProfile: (token, profile) =>
     apiRequest("/resume/analyze-profile", {
       method: "POST",
@@ -119,10 +126,13 @@ export const resumeApi = {
       headers: createHeaders(token),
       body: JSON.stringify(payload)
     }),
-  getJobRecommendations: (token) =>
-    apiRequest("/resume/job-recommendations", {
+  getJobRecommendations: (token) => {
+    const activeFlow = localStorage.getItem("activeFlow");
+    const query = activeFlow ? `?isFromProfile=${activeFlow === "build"}` : "";
+    return apiRequest(`/resume/job-recommendations${query}`, {
       headers: createHeaders(token, false)
-    })
+    });
+  }
 };
 
 export const feedbackApi = {
@@ -131,5 +141,41 @@ export const feedbackApi = {
       method: "POST",
       headers: createHeaders(token),
       body: JSON.stringify(payload)
+    }),
+  getStatus: (token) =>
+    apiRequest("/feedback/status", {
+      headers: createHeaders(token, false)
+    })
+};
+
+export const communityApi = {
+  getPosts: (token, type = "") => {
+    const query = type ? `?type=${type}` : "";
+    return apiRequest(`/community${query}`, {
+      headers: createHeaders(token, false)
+    });
+  },
+  createPost: (token, formData) =>
+    apiRequest("/community", {
+      method: "POST",
+      headers: createHeaders(token, false), // No content-type so browser sets multipart/form-data boundary
+      body: formData
+    }),
+  toggleLike: (token, id) =>
+    apiRequest(`/community/${id}/like`, {
+      method: "POST",
+      headers: createHeaders(token),
+      body: JSON.stringify({})
+    }),
+  addComment: (token, id, text) =>
+    apiRequest(`/community/${id}/comment`, {
+      method: "POST",
+      headers: createHeaders(token),
+      body: JSON.stringify({ text })
+    }),
+  deletePost: (token, id) =>
+    apiRequest(`/community/${id}`, {
+      method: "DELETE",
+      headers: createHeaders(token)
     })
 };

@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { resumeApi } from "../api";
 import { NavbarActions } from "../components/common/NavbarPortals";
 import { useAuth } from "../context/AuthContext";
+import { useSettings } from "../context/SettingsContext";
 import { LayoutDashboard } from "lucide-react";
 
 const TIME_LIMIT = 30;
@@ -67,10 +68,12 @@ const btn = (bg, shadow, extra = {}) => ({
 /* ─── component ─────────────────────────────────────────────── */
 const InterviewPrepPage = () => {
   const { token } = useAuth();
+  const { settings } = useSettings();
   const navigate  = useNavigate();
   const location  = useLocation();
 
   const [questions,    setQuestions]    = useState([]);
+  const [masterQuestionPool, setMasterQuestionPool] = useState([]);
   const [roleTitle,    setRoleTitle]    = useState("Your Role");
   const [answers,      setAnswers]      = useState({});
   const [currentAnswer,setCurrentAnswer]= useState("");
@@ -102,10 +105,12 @@ const InterviewPrepPage = () => {
           if (reqRole && res.roleSpecificInsights)
             roleData = res.roleSpecificInsights.find(r => r.role === reqRole);
           if (roleData?.interviewQuestions) {
-            setQuestions(roleData.interviewQuestions);
+            setMasterQuestionPool(roleData.interviewQuestions);
+            setQuestions(roleData.interviewQuestions.slice(0, 10));
             setRoleTitle(roleData.role);
           } else if (res.interviewQuestions) {
-            setQuestions(res.interviewQuestions);
+            setMasterQuestionPool(res.interviewQuestions);
+            setQuestions(res.interviewQuestions.slice(0, 10));
             setRoleTitle(reqRole || res.recommendedRoles?.[0] || "Your Role");
           }
         }
@@ -190,6 +195,11 @@ const InterviewPrepPage = () => {
     }
 
     /* ── Set state → triggers re-render → useEffect attaches stream ── */
+    if (masterQuestionPool.length > 0) {
+      const shuffled = [...masterQuestionPool].sort(() => 0.5 - Math.random());
+      setQuestions(shuffled.slice(0, 10));
+    }
+    
     setMode(selectedMode);
     setIsActive(true);
     setTimeLeft(TIME_LIMIT);
@@ -337,6 +347,30 @@ const InterviewPrepPage = () => {
             <LayoutDashboard size={16} />
             Dashboard
           </button>
+          
+          {settings?.communityAccess !== false && (
+            <button onClick={() => navigate("/community")}
+              style={{
+                background: "linear-gradient(135deg, #0ea5e9, #38bdf8)",
+                border: "none",
+                color: "#ffffff", borderRadius: "10px", padding: "0.55rem 1.25rem",
+                fontSize: "0.85rem", fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem",
+                transition: "all 0.25s ease", boxShadow: "0 6px 15px rgba(14, 165, 233, 0.35)"
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = "linear-gradient(135deg, #38bdf8, #7dd3fc)";
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow = "0 8px 20px rgba(14, 165, 233, 0.5)";
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = "linear-gradient(135deg, #0ea5e9, #38bdf8)";
+                e.currentTarget.style.transform = "none";
+                e.currentTarget.style.boxShadow = "0 6px 15px rgba(14, 165, 233, 0.35)";
+              }}>
+              <span style={{ fontSize: "16px", display: "flex" }}>🌍</span>
+              Community
+            </button>
+          )}
         </NavbarActions>
 
         {/* ── Header ── */}
